@@ -1,9 +1,9 @@
 import string
-from . import prob
 import operator
 import random
 import math
-
+from Bio import Restriction
+import sys
 
 ##############
 #FastaIterator
@@ -39,6 +39,10 @@ def FastaIterator(handle):
 
         if not line : return #StopIteration
     assert False, "Should not reach this line"
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 ########
 #
@@ -225,3 +229,79 @@ def onlyNucleic(seq,set=['a','c','g','t','u','A','C','G','T','U','n','N','@']):
 		if c not in set:
 			return False
 	return True
+
+def findUnique(tiles):
+	return list(set(tiles))
+
+# def findUnique(tiles):
+# 	seen = set()
+# 	res = []
+# 	for tile in tiles:
+# 		if tile not in seen:
+# 			seen.add(tile)
+# 			res.append(tile)
+# 	return res
+
+def estimateAffixLength(sequence,tagLength):
+	tagHits = sequencelib.mcount(sequence, '@')
+	if tagHits == 0:
+		return len(sequence)
+	elif tagHits > 1:
+		raise TileError("""You can only have one instance of 'tag' per tile""")
+	elif tagHits == 1:
+		return len(sequence) + tagLength - 1 #-1 is required upone removal of '@' tag
+
+
+def buildTags(numTags,tagLength,sites=None):
+	tmpTags = set()
+	while len(tmpTags)<numTags:
+		tmpTag = sequencelib.GenRandomSeq(tagLength,type="DNA")
+		if sites != None:
+			if hasRestrictionSites(tmpTag,sites):
+				continue
+		tmpTags.add(tmpTag)
+	return list(tmpTags)
+
+def hasRestrictionSites(sequence,sites):
+	#Parse sites
+	sites = sites.split(",")
+	rb = Restriction.RestrictionBatch(sites)
+
+	#Get Bio.Seq object
+	#amb = IUPACAmbiguousDNA()
+	tmpSeq = Seq(sequence)
+
+	#Search for sites
+	res = rb.search(tmpSeq)
+
+	#Sum hits
+	totalSites = 0
+	for v in res.values():
+		totalSites += len(v)
+
+	if totalSites > 0:
+		return True
+	else:
+		return False
+
+def warnRestrictionSites(sequence,name,sites):
+	sites = sites.split(",")
+	rb = Restriction.RestrictionBatch(sites)
+
+	#Get Bio.Seq object
+	#amb = IUPACAmbiguousDNA()
+	tmpSeq = Seq(sequence)
+
+	#Search for sites
+	res = rb.search(tmpSeq)
+
+	#Sum hits
+	totalSites = 0
+	for v in res.values():
+		totalSites += len(v)
+
+	if totalSites > 0:
+		print >>sys.stderr, "Warning: The following positions in '%s' will be masked from tiles due to incompatible restictions sites:" % (name)
+		pp(res)
+	else:
+		pass

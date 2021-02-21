@@ -1,12 +1,13 @@
 from probeDesign import utils
 import copy
+#import string
 from probeDesign.utils import pp
 from probeDesign import sequencelib
+from probeDesign import thermo
+from probeDesign import repeatMask
 import getopt,sys,re
-from Bio import Restriction
 from Bio.Seq import Seq
-from Bio.Alphabet.IUPAC import IUPACAmbiguousDNA
-#from itertools import tee,izip
+import primer3
 
 # def findProbes(infile, outfile, nProbes, species='mouse',
 #                 repeatmask=True,
@@ -34,7 +35,7 @@ class TileError(Exception):
 
 class Tile:
 	def __init__(self,sequence,seqName,startPos,prefix='',suffix='',tag=''):
-		self.sequence = sequence
+		self.sequence = str.lower(sequence)
 		self.startPos = startPos
 		self.start = startPos
 		self.seqName = seqName
@@ -42,7 +43,9 @@ class Tile:
 		self.prefix = prefix
 		self.suffix = suffix
 		self.tag = tag
-		#Validate guide
+		self.masked = False
+		#self.RajTM = self.calcRajTm()
+
 
 	def validate(self):
 		self.getGC()
@@ -77,7 +80,7 @@ class Tile:
 		pass
 
 	def GC(self):
-		return sequencelib.gc_content(self.oligoSequence())
+		return float(sequencelib.gc_content(self.oligoSequence()))
 
 	def oligoSequence(self):
 		return self.compiledPrefix()+self.sequence+self.compiledSuffix()
@@ -105,85 +108,47 @@ class Tile:
 		"""Only write tile sequence to fasta"""
 		return ">%s\n%s" % (self.name,self.sequence)
 
-#######################
-# Helper functions
-#######################
+	def calcGibbs(self):
+		[dHs,dSs] = thermo.stacks_rna_dna(self.sequence)
+		[dHi,dSi] = thermo.init_rna_dna()
+		binding_energy = thermo.gibbs(dHs+dHi,dSs+dSi,temp=37)  # cal/mol
+		binding_energy = thermo.salt_adjust(binding_energy/1000,len(self.sequence),saltconc=0.33)  # kcal/mol
+		self.Gibbs = binding_energy
 
-def findUnique(tiles):
-	return list(set(tiles))
+	def Tm(self):
+		return float(sequencelib.getTm(self.sequence))
 
-# def findUnique(tiles):
-# 	seen = set()
-# 	res = []
-# 	for tile in tiles:
-# 		if tile not in seen:
-# 			seen.add(tile)
-# 			res.append(tile)
-# 	return res
-
-def estimateAffixLength(sequence,tagLength):
-	tagHits = sequencelib.mcount(sequence, '@')
-	if tagHits == 0:
-		return len(sequence)
-	elif tagHits > 1:
-		raise TileError("""You can only have one instance of 'tag' per tile""")
-	elif tagHits == 1:
-		return len(sequence) + tagLength - 1 #-1 is required upone removal of '@' tag
-
-
-def buildTags(numTags,tagLength,sites=None):
-	tmpTags = set()
-	while len(tmpTags)<numTags:
-		tmpTag = sequencelib.GenRandomSeq(tagLength,type="DNA")
-		if sites != None:
-			if hasRestrictionSites(tmpTag,sites):
-				continue
-		tmpTags.add(tmpTag)
-	return list(tmpTags)
-
-def hasRestrictionSites(sequence,sites):
-	#Parse sites
-	sites = sites.split(",")
-	rb = Restriction.RestrictionBatch(sites)
-
-	#Get Bio.Seq object
-	amb = IUPACAmbiguousDNA()
-	tmpSeq = Seq(sequence,amb)
-
-	#Search for sites
-	res = rb.search(tmpSeq)
-
-	#Sum hits
-	totalSites = 0
-	for v in res.values():
-		totalSites += len(v)
-
-	if totalSites > 0:
-		return True
-	else:
-		return False
-
-def warnRestrictionSites(sequence,name,sites):
-	sites = sites.split(",")
-	rb = Restriction.RestrictionBatch(sites)
-
-	#Get Bio.Seq object
-	amb = IUPACAmbiguousDNA()
-	tmpSeq = Seq(sequence,amb)
-
-	#Search for sites
-	res = rb.search(tmpSeq)
-
-	#Sum hits
-	totalSites = 0
-	for v in res.values():
-		totalSites += len(v)
-
-	if totalSites > 0:
-		print >>sys.stderr, "Warning: The following positions in '%s' will be masked from tiles due to incompatible restictions sites:" % (name)
-		pp(res)
-	else:
+	def calcRajTm(self):
+		[dHs,dSs] = thermo.stacks_rna_dna(self.sequence)
+		#rajTm = thermo.melting_temp(dHs,dSs,)
 		pass
+
+	def isMasked(self):
+		if 'n' in self.sequence:
+			self.masked = True
+		elif 'N' in self.sequence:
+			self.masked = True
+		return self.masked
+
+	def hasRuns(self,runChar,runLength,mismatches):
+		answer = False
+		for i in range(len(self)-runLength+1):
+			count = 0
+			for j in range(i,i+runLength):
+				if self.sequence[j] == runChar:
+					count += 1
+			if count >= runLength-mismatches:
+				self.masked = True
+				answer = True
+		return answer
+
+	def splitProbe(self):
+		self.oddSeq = self.sequence[:int(len(self)/2)]
+		self.evenSeq = self.sequence[int(len(self)/2):]
+		return
+
+	def calcdTm(self):
+		self.dTm = abs(primer3.calcTm(self.oddSeq)-primer3.calcTm(self.evenSeq))
 
 
 #######################
@@ -192,15 +157,17 @@ def warnRestrictionSites(sequence,name,sites):
 #TODO: Modify this so that it only gets the window of appropriate size.  We will add prefix and suffix afterwards.
 
 def scanSequence(sequence,seqName,tileStep=1,tileSize=52):
-    tiles = []
-    #Pre-compute number of chunks to emit
-    numOfChunks = int(((len(sequence)-tileSize)/tileStep) + 1)
+	tiles = []
+	#Pre-compute number of chunks to emit
+	numOfChunks = int(((len(sequence)-tileSize)/tileStep) + 1)
 
-    print(numOfChunks)
-    #Tile across sequence
-    for i in range(0,numOfChunks*tileStep,tileStep):
-        tiles.append(Tile(sequence=sequence[i:i+tileSize],seqName=seqName,startPos=i+1))
-    return tiles
+	print(numOfChunks)
+	#Tile across sequence
+	for i in range(0,numOfChunks*tileStep,tileStep):
+		tile = Tile(sequence=sequence[i:i+tileSize],seqName=seqName,startPos=i+1)
+		if not tile.isMasked():
+			tiles.append(tile)
+	return tiles
 
 ###################
 # Reporting
@@ -218,6 +185,9 @@ def outputTable(tiles,outHandle=sys.stdout):
 				v = v()
 			vals.append(str(v))
 		print >>outHandle, "\t".join(vals)
+
+def usage():
+	utils.eprint('Help Message Goes Here')
 
 #def main():
 	# #######################
@@ -336,19 +306,79 @@ def outputTable(tiles,outHandle=sys.stdout):
 	# print >>sys.stderr, "There are a total of %d unique tiles" % len(tiles)
 
 def test():
+	# Set default args
+	dTmMax = 5.0
+	minGibbs = -80.0
+	maxGibbs = -50.0
+	targetGibbs = 60.0
+	tileSize = 52
+
+	# Read custom args
+
+	# Parse fasta files and loop over records
+	utils.eprint("Reading in Fasta file")
 	fname = "test/eGFP.fa"
 	handle = open(fname,'r')
 	fastaIter = sequencelib.FastaIterator(handle)
 
 	mySeq = next(fastaIter)
-	tiles = scanSequence(mySeq['sequence'],mySeq['name'])
+
+	# RepeatMasking
+	#TODO: Specify DNA source in input params
+	utils.eprint("\nRepeat Masking...")
+	mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource='mouse')
+
+	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
+	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=tileSize)
+
+	# Check for invalid characters
+
+	# Crunmask
+	utils.eprint("\nChecking for runs of C's")
+	tiles = [tile for tile in tiles if tile.hasRuns(runChar='c',runLength=7,mismatches=2)]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	# Grunmask
+	utils.eprint("\nChecking for runs of G's")
+	tiles = [tile for tile in tiles if tile.hasRuns(runChar='g',runLength=7,mismatches=2)]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	# Calculate Hairpins
+	utils.eprint("\nChecking for hairpins")
+	for tile in tiles:
+		thermRes = primer3.calcHairpin(tile.sequence)
+	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).structure_found]
+	utils.eprint(f'{len(tiles)} tiles remain')
 
 	print(len(tiles))
-	# Remove duplicate tile sequences
-	#tiles = findUnique(tiles)
+
+	# PseudogeneMasking
+
+
+	# GenomeMasking?  Bowtie hits to >1 regions of the genomemask
+
+	# GC filtering
+
+	# TM filtering
+
+	# Gibbs filtering
+	utils.eprint(f"\nChecking for {minGibbs} < Gibbs FE < {maxGibbs}")
+	[tile.calcGibbs() for tile in tiles]
+	tiles = [tile for tile in tiles if tile.Gibbs >= minGibbs]
+	tiles = [tile for tile in tiles if tile.Gibbs <= maxGibbs]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	# dTm between halves
+	utils.eprint(f"\nChecking for dTm <= {dTmMax}")
+	[tile.splitProbe() for tile in tiles]
+	[tile.calcdTm() for tile in tiles]
+	tiles = [tile for tile in tiles if tile.dTm <=dTmMax]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	# Select top 20
 
 	for tile in tiles:
-	       print(f"{tile}\t{tile.GC}\t{len(tile)}")
+		print(f"{tile}\tLength:{len(tile)}\tTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 
 	print(len(tiles))
 

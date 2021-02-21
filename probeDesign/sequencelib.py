@@ -1,5 +1,5 @@
 #/usr/bin/env python
-import string,operator,random,math
+import operator,random,math
 from . import prob
 
 ######
@@ -57,7 +57,7 @@ def reverse_complement(s):
 
 def rcomp(s):
     """Does same thing as reverse_complement only cooler"""
-    return s.translate(string.maketrans("ATCG","TAGC"))[::-1]
+    return s.translate(str.maketrans("ATCG","TAGC"))[::-1]
 
 def getTm(seq):
     Tm = 79.8 + 18.5*math.log10(0.05) + (58.4 * getGC(seq)) + (11.8 * getGC(seq)**2) - (820/len(seq))
@@ -75,7 +75,7 @@ def mcount(s, chars):
     # sums the counts of appearances of each char in chars
     count = 0
     for char in chars:
-        count = count+string.count(s,char)
+        count = count+str.count(s,char)
     return count
 
 def prob_seq(seq, pGC=.5):
@@ -135,19 +135,19 @@ def genRandomFromDist(length,freqs):
 #Motif Tools
 ###########
 def allindices(string, sub, listindex=[], offset=0):
-    i = string.find(sub, offset)
+    i = str.find(sub, offset)
     while i >= 0:
         listindex.append(i)
-        i = string.find(sub, i + 1)
+        i = str.find(sub, i + 1)
     return listindex
 
 def find_all(seq, sub):
     #print "Looking for %s in %s"%(sub,seq)
     found = []
-    next = string.find(seq,sub)
+    next = str.find(seq,sub)
     while next != -1:
         found.append(next)
-        next = string.find(seq,sub,next+1)
+        next = str.find(seq,sub,next+1)
     return found
 
 def kmer_dictionary_counts(seq,k,dic={}):
