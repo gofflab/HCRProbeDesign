@@ -9,23 +9,6 @@ import getopt,sys,re
 from Bio.Seq import Seq
 import primer3
 
-# def findProbes(infile, outfile, nProbes, species='mouse',
-#                 repeatmask=True,
-#                 pseudogenemask=True,
-#                 blastmask=True,
-#                 miRNAmask=True,
-#                 humanfiltermask=True,
-#                 genomemask=True,
-#                 GCrunmask=True,
-#                 GCmask=True,
-#                 targetTM = 67.5,
-#                 oligoLength = 20,
-#                 spacerLength=2,
-#                 masksequences=Null,
-#                 targetGibbsFE = -23,
-#
-#  ):
-
 
 class TileError(Exception):
 	def __init__(self,value):
@@ -164,7 +147,7 @@ def scanSequence(sequence,seqName,tileStep=1,tileSize=52):
 	print(numOfChunks)
 	#Tile across sequence
 	for i in range(0,numOfChunks*tileStep,tileStep):
-		tile = Tile(sequence=sequence[i:i+tileSize],seqName=seqName,startPos=i+1)
+		tile = Tile(sequence=sequencelib.reverse_complement(sequence[i:i+tileSize]),seqName=seqName,startPos=i+1)
 		if not tile.isMasked():
 			tiles.append(tile)
 	return tiles
@@ -354,7 +337,6 @@ def test():
 
 	# PseudogeneMasking
 
-
 	# GenomeMasking?  Bowtie hits to >1 regions of the genomemask
 
 	# GC filtering
@@ -381,6 +363,38 @@ def test():
 		print(f"{tile}\tLength:{len(tile)}\tTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 
 	print(len(tiles))
+
+# def findProbes(infile, outfile, nProbes, species='mouse',
+#                 repeatmask=True,
+#                 pseudogenemask=True,
+#                 blastmask=True,
+#                 miRNAmask=True,
+#                 humanfiltermask=True,
+#                 genomemask=True,
+#                 GCrunmask=True,
+#                 GCmask=True,
+#                 targetTM = 67.5,
+#                 oligoLength = 20,
+#                 spacerLength=2,
+#                 masksequences=Null,
+#                 targetGibbsFE = -23,
+#
+#  ):
+	# # Set default args
+	# species = "mouse"
+	# dTmMax = 5.0
+	# minGibbs = -80.0
+	# maxGibbs = -50.0
+	# targetGibbs = 60.0
+	# tileSize = 52
+	# #Argument handling
+	# try:
+	# 	opts,args = getopt.getopt(sys.argv[1:],"ho:vs:l:w:tfrpbg",["help","output=","verbose","prefix=","species=","oligoLength=","spacerLength=","targetTM=","targetGibbsFE=","repeatmask","pseudogenemask","blastmask","genomemask"])
+	# except getopt.GetoptError as err:
+	# 	print(err)
+	# 	usage()
+	# 	sys.exit(2)
+
 
 if __name__ == "__main__":
     test()
