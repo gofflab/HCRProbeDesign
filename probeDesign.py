@@ -4,7 +4,7 @@ from probeDesign import utils
 #import string
 from probeDesign.utils import pp
 from probeDesign import sequencelib
-from probeDesign import repeatmask
+from probeDesign import repeatMask
 from probeDesign import BLAST
 import getopt,sys,re
 #from Bio.Seq import Seq
@@ -192,7 +192,7 @@ def test():
 	# RepeatMasking
 	#TODO: Specify DNA source in input params
 	utils.eprint("\nRepeat Masking...")
-	mySeq['sequence'] = repeatmask.repeatmask(mySeq['sequence'],dnasource=species)
+	mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource=species)
 
 	#Convert to lowercase
 	#mySeq['sequence'] = mySeq['sequence'].lower()
