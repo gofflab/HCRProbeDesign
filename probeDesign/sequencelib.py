@@ -44,8 +44,8 @@ bed_fields = ['chr','start','end','label','score','strand']
 ###
 
 def complement(s):
-    comp = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A',
-            'a': 't', 'c': 't', 'g': 'c', 't': 'a'
+    comp = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A', 'N': 'N',
+            'a': 't', 'c': 't', 'g': 'c', 't': 'a', 'n': 'n'
             }
     complseq = [comp[base] for base in s]
     return complseq

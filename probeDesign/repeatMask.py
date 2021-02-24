@@ -1,3 +1,8 @@
+################
+# Manages API calls to http://www.repeatmasker.org/ for target sequences
+#TODO: Unsure whether this should happen before or after reverse complementing.  Ie. do I want to mask the target sequence?  Or the probe sequences?  Does it matter?
+#################
+
 import time
 import urllib.parse
 import urllib.request
@@ -50,12 +55,13 @@ def repeatmask(sequence,dnasource='mouse'):
         time.sleep(sleepInterval)
 
     # If no repeats, return orig sequence
+    utils.eprint('*** SUMMARY OF REPEATMASKER JOB ***')
     if termText[1] in str(result_text):
+        utils.eprint('No repeats found in sequence.')
         return(sequence)
     else:
         res_soup = BeautifulSoup(result_text,'html.parser')
         summary_text = res_soup.find_all("pre")[1].text
-        utils.eprint('*** SUMMARY OF REPEATMASKER JOB ***')
         utils.eprint(summary_text)
 
         files = []

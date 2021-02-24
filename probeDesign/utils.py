@@ -4,6 +4,7 @@ import random
 import math
 from Bio import Restriction
 import sys
+import types
 
 ##############
 #FastaIterator
@@ -74,13 +75,13 @@ def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=
     # first_gap is the closing gap before the closing bracket, parens or curly braces
 
     if level == 0:
-        if type(d) != types.StringType: d = repr(d)
+        if type(d) != str: d = repr(d)
 
         if maxw and len(d) > maxw:
             final = ifab(maxw > 20, 10, maxw/2)
             f.write(first_gap+d[:maxw-final]+'...'+d[-final:]+' (%s chars)\n' % len(d))
         else: f.write(first_gap+d+'\n')
-    elif type(d) == types.ListType:
+    elif type(d) == list:
         if not d:
             f.write(first_gap+"[]\n")
             return
@@ -95,7 +96,7 @@ def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=
                     f.write(gap+' -> ... (%s in list)\n'%len(d))
                     break
         f.write(last_gap+"]\n")
-    elif type(d) == types.TupleType:
+    elif type(d) == tuple:
         if not d:
             f.write(first_gap+"()\n")
             return
@@ -116,7 +117,7 @@ def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=
                     f.write(gap+' => ... (%s in tuple)\n'%len(d))
                     break
         f.write(last_gap+")\n")
-    elif type(d) == types.DictType:
+    elif type(d) == dict:
         if not d:
             f.write(first_gap+"{}\n")
             return
@@ -124,7 +125,7 @@ def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=
         f.write(first_gap+"{\n")
         keys = d.keys()
         keys.sort()
-        key_strings = map(lambda k: ifab(type(k)==types.StringType, k, repr(k)), keys)
+        key_strings = map(lambda k: ifab(type(k)==str, k, repr(k)), keys)
         maxlen = max(map(len, key_strings))
         h = 0
         for k,key_string in map(None, keys, key_strings):
@@ -142,7 +143,7 @@ def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=
                 if h >= maxh and maxh<len(keys):
                     remaining_keys = []
                     for k in keys[h:]:
-                        if type(k) == types.TupleType:
+                        if type(k) == tuple:
                             remaining_keys.append(repr(k))
                         else:
                             remaining_keys.append('%s'%k)
@@ -154,7 +155,7 @@ def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=
 
             #gap+' '*(len(key_string)+3), '', gap+' '*(len(key_string)+5))
         f.write(last_gap+"}\n")
-    elif type(d) == types.InstanceType:
+    elif type(d) == object:
         fields = dir(d)
 
         if not fields:
@@ -163,7 +164,7 @@ def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=
         # recurse on classes
         f.write(first_gap+"*ClassInstance %s\n"%d)
         fields.sort()
-        key_strings = map(lambda k: ifab(type(k)==types.StringType, k, repr(k)), fields)
+        key_strings = map(lambda k: ifab(type(k)== str, k, repr(k)), fields)
         maxlen = max(map(len, key_strings))
         h = 0
         for k,key_string in map(None, fields, key_strings):

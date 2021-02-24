@@ -181,7 +181,81 @@ def overhang_dna(inseq,end):
 
     return dGoh[inseq]
 
+def Tm_RNA_DNA(sequence):
+    # This gives the Tm of a sequence using RNA-DNA energetics
+    primerConc = 0.00005
+    temp = 30.0
+    salt = 0.33
 
+    # SantaLucia 98 parameters
+    delH = {'aa':-7.8, 'ac':-5.9, 'ag':-9.1, 'at':-8.3,
+            'ca':-9.0, 'cc':-9.3, 'cg':-16.3,'ct':-7.0,
+            'ga':-5.5, 'gc':-8.0, 'gg':-12.8,'gt':-7.8,
+            'ta':-7.8, 'tc':-8.6, 'tg':-10.4,'tt':-11.5}
+
+    delS = {'aa':-21.9, 'ac':-12.3, 'ag':-23.5, 'at':-23.9,
+            'ca':-26.1, 'cc':-23.2, 'cg':-47.1, 'ct':-19.7,
+            'ga':-13.5, 'gc':-17.1, 'gg':-31.9, 'gt':-21.6,
+            'ta':-23.2, 'tc':-22.9, 'tg':-28.4, 'tt':-36.4}
+    dH = 0
+    dS = 0
+
+    dH = sum([delH[sequence[i:i+2]] for i in range(len(sequence)-1)])
+    dS = sum([delS[sequence[i:i+2]] for i in range(len(sequence)-1)])
+
+    dH += 1.9
+    dS += -3.9
+
+    dG = dH*1000.0 - (37.0+273.15)*dS
+    dG = dG/1000
+
+    #ans = dH*1000/(dS + (1.9872 * math.log(primerConc/4))) + (16.6 * math.log10(salt)) - 273.15
+
+#    print(delH)
+#    return ans
+    return dG
+
+def Tm(sequence):
+    # This gives the Tm of a sequence
+    primerConc = 0.00005
+    temp = 30.0
+    salt = 0.33
+
+    # SantaLucia 98 parameters
+    delH = {'aa':-7.9, 'ac':-8.4, 'ag':-7.8, 'at':-7.2,
+            'ca':-8.5, 'cc':-8.0, 'cg':-10.6,'ct':-7.8,
+            'ga':-8.2, 'gc':-9.8, 'gg':-8.0, 'gt':-8.4,
+            'ta':-7.2, 'tc':-8.2, 'tg':-8.5, 'tt':-7.9}
+
+    delS = {'aa':-22.2, 'ac':-22.4, 'ag':-21.0, 'at':-20.4,
+            'ca':-22.7, 'cc':-19.9, 'cg':-27.2, 'ct':-21.0,
+            'ga':-22.2, 'gc':-24.4, 'gg':-19.9, 'gt':-22.4,
+            'ta':-21.3, 'tc':-22.2, 'tg':-22.7, 'tt':-22.2}
+    dH = 0
+    dS = 0
+
+    dH = sum([delH[sequence[i:i+2]] for i in range(len(sequence)-1)])
+    dS = sum([delS[sequence[i:i+2]] for i in range(len(sequence)-1)])
+
+    if (sequence[0] == 'c') or (sequence[0] == 'g'):
+        dH += 0.1
+        dS += -2.8
+    else:
+        dH += 2.3
+        dS += 4.1
+
+    if (sequence[-1] == 'c') or (sequence[-1] == 'g'):
+        dH += 0.1
+        dS += -2.8
+    else:
+        dH += 2.3
+        dS += 4.1
+
+    ans = dH*1000/(dS + (1.9872 * math.log(primerConc/4))) + (16.6 * math.log10(salt)) - 273.15
+
+#    print(delH)
+    return ans
+    
 def melting_temp(dH,dS,ca,cb,salt):
     # calculation for total concentration of nucleic acid for non-self-complementary pairs
     ct = ca - cb/2 # SantaLucia 98
