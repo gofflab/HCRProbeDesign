@@ -4,23 +4,23 @@
 # Sequences below include 2nt spacers on 3' end of odd and 5' end of even to allow for bending to present initiator.
 initiators = {
     "B1": {
-        "odd": "gAggAgggCAgCAAACggAA"
+        "odd": "gAggAgggCAgCAAACggAA",
         "even": "TAgAAgAgTCTTCCTTTACg"
     },
     "B2": {
-        "odd": "CCTCgTAAATCCTCATCAAA"
+        "odd": "CCTCgTAAATCCTCATCAAA",
         "even": "AAATCATCCAgTAAACCgCC"
     },
     "B3": {
-        "odd": "gTCCCTgCCTCTATATCTTT"
+        "odd": "gTCCCTgCCTCTATATCTTT",
         "even": "TTCCACTCAACTTTAACCCg"
     },
     "B4": {
-        "odd": "CCTCAACCTACCTCCAACAA"
+        "odd": "CCTCAACCTACCTCCAACAA",
         "even": "ATTCTCACCATATTCgCTTC"
     },
     "B5": {
-        "odd": "CTCACTCCCAATCTCTATAA"
+        "odd": "CTCACTCCCAATCTCTATAA",
         "even": "AACTACCCTACAAATCCAAT"
     },
 }

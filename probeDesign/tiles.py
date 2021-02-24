@@ -2,6 +2,7 @@ from . import utils
 from . import thermo
 from . import sequencelib
 import primer3
+from . import HCR
 
 
 class TileError(Exception):
@@ -17,11 +18,12 @@ class Tile:
 		self.start = startPos
 		self.end = startPos + len(self.sequence)
 		self.seqName = seqName
-		self.name = "%s:%d-%d" % (self.seqName,self.start,self.start+len(self.sequence))
+		self.name = f"{self.seqName}:{self.start}-{self.start+len(self.sequence)}".replace(" ", "_")
 		self.prefix = prefix
 		self.suffix = suffix
 		self.tag = tag
 		self.masked = False
+		self.hitCount = -1 #-1 indicates that genome masking has not yet been performed.
 		#self.RajTM = self.calcRajTm()
 
 
@@ -138,9 +140,18 @@ class Tile:
 		return answer
 
 	def splitProbe(self):
-		self.oddSeq = self.sequence[:int(len(self)/2)]
-		self.evenSeq = self.sequence[int(len(self)/2):]
+		"""
+		Split sequence in half with two bases in the middle removed (flexible gap to help initiator sequence land)
+		ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer dropped
+		"""
+		self.fivePrimeSeq = self.sequence[:int(len(self)/2)-1]
+		self.threePrimeSeq = self.sequence[int(len(self)/2)+1:]
 		return
 
 	def calcdTm(self):
-		self.dTm = abs(primer3.calcTm(self.oddSeq)-primer3.calcTm(self.evenSeq))
+		self.dTm = abs(primer3.calcTm(self.fivePrimeSeq)-primer3.calcTm(self.threePrimeSeq))
+
+	#TODO: PLEASE check this to make sure that I'm adding the initiator sequences in the correct position and order
+	def makeProbes(self,channel):
+		self.P1 = HCR.initiators[channel]["odd"]+self.threePrimeSeq
+		self.P2 = self.fivePrimeSeq + HCR.initiators[channel]["even"]

@@ -5,6 +5,7 @@ from probeDesign import utils
 from probeDesign.utils import pp
 from probeDesign import sequencelib
 from probeDesign import repeatMask
+from probeDesign import genomeMask
 from probeDesign import BLAST
 import getopt,sys,re
 #from Bio.Seq import Seq
@@ -176,14 +177,18 @@ def test():
 	tileSize = 52
 	verbose = True
 	species = 'mouse'
-	genomemask = False
+	genomemask = True
+	num_hits_allowed = 1
+	channel = "B1"
+	dTmFilter = False
 
 	# Read custom args
 
 	# Parse fasta files and loop over records
 	utils.eprint("Reading in Fasta file")
 	#fname = "test/eGFP.fa"
-	fname = "test/mKcnip3.fa"
+	fname = "test/tdTomato.fa"
+	targetName = "tdTomato"
 	handle = open(fname,'r')
 	fastaIter = sequencelib.FastaIterator(handle)
 
@@ -200,8 +205,6 @@ def test():
 	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
 	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=tileSize)
 	utils.eprint(f'{len(tiles)} tiles available of length {tileSize}...')
-
-	#utils.pp(tiles[0])
 
 	# Check for invalid characters
 
@@ -226,22 +229,29 @@ def test():
 
 	# PseudogeneMasking.  BLAST?
 
-	# GenomeMasking?  BLAST instead of bowtie
+	# GenomeMasking?  Using bowtie because BLAST over WWW is unpredictable
 	if genomemask:
-		utils.eprint(f"\nBLASTN on remaining tiles against {species} reference database")
-		blast_string = "\n".join([tile.toFasta() for tile in tiles[:10]])
+		utils.eprint(f"\nChecking unique mapping of remaining tiles against {species} reference genome")
+		blast_string = "\n".join([tile.toFasta() for tile in tiles])
 		# if verbose:
 		# 	utils.eprint("Submitting BLAST request with the following string")
 		# 	utils.eprint(blast_string)
-		blast_res = BLAST.blastProbes(blast_string, species=species)
+		blast_res = genomeMask.genomemask(blast_string, handleName=targetName,species=species)
 		utils.eprint(f'Parsing BLAST output now')
-		BLAST.getNHits(blast_res)
-
-
-
-	# GC filtering
+		hitCounts = genomeMask.countHitsFromSam(f'{targetName}.sam')
+		#print(hitCounts)
+		#Check that keys returned from hitCounts match order of tiles in tiles
+		assert all(map(lambda x, y: x == y, [k for k in hitCounts.keys()], [tile.name for tile in tiles]))
+		utils.eprint(f'Filtering for <= {num_hits_allowed} alignments to {species} genome...')
+		for i in range(len(tiles)):
+			k = list(hitCounts.keys())[i]
+			tile.hitCount = hitCounts[k]
+		tiles = [tile for tile in tiles if tile.hitCount <= num_hits_allowed]
+		utils.eprint(f'{len(tiles)} tiles remain')
 
 	# TM filtering
+
+	# GC filtering
 	utils.eprint(f"\nChecking for {minGC} < GC < {maxGC}")
 	tiles = [tile for tile in tiles if tile.GC() >= minGC]
 	tiles = [tile for tile in tiles if tile.GC() <= maxGC]
@@ -254,14 +264,19 @@ def test():
 	tiles = [tile for tile in tiles if tile.Gibbs <= maxGibbs]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
-	# dTm between halves
-	utils.eprint(f"\nChecking for dTm <= {dTmMax}")
+	# Split tile into probeset
+	utils.eprint(f"\nSplitting tiles into probesets")
 	[tile.splitProbe() for tile in tiles]
 	[tile.calcdTm() for tile in tiles]
-	tiles = [tile for tile in tiles if tile.dTm <=dTmMax]
-	utils.eprint(f'{len(tiles)} tiles remain')
+
+	# dTm between halves
+	if dTmFilter:
+		utils.eprint(f"\nChecking for dTm <= {dTmMax} between probes for each tile")
+		tiles = [tile for tile in tiles if tile.dTm <= dTmMax]
+		utils.eprint(f'{len(tiles)} tiles remain')
 
 	# Break remaining probes into non-overlapping regions
+	#TODO: there must be a better way to do this to minimize overlaps.  Perhaps testing overlaps from bestTiles later on?  Would ensure better quality picks make it to the end.
 	regions = {}
 	regionCount = 0
 
@@ -277,17 +292,21 @@ def test():
 			regionList = [tiles[i]]
 			regionCount = regionCount + 1
 
-	# Select best from region
-	hits = {}
+	# Select best from each region
+	bestTiles = []
 	for k,v in regions.items():
-		hits[k] = v[min(range(len(v)), key=lambda i: abs([x.Gibbs for x in v][i]-targetGibbs))]
+		bestTiles.append(v[min(range(len(v)), key=lambda i: abs([x.Gibbs for x in v][i]-targetGibbs))])
 
-	for k,tile in hits.items():
-		print(f'Non-overlapping region {k}')
-		#for tile in v:
-		print(f"{tile}\tLength:{len(tile)}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 
-	utils.eprint(f'{len(tiles)} tiles total')
+	# Add initator and spacers to split probes
+	utils.eprint(f"\nAdding spacers and initiator sequences to split probes for channel {channel}")
+	[tile.makeProbes(channel) for tile in bestTiles]
+
+	# Print out results
+	for tile in bestTiles:
+		print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
+
+	utils.eprint(f'\nThere are a total of {len(bestTiles)} best probes')
 
 	#TODO: dump output to designated file handles
 
