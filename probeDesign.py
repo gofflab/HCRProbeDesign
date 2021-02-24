@@ -4,7 +4,7 @@ from probeDesign import utils
 #import string
 from probeDesign.utils import pp
 from probeDesign import sequencelib
-from probeDesign import repeatMask
+from probeDesign import repeatmask
 from probeDesign import BLAST
 import getopt,sys,re
 #from Bio.Seq import Seq
@@ -187,12 +187,12 @@ def test():
 	handle = open(fname,'r')
 	fastaIter = sequencelib.FastaIterator(handle)
 
-	mySeq = next(fastaIter)
+	mySeq = next(fastaIter) #TODO: make loopable when migrating to main()
 
 	# RepeatMasking
 	#TODO: Specify DNA source in input params
 	utils.eprint("\nRepeat Masking...")
-	mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource=species)
+	mySeq['sequence'] = repeatmask.repeatmask(mySeq['sequence'],dnasource=species)
 
 	#Convert to lowercase
 	#mySeq['sequence'] = mySeq['sequence'].lower()
@@ -288,6 +288,8 @@ def test():
 		print(f"{tile}\tLength:{len(tile)}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 
 	utils.eprint(f'{len(tiles)} tiles total')
+
+	#TODO: dump output to designated file handles
 
 # def findProbes(infile, outfile, nProbes, species='mouse',
 #                 repeatmask=True,
