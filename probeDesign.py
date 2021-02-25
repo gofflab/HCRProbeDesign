@@ -301,7 +301,7 @@ def main():
 		utils.eprint(f"\nChecking unique mapping of remaining tiles against {args.species} reference genome")
 		blast_string = "\n".join([tile.toFasta() for tile in tiles])
 		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species)
-		utils.eprint(f'Parsing BLAST output now')
+		utils.eprint(f'Parsing bowtie2 output now')
 		hitCounts = genomeMask.countHitsFromSam(f'{args.targetName}.sam')
 		#print(hitCounts)
 		#Check that keys returned from hitCounts match order of tiles in tiles

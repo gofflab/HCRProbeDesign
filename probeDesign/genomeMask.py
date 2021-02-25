@@ -6,9 +6,12 @@ import subprocess
 import tempfile
 import pysam
 from collections import defaultdict
+import os
+
+package_directory = os.path.dirname(os.path.abspath(__file__))
 
 indexLookup = {
-    'mouse': 'indices/mm10/mm10'
+    'mouse': os.path.join(package_directory,'../indices/mm10/mm10')
 }
 
 def genomemask(fasta_string,handleName="tmp",species="mouse"):
@@ -18,6 +21,7 @@ def genomemask(fasta_string,handleName="tmp",species="mouse"):
     tmpFasta.write(fasta_string)
     tmpFasta.close()
     sam_file = f'{handleName}.sam'
+    print(indexLookup[species])
     res = subprocess.call(["bowtie2", "-x", indexLookup[species], "-f", fasta_file, "-S", sam_file])
     return res
 
