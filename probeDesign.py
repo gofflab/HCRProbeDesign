@@ -385,23 +385,16 @@ def main():
 	#TODO: Currently ranking tiles based on min distance to targetGibbs.  Need to make an argument to select targetGC as goal instead.
 	utils.eprint(f'\nSelecting top {args.maxProbes} tiles based on distance to targetGibbs = {args.targetGibbs}')
 	bestTiles = []
-	while len(bestTiles) < args.maxProbes or len(tiles) == 0:
-		try:
-			nextBestIdx = min(range(len(tiles)), key=lambda i: abs([x.Gibbs for x in tiles][i]-args.targetGibbs))
-		except ValueError:
-			break
+	while len(bestTiles) < args.maxProbes and len(tiles) > 0:
+		nextBestIdx = min(range(len(tiles)), key=lambda i: abs([x.Gibbs for x in tiles][i]-args.targetGibbs))
 		#print(f'{nextBestIdx}')
 		if len(bestTiles) == 0:
 			bestTiles.append(tiles.pop(nextBestIdx))
 			continue
-		for tile in bestTiles:
-			try:
-				if tiles[nextBestIdx].overlaps(tile):
-					tiles.pop(nextBestIdx)
-				else:
-					bestTiles.append(tiles.pop(nextBestIdx))
-			except IndexError:
-				break
+		if any([tiles[nextBestIdx].overlaps(x) for x in bestTiles]):
+			tiles.pop(nextBestIdx)
+		else:
+			bestTiles.append(tiles.pop(nextBestIdx))
 
 	utils.eprint(f'Selected {len(bestTiles)} tiles for probe design')
 
