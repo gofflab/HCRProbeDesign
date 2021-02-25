@@ -12,16 +12,13 @@ class TileError(Exception):
 		return repr(self.value)
 
 class Tile:
-	def __init__(self,sequence,seqName,startPos,prefix='',suffix='',tag=''):
+	def __init__(self,sequence,seqName,startPos):
 		self.sequence = str.lower(sequence)
 		self.startPos = startPos
 		self.start = startPos
 		self.end = startPos + len(self.sequence)
 		self.seqName = seqName
 		self.name = f"{self.seqName}:{self.start}-{self.start+len(self.sequence)}".replace(" ", "_")
-		self.prefix = prefix
-		self.suffix = suffix
-		self.tag = tag
 		self.masked = False
 		self.hitCount = -1 #-1 indicates that genome masking has not yet been performed.
 		#self.RajTM = self.calcRajTm()

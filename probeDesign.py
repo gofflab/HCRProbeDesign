@@ -268,7 +268,7 @@ def main():
 	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
 	###############
 	utils.eprint(f"\nBreaking target sequence into revcomp tiles of size {args.tileSize}...")
-	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=args.tileSize)
+	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=args.tileSize) # Here we remove masked sequences and rev comp for tiles.
 	utils.eprint(f'{len(tiles)} tiles available of length {args.tileSize}...')
 
 	##############
