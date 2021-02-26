@@ -152,3 +152,4 @@ class Tile:
 	def makeProbes(self,channel):
 		self.P1 = HCR.initiators[channel]["odd"]+self.threePrimeSeq
 		self.P2 = self.fivePrimeSeq + HCR.initiators[channel]["even"]
+		self.channel = channel

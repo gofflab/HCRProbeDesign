@@ -36,20 +36,18 @@ def scanSequence(sequence,seqName,tileStep=1,tileSize=52):
 ###################
 
 def outputTable(tiles,outHandle=sys.stdout):
-	outputKeys=["name","seqName","startPos","oligoSequence","prefix","suffix","tag","GC"]
-	print >>outHandle, "\t".join(outputKeys)
+	"""
+	Formats tile output and writes to outHandle
+	"""
+	outputKeys=["name","probe","start","length","P1","P2","channel","GC","Tm","dTm","GibbsFE"]
+	outHandle.write("\t".join(outputKeys)+"\n")
 
 	for tile in tiles:
-		vals = []
-		for k in outputKeys:
-			v = getattr(tile,k)
-			if callable(v):
-				v = v()
-			vals.append(str(v))
-		print >>outHandle, "\t".join(vals)
+		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calcTm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}"+"\n")
 
-def usage():
-	utils.eprint('Help Message Goes Here')
+###############
+# Test function with hard-coded variables
+###############
 
 def test():
 	# Set default args
@@ -195,7 +193,11 @@ def test():
 
 	#TODO: dump output to designated file handles
 
+
 def main():
+	"""
+	Main function for HCR Probe design.  Called when used directly from cmdline
+	"""
 	#######################
 	# Variables
 	#######################
@@ -379,7 +381,7 @@ def main():
 	# Select overall best n tiles (regardless of region)
 	################
 	# Instead of above 'region-based' approach, Let's start by choosing the best probes (by min distance to targetGibbs and/or min distance to targetGC).
-	# As we choose subsequent best probes, test for overlap with any existing tiles (tile.overlap(tile2)).  If none, then append next best to bestTiles
+	# As we choose subsequent best probes, test for overlap with any existing tiles (tile.overlaps(tile2)).  If none, then append next best to bestTiles
 	# Do this until you are out of tiles or bestTiles reaches a certain number of tiles.
 
 	#TODO: Currently ranking tiles based on min distance to targetGibbs.  Need to make an argument to select targetGC as goal instead.
@@ -407,8 +409,9 @@ def main():
 	################
 	# Print out results
 	################
-	for tile in bestTiles:
-		print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
+	#for tile in bestTiles:
+	#	print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
+	outputTable(bestTiles,outHandle=args.output)
 
 if __name__ == "__main__":
     main()
