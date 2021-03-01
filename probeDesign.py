@@ -68,12 +68,17 @@ def outputTable(tiles,outHandle=sys.stdout):
 #
 #     return [inseq, compseq, probeseq]
 
-def calcOligoCost(bestTiles,pricePerBase=0.12):
+def calcOligoCost(tiles,pricePerBase=0.12):
 	total = 0.0
-	for tile in bestTiles:
+	for tile in tiles:
 		probeSize = len(tile.P1) + len(tile.P2)
 		total += probeSize*pricePerBase
 	return total
+
+def outputRunParams(args):
+	utils.eprint(f"\nParameters:")
+	utils.eprint(print(args))
+
 
 ###############
 # Test function with hard-coded variables
@@ -264,17 +269,17 @@ def main():
 	parser.add_argument("--maxGC", help="Max allowable GC", default=55.0,type=float)
 	parser.add_argument("--targetGC", help="Target GC", default=50.0,type=float)
 	parser.add_argument("--dTmMax", help="Max allowable difference in Tm between probes in set", default=5.0,type=float)
-	parser.add_argument("--dTmFilter", help="Enable filtering based on dTm between probeset halves.", default="False", action="store_true")
-	parser.add_argument("-g", "--no-genomemask", help="Disables bowtie2 checking for multiple hits to genome", default="True", action="store_false")
-	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default="True", action="store_false")
+	parser.add_argument("--dTmFilter", help="Enable filtering based on dTm between probeset halves.", default=False, action="store_true")
+	parser.add_argument("-g", "--no-genomemask", help="Disables bowtie2 checking for multiple hits to genome", default=True, action="store_false")
+	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=True, action="store_false")
 	parser.add_argument("--minGibbs", help="Min allowable GibbsFE", default=-70.0,type=float)
 	parser.add_argument("--maxGibbs", help="Max allowable GibbsFE", default=-50.0,type=float)
 	parser.add_argument("--targetGibbs", help="Target GibbsFE", default=-60.0,type=float)
 	parser.add_argument("--maxRunLength", help="Max allowable homopolymer run size", default=7,type=int)
-	parser.add_argument("-n","--maxProbes", help="Max number of probes to return", default=10,type=int)
+	parser.add_argument("-n","--maxProbes", help="Max number of probes to return", default=20,type=int)
 	parser.add_argument("--maxRunMismatches", help="Max allowable homopolymer run mismatches", default=2,type=int)
 	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
-	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default="False", action="store_true")
+	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
 
 	args = parser.parse_args()
 
@@ -377,7 +382,7 @@ def main():
 	###############
 	# dTm between halves
 	###############
-	if not args.dTmFilter:
+	if args.dTmFilter:
 		utils.eprint(f"\nChecking for dTm <= {args.dTmMax} between probes for each tile")
 		tiles = [tile for tile in tiles if tile.dTm <= args.dTmMax]
 		utils.eprint(f'{len(tiles)} tiles remain')
@@ -443,6 +448,11 @@ def main():
 	#for tile in bestTiles:
 	#	print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 	outputTable(bestTiles,outHandle=args.output)
+
+	if args.calcPrice:
+		utils.eprint(f'\nTotal cost to synthesize probe sets ~${calcOligoCost(bestTiles):.2f}')
+
+	outputRunParams(args)
 
 if __name__ == "__main__":
     main()
