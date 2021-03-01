@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from probeDesign.tiles import Tile, TileError
 from probeDesign import utils
 #import copy
@@ -41,9 +42,38 @@ def outputTable(tiles,outHandle=sys.stdout):
 	"""
 	outputKeys=["name","probe","start","length","P1","P2","channel","GC","Tm","dTm","GibbsFE"]
 	outHandle.write("\t".join(outputKeys)+"\n")
-
 	for tile in tiles:
-		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calcTm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}"+"\n")
+		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calcTm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}\n")
+
+#
+# def alignOutput(inseq,tiles):
+#     """Uses tile information to make a nice output w/ probes aligned to inseq
+#
+#     Returns 3 elements in a list:
+#         [0] - the inseq
+#         [1] - the oligos
+#         [2] - probe # information
+#     """
+#     nTiles = len(tiles)
+#     compoligos  = [seq.complement(inseq[j:(j+len(j))]) for j in tiles]
+#     spaceoligos = [' '*(tiles[i]-tiles[i-1]-len(tiles[i])) for i in range(1,nTiles)]
+#     spaceoligos = [' '*tiles[0]] + spaceoligos
+#     probenum    = [ ('Probe # '+str(i+1)).ljust(len(tiles[i])) for i in range(nTiles)]
+#
+#     compseq  = ''.join([spaceoligos[i] + compoligos[i] for i in range(nTiles)])
+#     probeseq = ''.join([spaceoligos[i] + probenum[i] for i in range(nTiles)])
+#
+#     compseq = compseq.ljust(len(inseq))
+#     probeseq = probeseq.ljust(len(inseq))
+#
+#     return [inseq, compseq, probeseq]
+
+def calcOligoCost(bestTiles,pricePerBase=0.12):
+	total = 0.0
+	for tile in bestTiles:
+		probeSize = len(tile.P1) + len(tile.P2)
+		total += probeSize*pricePerBase
+	return total
 
 ###############
 # Test function with hard-coded variables
@@ -241,9 +271,10 @@ def main():
 	parser.add_argument("--maxGibbs", help="Max allowable GibbsFE", default=-50.0,type=float)
 	parser.add_argument("--targetGibbs", help="Target GibbsFE", default=-60.0,type=float)
 	parser.add_argument("--maxRunLength", help="Max allowable homopolymer run size", default=7,type=int)
-	parser.add_argument("-n","--maxProbes", help="Max number of probes to return", default=20,type=int)
+	parser.add_argument("-n","--maxProbes", help="Max number of probes to return", default=10,type=int)
 	parser.add_argument("--maxRunMismatches", help="Max allowable homopolymer run mismatches", default=2,type=int)
 	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
+	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default="False", action="store_true")
 
 	args = parser.parse_args()
 
