@@ -97,9 +97,6 @@ class Tile:
 	def __cmp__(self,other):
 		return cmp((self.seqName, self.startPos, self.name),(other.seqName, other.startPos, other.name))
 
-	def toFasta(self):
-		return ">%s\n%s" % (self.name,self.sequence)
-
 	# def tileFasta(self):
 	# 	"""Only write tile sequence to fasta"""
 	# 	return ">%s\n%s" % (self.name,self.sequence)
