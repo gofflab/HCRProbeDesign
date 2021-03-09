@@ -347,7 +347,8 @@ def main():
 		utils.eprint(f'Filtering for <= {args.num_hits_allowed} alignments to {args.species} genome...')
 		for i in range(len(tiles)):
 			k = list(hitCounts.keys())[i]
-			tile.hitCount = hitCounts[k]
+			tiles[i].hitCount = hitCounts[k]
+			#utils.eprint(f'{tiles[i].hitCount}')
 		tiles = [tile for tile in tiles if tile.hitCount <= args.num_hits_allowed]
 		utils.eprint(f'{len(tiles)} tiles remain')
 

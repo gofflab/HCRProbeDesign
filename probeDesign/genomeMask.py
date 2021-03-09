@@ -14,7 +14,7 @@ indexLookup = {
     'mouse': os.path.join(package_directory,'../indices/mm10/mm10')
 }
 
-def genomemask(fasta_string,handleName="tmp",species="mouse"):
+def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3):
     fasta_file = f'{handleName}_reads.fa'
     tmpFasta = open(fasta_file,mode="w")
     #print(tmpFasta.name)
@@ -22,14 +22,14 @@ def genomemask(fasta_string,handleName="tmp",species="mouse"):
     tmpFasta.close()
     sam_file = f'{handleName}.sam'
     print(indexLookup[species])
-    res = subprocess.call(["bowtie2", "-x", indexLookup[species], "-f", fasta_file, "-S", sam_file])
+    res = subprocess.call(["bowtie2", f"-k{nAlignments}", "-x", indexLookup[species], "-f", fasta_file, "-S", sam_file])
     return res
 
 def countHitsFromSam(samFile):
     hitCounts = defaultdict(int)
     sam = pysam.AlignmentFile(samFile,"r")
     for read in sam.fetch():
-        #print(read)
+        #print(read.get_tag(tag="TM:i")) # This doesn't work because pysam doesn't read the XS:i: tag
         if read.is_unmapped:
             hitCounts[read.query_name] += 0
         else:
