@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: HCRProbeDesign
+Version: 0.1.2
+Summary: Probe Design tool for Hybridization Chain Reaction
+Home-page: https://github.com/gofflab/HCRProbeDesign
+Author: Loyal A. Goff
+Author-email: author@example.com
+License: MIT
+Project-URL: Bug Tracker, https://github.com/gofflab/HCRProbeDesign/issues
+Description: # Requirements
+        + bowtie2 installation
+        + Download or create .bt2 reference indexes and install in indices/
+        + conda
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

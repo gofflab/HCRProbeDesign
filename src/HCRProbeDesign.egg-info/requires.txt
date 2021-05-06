@@ -1,0 +1,4 @@
+primer3-py
+biopython
+beautifulsoup4
+pysam

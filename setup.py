@@ -1,3 +1,4 @@
+import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -11,17 +12,23 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/gofflab/HCRProbeDesign",
     packages=setuptools.find_packages(),
     install_requires=[
         'primer3-py',
         'biopython',
         'beautifulsoup4',
-    ]
+        'pysam',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    entry_points={
+    'console_scripts': [
+        'designProbes=probeDesign.probeDesign:main',
+    ],
+},
 )

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-from probeDesign.tiles import Tile, TileError
-from probeDesign import utils
+from .tiles import Tile, TileError
+from . import utils
 #import copy
 #import string
-from probeDesign.utils import pp
-from probeDesign import sequencelib
-from probeDesign import repeatMask
-from probeDesign import genomeMask
-from probeDesign import HCR
+from .utils import pp
+from . import sequencelib
+from . import repeatMask
+from . import genomeMask
+from . import HCR
 #from probeDesign import BLAST
 import sys,re
 #from Bio.Seq import Seq
