@@ -17,11 +17,12 @@
   git clone https://github.com/gofflab/HCRProbeDesign.git
   ```
   ## bowtie2 Installation
-  To determine whether designed probesets target unique sequences within a given species, we use [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) to quickly map all designed probesets against a reference genome index (mouse mm10 by default). Please ensure that bowtie2 is installed on your system to use this feature.  We recommend using conda to create a specific virtual environment and provide an `environment.yml` file to install bowtie2 and all other required dependencies for the probe design software
-    ```
-    conda env create -f environment.yml
-    conda activate HCRProbeDesign
-    ```
+  To determine whether designed probesets target unique sequences within a given species, we use [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) to quickly map all designed probesets against a reference genome index (mouse mm10 by default). Please ensure that bowtie2 is installed on your system to use this feature.  We recommend using conda to create a specific virtual environment and provide an `environment.yml` file to install bowtie2 and all other required dependencies for the probe design software.
+
+  ```
+  conda env create -f environment.yml
+  conda activate HCRProbeDesign
+  ```
 
   ## pip install
   ```
@@ -39,3 +40,5 @@
   ```
 
 # Command Line
+
+`HCRProbeDesign` package provides the commandline executable `designProbes` as the primary
