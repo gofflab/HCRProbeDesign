@@ -4,3 +4,5 @@ __pycache__
 indices/*
 *.sam
 tmp.fa
+*.zip
+*.bt2
