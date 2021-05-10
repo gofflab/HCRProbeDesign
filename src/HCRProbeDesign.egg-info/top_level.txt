@@ -1,1 +1,1 @@
-probeDesign
+HCRProbeDesign

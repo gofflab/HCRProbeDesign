@@ -271,6 +271,7 @@ def main():
 	parser.add_argument("--dTmMax", help="Max allowable difference in Tm between probes in set", default=5.0,type=float)
 	parser.add_argument("--dTmFilter", help="Enable filtering based on dTm between probeset halves.", default=False, action="store_true")
 	parser.add_argument("-g", "--no-genomemask", help="Disables bowtie2 checking for multiple hits to genome", default=True, action="store_false")
+	parser.add_argument("-i","--index", help="Location of bowtie2 index file for genomemask analysis")
 	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=True, action="store_false")
 	parser.add_argument("--minGibbs", help="Min allowable GibbsFE", default=-70.0,type=float)
 	parser.add_argument("--maxGibbs", help="Max allowable GibbsFE", default=-50.0,type=float)
@@ -338,7 +339,7 @@ def main():
 	if args.no_genomemask:
 		utils.eprint(f"\nChecking unique mapping of remaining tiles against {args.species} reference genome")
 		blast_string = "\n".join([tile.toFasta() for tile in tiles])
-		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species)
+		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species,index=None)
 		utils.eprint(f'Parsing bowtie2 output now')
 		hitCounts = genomeMask.countHitsFromSam(f'{args.targetName}.sam')
 		#print(hitCounts)

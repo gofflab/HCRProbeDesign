@@ -1,3 +1,4 @@
 [console_scripts]
-designProbes = probeDesign.probeDesign:main
+designProbes = HCRProbeDesign.probeDesign:main
+fetchIndex = HCRProbeDesign.genomeMask:install_index
 

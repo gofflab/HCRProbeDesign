@@ -7,14 +7,19 @@ import tempfile
 import pysam
 from collections import defaultdict
 import os
+import urllib.request
+import shutil
+import pkg_resources
+from zipfile import ZipFile
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
-
+indices_directory = f'{package_directory}/indices/'
 indexLookup = {
-    'mouse': os.path.join(package_directory,'../indices/mm10/mm10')
+    'mouse': os.path.join(indices_directory,'mm10/mm10')
 }
 
-def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3):
+#TODO: make genomemask() take transient index argment if not default in species
+def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3, index=None):
     fasta_file = f'{handleName}_reads.fa'
     tmpFasta = open(fasta_file,mode="w")
     #print(tmpFasta.name)
@@ -42,3 +47,19 @@ def test():
     proc_info = genomemask(fasta_string,handleName=handleName,species="mouse")
     res = countHitsFromSam(f'{handleName}.sam')
     print(res)
+
+def install_index(url='https://genome-idx.s3.amazonaws.com/bt/mm10.zip',genome="mm10"):
+    print(f'Downloading Bowtie2 index from {url} ...')
+    #folder = pkg_resources.resource_filename('HCRProbeDesign','indices/')
+    index_folder = indices_directory
+    fname = f'{index_folder}{genome}.zip'
+    print(fname)
+    if not os.path.exists(fname):
+        urllib.request.urlretrieve(url, fname)
+    with ZipFile(fname, 'r') as zip:
+        # printing all the contents of the zip file
+        #zip.printdir()
+        # extracting all the files
+        print(f'Extracting index from {fname} to {index_folder}{genome}...')
+        zip.extractall(f'{index_folder}{genome}')
+    print('Done!')
