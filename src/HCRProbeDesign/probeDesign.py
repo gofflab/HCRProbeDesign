@@ -308,7 +308,7 @@ def main():
 	parser.add_argument("--idt", help="Output tsv format optimized for IDT ordering", default=False, action="store_true")
 	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.19 per base", default=False, action="store_true")
 	args = parser.parse_args()
-	
+
 	#########
 	# Parse fasta file. Currently not looping over records, only uses first fasta record
 	#########
@@ -475,7 +475,7 @@ def main():
 	#for tile in bestTiles:
 	#	print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 	if args.idt:
-		outputIDT(bestTiles,outHanle=args.output)
+		outputIDT(bestTiles,outHandle=args.output)
 	else:
 		outputTable(bestTiles,outHandle=args.output)
 
