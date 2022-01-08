@@ -11,6 +11,7 @@ import urllib.request
 import shutil
 import pkg_resources
 from zipfile import ZipFile
+import argparse
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 indices_directory = f'{package_directory}/indices/'
@@ -49,6 +50,12 @@ def test():
     print(res)
 
 def install_index(url='https://genome-idx.s3.amazonaws.com/bt/mm10.zip',genome="mm10"):
+    # Parse arguments if any
+    #Argument handling
+	parser = argparse.ArgumentParser(description="Bowtie2 index retrieval and installation",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    args = parser.parse_args()
+
     print(f'Downloading Bowtie2 index from {url} ...')
     #folder = pkg_resources.resource_filename('HCRProbeDesign','indices/')
     index_folder = indices_directory

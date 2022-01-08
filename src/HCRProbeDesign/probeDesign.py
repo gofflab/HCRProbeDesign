@@ -14,6 +14,7 @@ import sys,re
 import primer3
 from string import ascii_uppercase
 import argparse
+from itertools import product
 
 #######################
 # Scan input sequence #
@@ -45,6 +46,30 @@ def outputTable(tiles,outHandle=sys.stdout):
 	for tile in tiles:
 		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calcTm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}\n")
 
+def outputIDT(tiles,outHandle=sys.stdout):
+	"""
+	Formats tile output for direct ordering using IDT template
+	"""
+	#96-well addressing
+	rows = list(ascii_uppercase[0:8])
+	columns = [x+1 for x in range(12)]
+	outputKeys = ["name","start","length","P1","P2","channel"]
+	#Header for IDT plate template
+	outHandle.write("\t").join(["Name","Sequence"])+"\n")
+	#One row per oligo (P1='odd', p2='even')
+	odd = []
+	even = []
+	for tile in tiles:
+		odd.append((f"{tile.name}:{tile.channel}:odd",tile.P1))
+		even.append((f"{tile.name}:{tile.channel}:even",tile.P2))
+	
+	for oligo in odd:
+		outHandle.write(f"{oligo[0]}\t{oligo[1]}\n")
+	
+	for oligo in even:
+		outHandle.write(f"{oligo[0]}\t{oligo[1]}\n")
+		
+		
 #
 # def alignOutput(inseq,tiles):
 #     """Uses tile information to make a nice output w/ probes aligned to inseq
@@ -68,7 +93,7 @@ def outputTable(tiles,outHandle=sys.stdout):
 #
 #     return [inseq, compseq, probeseq]
 
-def calcOligoCost(tiles,pricePerBase=0.12):
+def calcOligoCost(tiles,pricePerBase=0.19):
 	total = 0.0
 	for tile in tiles:
 		probeSize = len(tile.P1) + len(tile.P2)
@@ -280,7 +305,8 @@ def main():
 	parser.add_argument("-n","--maxProbes", help="Max number of probes to return", default=20,type=int)
 	parser.add_argument("--maxRunMismatches", help="Max allowable homopolymer run mismatches", default=2,type=int)
 	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
-	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
+	parser.add_argument("--idt", help="Output tsv format optimized for IDT ordering", default=False, action="store_true")
+	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.19 per base", default=False, action="store_true")
 
 	args = parser.parse_args()
 
@@ -449,7 +475,10 @@ def main():
 	################
 	#for tile in bestTiles:
 	#	print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
-	outputTable(bestTiles,outHandle=args.output)
+	if args.idt:
+		outputIDT(bestTiles,outHanle=args.output)
+	else:
+		outputTable(bestTiles,outHandle=args.output)
 
 	if args.calcPrice:
 		utils.eprint(f'\nTotal cost to synthesize probe sets ~${calcOligoCost(bestTiles):.2f}')

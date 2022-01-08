@@ -221,7 +221,7 @@ def Tm(sequence):
     temp = 30.0
     salt = 0.33
 
-    # SantaLucia 98 parameters
+    # SantaLucia 98 parameters (PMID: 9465037)
     delH = {'aa':-7.9, 'ac':-8.4, 'ag':-7.8, 'at':-7.2,
             'ca':-8.5, 'cc':-8.0, 'cg':-10.6,'ct':-7.8,
             'ga':-8.2, 'gc':-9.8, 'gg':-8.0, 'gt':-8.4,
@@ -237,6 +237,7 @@ def Tm(sequence):
     dH = sum([delH[sequence[i:i+2]] for i in range(len(sequence)-1)])
     dS = sum([delS[sequence[i:i+2]] for i in range(len(sequence)-1)])
 
+    # Add initiation effect if terminal g or c on 5' end
     if (sequence[0] == 'c') or (sequence[0] == 'g'):
         dH += 0.1
         dS += -2.8
@@ -244,6 +245,7 @@ def Tm(sequence):
         dH += 2.3
         dS += 4.1
 
+    # Add initiation effect if terminal g or c on 3' end
     if (sequence[-1] == 'c') or (sequence[-1] == 'g'):
         dH += 0.1
         dS += -2.8
