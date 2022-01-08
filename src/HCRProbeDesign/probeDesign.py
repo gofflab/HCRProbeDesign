@@ -307,7 +307,6 @@ def main():
 	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
 	parser.add_argument("--idt", help="Output tsv format optimized for IDT ordering", default=False, action="store_true")
 	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.19 per base", default=False, action="store_true")
-
 	args = parser.parse_args()
 
 	#########
