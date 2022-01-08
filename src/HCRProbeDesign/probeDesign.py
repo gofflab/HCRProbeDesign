@@ -55,7 +55,7 @@ def outputIDT(tiles,outHandle=sys.stdout):
 	columns = [x+1 for x in range(12)]
 	outputKeys = ["name","start","length","P1","P2","channel"]
 	#Header for IDT plate template
-	outHandle.write("\t").join(["Name","Sequence"])+"\n")
+	outHandle.write("\t".join(["Name","Sequence"])+"\n")
 	#One row per oligo (P1='odd', p2='even')
 	odd = []
 	even = []
