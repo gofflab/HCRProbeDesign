@@ -353,9 +353,9 @@ def main():
 	# Calculate Hairpins
 	##############
 	utils.eprint("\nChecking for hairpins")
-	for tile in tiles:
-		thermRes = primer3.calcHairpin(tile.sequence)
-	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).structure_found]
+	#for tile in tiles:
+	#	thermRes = primer3.calcHairpin(tile.sequence)
+	tiles = [tile for tile in tiles if not primer3.calcHairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	##############
