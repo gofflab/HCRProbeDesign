@@ -353,9 +353,9 @@ def main():
 	# Calculate Hairpins
 	##############
 	utils.eprint("\nChecking for hairpins")
-	#for tile in tiles:
-	#	thermRes = primer3.calcHairpin(tile.sequence)
-	tiles = [tile for tile in tiles if not primer3.calcHairpin(tile.sequence).structure_found]
+	#TODO: add this as a user-selectable parameter. Currently awkward as we don't have a min Tm filter.
+	max_Th = 45.0 # This is the maximum tolerated calculated melting temperature of any predicted hairpins 
+	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).tm < max_Th or not primer3.calcHairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	##############
