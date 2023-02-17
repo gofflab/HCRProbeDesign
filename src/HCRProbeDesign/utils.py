@@ -1,10 +1,12 @@
-import string
+import math
 import operator
 import random
-import math
-from Bio import Restriction
+import string
 import sys
 import types
+
+from Bio import Restriction
+
 
 ##############
 #FastaIterator
@@ -38,7 +40,8 @@ def FastaIterator(handle):
         newSeq = {'name':name,'sequence':"".join(lines)}
         yield newSeq
 
-        if not line : return #StopIteration
+        if not line:
+            return #StopIteration
     assert False, "Should not reach this line"
 
 
@@ -304,5 +307,7 @@ def warnRestrictionSites(sequence,name,sites):
 	if totalSites > 0:
 		print >>sys.stderr, "Warning: The following positions in '%s' will be masked from tiles due to incompatible restictions sites:" % (name)
 		pp(res)
+	else:
+		pass
 	else:
 		pass

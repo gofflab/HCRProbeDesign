@@ -1,6 +1,10 @@
 #/usr/bin/env python
-import operator,random,math
+import math
+import operator
+import random
+
 from . import prob
+
 
 ######
 #Parsers
@@ -186,6 +190,10 @@ def get_seeds(iter,seeds={}):
         counter+=1
         if counter%10000==0:
             print(f"{counter}")
+        i.CSToDNA()
+        seed = i.sequence[1:8]
+        seeds[seed] = 1 + seeds.get(seed,0)
+    return seeds
         i.CSToDNA()
         seed = i.sequence[1:8]
         seeds[seed] = 1 + seeds.get(seed,0)

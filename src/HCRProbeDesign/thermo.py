@@ -1,29 +1,53 @@
-'''
+"""
 @authors:
     Marshall J. Levesque
     Arjun Raj
     Daniel Wei
-'''
-
-import string
+"""
+import array
 import math
 import re
-import array
+import string
+from collections import Counter
+from dataclasses import dataclass
 
-def containsAny(astring, aset):
+import numpy as np
+
+ENCODER = {
+    "aa": 0,
+    "ac": 1,
+    "ag": 2,
+    "at": 3,
+    "ca": 4,
+    "cc": 5,
+    "cg": 6,
+    "ct": 7,
+    "ga": 8,
+    "gc": 9,
+    "gg": 10,
+    "gt": 11,
+    "ta": 12,
+    "tc": 13,
+    "tg": 14,
+    "tt": 15,
+}
+
+
+def containsAny(astring: str, aset: set[str]) -> bool:
     # Check whether 'str' contains ANY of the chars in 'set'
     # http://code.activestate.com/recipes/65441-checking-whether-a-string-contains-a-set-of-chars/
-    return 1 in [c in astring for c in aset]
+    return bool(aset & set(astring))
 
-def gibbs(dH,dS,temp=37):
-    """ Calc Gibbs Free Energy in cal/mol from enthaply, entropy, and temperature
+
+def gibbs(dH, dS, temp=37):
+    """Calc Gibbs Free Energy in cal/mol from enthaply, entropy, and temperature
 
     Arguments:
     dH -- enthalpy in kcal/mol
     dS -- entropy in cal/(mol * Kelvin)
     temp -- temperature in celcius (default 37 degrees C)
     """
-    return dH*1000 - (temp+273.15)*dS  # cal/mol
+    return dH * 1000 - (temp + 273.15) * dS  # cal/mol
 
 
 def init_rna_dna():
@@ -31,8 +55,31 @@ def init_rna_dna():
     duplex initiation. Values from Sugimoto et al 1995
     """
     initH = 1.9  # kcal/mol
-    initS = -3.9 # cal/(mol * Kelvin)
+    initS = -3.9  # cal/(mol * Kelvin)
     return [initH, initS]
+
+
+class RNADNA:
+    STACKS_RNA_DNA = np.array(
+        [
+            -7.8,
+            -5.9,
+            -9.1,
+            -8.3,
+            -9.0,
+            -9.3,
+            -16.3,
+            -7.0,
+            -5.5,
+            -8.0,
+            -12.8,
+            -7.8,
+            -7.8,
+            -8.6,
+            -10.4,
+            -11.5,
+        ]
+    )
 
 
 def stacks_rna_dna(inseq):
@@ -49,21 +96,51 @@ def stacks_rna_dna(inseq):
     """
 
     # uracil->thymidine
-    delH = {'aa':-7.8, 'ac':-5.9, 'ag':-9.1, 'at':-8.3,
-            'ca':-9.0, 'cc':-9.3, 'cg':-16.3,'ct':-7.0,
-            'ga':-5.5, 'gc':-8.0, 'gg':-12.8,'gt':-7.8,
-            'ta':-7.8, 'tc':-8.6, 'tg':-10.4,'tt':-11.5}  # kcal/mol
+    ΔH = {
+        "aa": -7.8,
+        "ac": -5.9,
+        "ag": -9.1,
+        "at": -8.3,
+        "ca": -9.0,
+        "cc": -9.3,
+        "cg": -16.3,
+        "ct": -7.0,
+        "ga": -5.5,
+        "gc": -8.0,
+        "gg": -12.8,
+        "gt": -7.8,
+        "ta": -7.8,
+        "tc": -8.6,
+        "tg": -10.4,
+        "tt": -11.5,
+    }  # kcal/mol
 
-    delS = {'aa':-21.9, 'ac':-12.3, 'ag':-23.5, 'at':-23.9,
-            'ca':-26.1, 'cc':-23.2, 'cg':-47.1, 'ct':-19.7,
-            'ga':-13.5, 'gc':-17.1, 'gg':-31.9, 'gt':-21.6,
-            'ta':-23.2, 'tc':-22.9, 'tg':-28.4, 'tt':-36.4}  # cal/(mol*Kelvin)
+    ΔS = {
+        "aa": -21.9,
+        "ac": -12.3,
+        "ag": -23.5,
+        "at": -23.9,
+        "ca": -26.1,
+        "cc": -23.2,
+        "cg": -47.1,
+        "ct": -19.7,
+        "ga": -13.5,
+        "gc": -17.1,
+        "gg": -31.9,
+        "gt": -21.6,
+        "ta": -23.2,
+        "tc": -22.9,
+        "tg": -28.4,
+        "tt": -36.4,
+    }  # cal/(mol*Kelvin)
 
     # sum enthalpy and entropy of RNA-DNA base stacks
-    dH = sum([delH[inseq[i:i+2]] for i in range(len(inseq)-1)]) # kcal/mol
-    dS = sum([delS[inseq[i:i+2]] for i in range(len(inseq)-1)]) # cal/(mol*Kelvin)
+    count = Counter(inseq[i : i + 2] for i in range(len(inseq) - 1))
+    dH = sum([ΔH[k] * v for k, v in count.items()])  # kcal/mol
+    dS = sum([ΔS[k] * v for k, v in count.items()])  # cal/(mol*Kelvin)
 
     return [dH, dS]
+
 
 def init_dna_dna(inseq):
     """Return [enthalpy, entropy] list with units kcal/mol and cal/(mol*Kelvin)
@@ -73,14 +150,14 @@ def init_dna_dna(inseq):
     initH = 0  # kcal/mol
     initS = 0  # cal/(mol*Kelvin)
 
-    if (inseq[0] == 'c') or (inseq[0] == 'g'):
+    if (inseq[0] == "c") or (inseq[0] == "g"):
         initH += 0.1
         initS += -2.8
     else:
         initH += 2.3
         initS += 4.1
 
-    if (inseq[-1] == 'c') or (inseq[-1] == 'g'):
+    if (inseq[-1] == "c") or (inseq[-1] == "g"):
         initH += 0.1
         initS += -2.8
     else:
@@ -101,24 +178,54 @@ def stacks_dna_dna(inseq, temp=37):
     Return [enthalpy, entropy] list in kcal/mol and cal/(mol*Kelvin)
     """
     # SantaLucia 98 parameters for DNA Hybridization (Table 2)
-    delH = {'aa':-7.9, 'ac':-8.4, 'ag':-7.8, 'at':-7.2,
-            'ca':-8.5, 'cc':-8.0, 'cg':-10.6,'ct':-7.8,
-            'ga':-8.2, 'gc':-9.8, 'gg':-8.0, 'gt':-8.4,
-            'ta':-7.2, 'tc':-8.2, 'tg':-8.5, 'tt':-7.9}  # kcal/mol
+    delH = {
+        "aa": -7.9,
+        "ac": -8.4,
+        "ag": -7.8,
+        "at": -7.2,
+        "ca": -8.5,
+        "cc": -8.0,
+        "cg": -10.6,
+        "ct": -7.8,
+        "ga": -8.2,
+        "gc": -9.8,
+        "gg": -8.0,
+        "gt": -8.4,
+        "ta": -7.2,
+        "tc": -8.2,
+        "tg": -8.5,
+        "tt": -7.9,
+    }  # kcal/mol
 
-    delS = {'aa':-22.2, 'ac':-22.4, 'ag':-21.0, 'at':-20.4,
-            'ca':-22.7, 'cc':-19.9, 'cg':-27.2, 'ct':-21.0,
-            'ga':-22.2, 'gc':-24.4, 'gg':-19.9, 'gt':-22.4,
-            'ta':-21.3, 'tc':-22.2, 'tg':-22.7, 'tt':-22.2}  # cal/(mol*Kelvin)
+    delS = {
+        "aa": -22.2,
+        "ac": -22.4,
+        "ag": -21.0,
+        "at": -20.4,
+        "ca": -22.7,
+        "cc": -19.9,
+        "cg": -27.2,
+        "ct": -21.0,
+        "ga": -22.2,
+        "gc": -24.4,
+        "gg": -19.9,
+        "gt": -22.4,
+        "ta": -21.3,
+        "tc": -22.2,
+        "tg": -22.7,
+        "tt": -22.2,
+    }  # cal/(mol*Kelvin)
 
     # sum enthalpy and entropy of DNA-DNA base stacks
-    dH = sum([delH[inseq[i:i+2]] for i in range(len(inseq)-1)]) # kcal/mol
-    dS = sum([delS[inseq[i:i+2]] for i in range(len(inseq)-1)]) # cal/(mol*Kelvin)
+    dH = sum([delH[inseq[i : i + 2]] for i in range(len(inseq) - 1)])  # kcal/mol
+    dS = sum(
+        [delS[inseq[i : i + 2]] for i in range(len(inseq) - 1)]
+    )  # cal/(mol*Kelvin)
 
     return [dH, dS]
 
 
-def salt_adjust(delG,nbases,saltconc):
+def salt_adjust(delG, nbases, saltconc):
     """Adjust Gibbs Free Energy from 1M Na+ for another concentration
 
     Arguments:
@@ -128,10 +235,10 @@ def salt_adjust(delG,nbases,saltconc):
 
     Equation 7 SantaLucia 1998
     """
-    return delG - 0.114*nbases*math.log(saltconc)
+    return delG - 0.114 * nbases * math.log(saltconc)
 
 
-def overhang_rna(inseq,end):
+def overhang_rna(inseq, end):
     """Return Gibbs free energy at 37degC (in kcal/mol) contribution from single
     base overhang in RNA/RNA duplex.
 
@@ -142,21 +249,51 @@ def overhang_rna(inseq,end):
     Table 3 in Freier et al, Biochemistry, 1986
     """
     # Free energy in kcal/mol for RNA/RNA 1M NaCl, 37 degrees celcius
-    if (end == 5):
-        dGoh = {'aa':-0.3, 'ac':-0.5, 'ag':-0.2, 'at':-0.3,
-                'ca':-0.3, 'cc':-0.2, 'cg':-0.3, 'ct':-0.2,
-                'ga':-0.4, 'gc':-0.2, 'gg':-0.0, 'gt':-0.2,
-                'ta':-0.2, 'tc':-0.1, 'tg':-0.0, 'tt':-0.2}
-    elif (end == 3):
-        dGoh = {'aa':-0.8, 'ac':-0.5, 'ag':-0.8, 'at':-0.6,
-                'ca':-1.7, 'cc':-0.8, 'cg':-1.7, 'ct':-1.2,
-                'ga':-1.1, 'gc':-0.4, 'gg':-1.3, 'gt':-0.6,
-                'ta':-0.7, 'tc':-0.1, 'tg':-0.7, 'tt':-0.1}
+    if end == 5:
+        dGoh = {
+            "aa": -0.3,
+            "ac": -0.5,
+            "ag": -0.2,
+            "at": -0.3,
+            "ca": -0.3,
+            "cc": -0.2,
+            "cg": -0.3,
+            "ct": -0.2,
+            "ga": -0.4,
+            "gc": -0.2,
+            "gg": -0.0,
+            "gt": -0.2,
+            "ta": -0.2,
+            "tc": -0.1,
+            "tg": -0.0,
+            "tt": -0.2,
+        }
+    elif end == 3:
+        dGoh = {
+            "aa": -0.8,
+            "ac": -0.5,
+            "ag": -0.8,
+            "at": -0.6,
+            "ca": -1.7,
+            "cc": -0.8,
+            "cg": -1.7,
+            "ct": -1.2,
+            "ga": -1.1,
+            "gc": -0.4,
+            "gg": -1.3,
+            "gt": -0.6,
+            "ta": -0.7,
+            "tc": -0.1,
+            "tg": -0.7,
+            "tt": -0.1,
+        }
+    else:
+        raise ValueError(f"Invalid end value: {end}")
 
     return dGoh[inseq]
 
 
-def overhang_dna(inseq,end):
+def overhang_dna(inseq, end):
     """Return Gibbs free energy at 37degC (in kcal/mol) contribution from single
     base overhang in DNA/DNA duplex.
 
@@ -168,52 +305,110 @@ def overhang_dna(inseq,end):
     """
 
     # Free energy in kcal/mol for DNA/DNA 1M NaCl, 37 degrees celcius
-    if (end == 5):
-        dGoh = {'aa':-0.51, 'ac':-0.96, 'ag':-0.58, 'at':-0.50,
-                'ca':-0.42, 'cc':-0.52, 'cg':-0.34, 'ct':-0.02,
-                'ga':-0.62, 'gc':-0.72, 'gg':-0.56, 'gt':-0.48,
-                'ta':-0.71, 'tc':-0.58, 'tg':-0.61, 'tt':-0.10}
-    elif (end == 3):
-        dGoh = {'aa':-0.12, 'ac':+0.28, 'ag':-0.01, 'at':+0.13,
-                'ca':-0.82, 'cc':-0.31, 'cg':-0.01, 'ct':-0.52,
-                'ga':-0.92, 'gc':-0.23, 'gg':-0.44, 'gt':-0.35,
-                'ta':-0.48, 'tc':-0.19, 'tg':-0.50, 'tt':-0.29}
+    if end == 5:
+        dGoh = {
+            "aa": -0.51,
+            "ac": -0.96,
+            "ag": -0.58,
+            "at": -0.50,
+            "ca": -0.42,
+            "cc": -0.52,
+            "cg": -0.34,
+            "ct": -0.02,
+            "ga": -0.62,
+            "gc": -0.72,
+            "gg": -0.56,
+            "gt": -0.48,
+            "ta": -0.71,
+            "tc": -0.58,
+            "tg": -0.61,
+            "tt": -0.10,
+        }
+    elif end == 3:
+        dGoh = {
+            "aa": -0.12,
+            "ac": +0.28,
+            "ag": -0.01,
+            "at": +0.13,
+            "ca": -0.82,
+            "cc": -0.31,
+            "cg": -0.01,
+            "ct": -0.52,
+            "ga": -0.92,
+            "gc": -0.23,
+            "gg": -0.44,
+            "gt": -0.35,
+            "ta": -0.48,
+            "tc": -0.19,
+            "tg": -0.50,
+            "tt": -0.29,
+        }
 
     return dGoh[inseq]
 
+
 def Tm_RNA_DNA(sequence):
     # This gives the Tm of a sequence using RNA-DNA energetics
-    primerConc = 0.00005
-    temp = 30.0
-    salt = 0.33
+    # primerConc = 0.00005
+    # temp = 30.0
+    # salt = 0.33
 
     # SantaLucia 98 parameters
-    delH = {'aa':-7.8, 'ac':-5.9, 'ag':-9.1, 'at':-8.3,
-            'ca':-9.0, 'cc':-9.3, 'cg':-16.3,'ct':-7.0,
-            'ga':-5.5, 'gc':-8.0, 'gg':-12.8,'gt':-7.8,
-            'ta':-7.8, 'tc':-8.6, 'tg':-10.4,'tt':-11.5}
+    delH = {
+        "aa": -7.8,
+        "ac": -5.9,
+        "ag": -9.1,
+        "at": -8.3,
+        "ca": -9.0,
+        "cc": -9.3,
+        "cg": -16.3,
+        "ct": -7.0,
+        "ga": -5.5,
+        "gc": -8.0,
+        "gg": -12.8,
+        "gt": -7.8,
+        "ta": -7.8,
+        "tc": -8.6,
+        "tg": -10.4,
+        "tt": -11.5,
+    }
 
-    delS = {'aa':-21.9, 'ac':-12.3, 'ag':-23.5, 'at':-23.9,
-            'ca':-26.1, 'cc':-23.2, 'cg':-47.1, 'ct':-19.7,
-            'ga':-13.5, 'gc':-17.1, 'gg':-31.9, 'gt':-21.6,
-            'ta':-23.2, 'tc':-22.9, 'tg':-28.4, 'tt':-36.4}
+    delS = {
+        "aa": -21.9,
+        "ac": -12.3,
+        "ag": -23.5,
+        "at": -23.9,
+        "ca": -26.1,
+        "cc": -23.2,
+        "cg": -47.1,
+        "ct": -19.7,
+        "ga": -13.5,
+        "gc": -17.1,
+        "gg": -31.9,
+        "gt": -21.6,
+        "ta": -23.2,
+        "tc": -22.9,
+        "tg": -28.4,
+        "tt": -36.4,
+    }
     dH = 0
     dS = 0
 
-    dH = sum([delH[sequence[i:i+2]] for i in range(len(sequence)-1)])
-    dS = sum([delS[sequence[i:i+2]] for i in range(len(sequence)-1)])
+    dH = sum([delH[sequence[i : i + 2]] for i in range(len(sequence) - 1)])
+    dS = sum([delS[sequence[i : i + 2]] for i in range(len(sequence) - 1)])
 
     dH += 1.9
     dS += -3.9
 
-    dG = dH*1000.0 - (37.0+273.15)*dS
-    dG = dG/1000
+    dG = dH * 1000.0 - (37.0 + 273.15) * dS
+    dG = dG / 1000
 
-    #ans = dH*1000/(dS + (1.9872 * math.log(primerConc/4))) + (16.6 * math.log10(salt)) - 273.15
+    # ans = dH*1000/(dS + (1.9872 * math.log(primerConc/4))) + (16.6 * math.log10(salt)) - 273.15
 
-#    print(delH)
-#    return ans
+    #    print(delH)
+    #    return ans
     return dG
+
 
 def Tm(sequence):
     # This gives the Tm of a sequence
@@ -222,23 +417,51 @@ def Tm(sequence):
     salt = 0.33
 
     # SantaLucia 98 parameters (PMID: 9465037)
-    delH = {'aa':-7.9, 'ac':-8.4, 'ag':-7.8, 'at':-7.2,
-            'ca':-8.5, 'cc':-8.0, 'cg':-10.6,'ct':-7.8,
-            'ga':-8.2, 'gc':-9.8, 'gg':-8.0, 'gt':-8.4,
-            'ta':-7.2, 'tc':-8.2, 'tg':-8.5, 'tt':-7.9}
+    delH = {
+        "aa": -7.9,
+        "ac": -8.4,
+        "ag": -7.8,
+        "at": -7.2,
+        "ca": -8.5,
+        "cc": -8.0,
+        "cg": -10.6,
+        "ct": -7.8,
+        "ga": -8.2,
+        "gc": -9.8,
+        "gg": -8.0,
+        "gt": -8.4,
+        "ta": -7.2,
+        "tc": -8.2,
+        "tg": -8.5,
+        "tt": -7.9,
+    }
 
-    delS = {'aa':-22.2, 'ac':-22.4, 'ag':-21.0, 'at':-20.4,
-            'ca':-22.7, 'cc':-19.9, 'cg':-27.2, 'ct':-21.0,
-            'ga':-22.2, 'gc':-24.4, 'gg':-19.9, 'gt':-22.4,
-            'ta':-21.3, 'tc':-22.2, 'tg':-22.7, 'tt':-22.2}
+    delS = {
+        "aa": -22.2,
+        "ac": -22.4,
+        "ag": -21.0,
+        "at": -20.4,
+        "ca": -22.7,
+        "cc": -19.9,
+        "cg": -27.2,
+        "ct": -21.0,
+        "ga": -22.2,
+        "gc": -24.4,
+        "gg": -19.9,
+        "gt": -22.4,
+        "ta": -21.3,
+        "tc": -22.2,
+        "tg": -22.7,
+        "tt": -22.2,
+    }
     dH = 0
     dS = 0
 
-    dH = sum([delH[sequence[i:i+2]] for i in range(len(sequence)-1)])
-    dS = sum([delS[sequence[i:i+2]] for i in range(len(sequence)-1)])
+    dH = sum([delH[sequence[i : i + 2]] for i in range(len(sequence) - 1)])
+    dS = sum([delS[sequence[i : i + 2]] for i in range(len(sequence) - 1)])
 
     # Add initiation effect if terminal g or c on 5' end
-    if (sequence[0] == 'c') or (sequence[0] == 'g'):
+    if (sequence[0] == "c") or (sequence[0] == "g"):
         dH += 0.1
         dS += -2.8
     else:
@@ -246,22 +469,29 @@ def Tm(sequence):
         dS += 4.1
 
     # Add initiation effect if terminal g or c on 3' end
-    if (sequence[-1] == 'c') or (sequence[-1] == 'g'):
+    if (sequence[-1] == "c") or (sequence[-1] == "g"):
         dH += 0.1
         dS += -2.8
     else:
         dH += 2.3
         dS += 4.1
 
-    ans = dH*1000/(dS + (1.9872 * math.log(primerConc/4))) + (16.6 * math.log10(salt)) - 273.15
+    ans = (
+        dH * 1000 / (dS + (1.9872 * math.log(primerConc / 4)))
+        + (16.6 * math.log10(salt))
+        - 273.15
+    )
 
-#    print(delH)
+    #    print(delH)
     return ans
-    
-def melting_temp(dH,dS,ca,cb,salt):
+
+
+def melting_temp(dH, dS, ca, cb, salt):
     # calculation for total concentration of nucleic acid for non-self-complementary pairs
-    ct = ca - cb/2 # SantaLucia 98
+    ct = ca - cb / 2  # SantaLucia 98
 
     # calculation for melting temperature - SantaLucia 98 Equation 3
-    tm = dH*1000/(dS + (1.9872 * math.log(ct))) + (16.6 * math.log10(salt)) - 273.15
+    tm = dH * 1000 / (dS + (1.9872 * math.log(ct))) + (16.6 * math.log10(salt)) - 273.15
+    return tm
+    return tm
     return tm
