@@ -93,7 +93,7 @@ def outputIDT(tiles,outHandle=sys.stdout):
 #
 #     return [inseq, compseq, probeseq]
 
-def calcOligoCost(tiles,pricePerBase=0.19):
+def calcOligoCost(tiles,pricePerBase=0.12):
 	total = 0.0
 	for tile in tiles:
 		probeSize = len(tile.P1) + len(tile.P2)
@@ -306,7 +306,7 @@ def main():
 	parser.add_argument("--maxRunMismatches", help="Max allowable homopolymer run mismatches", default=2,type=int)
 	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
 	parser.add_argument("--idt", help="File name to output tsv format optimized for IDT ordering", type=argparse.FileType('w'), default=None)
-	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.19 per base", default=False, action="store_true")
+	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
 	args = parser.parse_args()
 
 	#########
@@ -352,6 +352,7 @@ def main():
 	##############
 	# Calculate Hairpins
 	##############
+	#TODO: I don't think this is working correctly.  It's actually selecting things that _do_ have hairpin structure.  Probably need to enforce either structure_found==False and/or [hairpin (Tm) < probe Tm-10] or something like that. Or that hairpinTm is significantly less than either probe-half Tm.
 	utils.eprint("\nChecking for hairpins")
 	for tile in tiles:
 		thermRes = primer3.calcHairpin(tile.sequence)
