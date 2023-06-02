@@ -354,9 +354,9 @@ def main():
 	##############
 	#TODO: I don't think this is working correctly.  It's actually selecting things that _do_ have hairpin structure.  Probably need to enforce either structure_found==False and/or [hairpin (Tm) < probe Tm-10] or something like that. Or that hairpinTm is significantly less than either probe-half Tm.
 	utils.eprint("\nChecking for hairpins")
-	for tile in tiles:
-		thermRes = primer3.calcHairpin(tile.sequence)
-	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).structure_found]
+	#TODO: add this as a user-selectable parameter. Currently awkward as we don't have a min Tm filter.
+	max_Th = 45.0 # This is the maximum tolerated calculated melting temperature of any predicted hairpins 
+	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).tm < max_Th or not primer3.calcHairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	##############
