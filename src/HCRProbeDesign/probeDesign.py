@@ -324,7 +324,7 @@ def main():
 	parser.add_argument("--maxRunMismatches", help="Max allowable homopolymer run mismatches", default=2,type=int)
 	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
 	parser.add_argument("--idt", help="File name to output tsv format optimized for IDT ordering", type=argparse.FileType('w'), default=None)
-	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.19 per base", default=False, action="store_true")
+	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
 	args = parser.parse_args()
 
 	#########
@@ -377,9 +377,9 @@ def main():
 	##############
 	# Checking for hairpins in the tiles.
 	utils.eprint("\nChecking for hairpins")
-	for tile in tiles:
-		thermRes = primer3.calcHairpin(tile.sequence)
-	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).structure_found]
+	#TODO: add this as a user-selectable parameter. Currently awkward as we don't have a min Tm filter.
+	max_Th = 45.0 # This is the maximum tolerated calculated melting temperature of any predicted hairpins 
+	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).tm < max_Th or not primer3.calcHairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	##############
