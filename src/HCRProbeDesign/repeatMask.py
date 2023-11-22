@@ -13,6 +13,14 @@ import random
 import re
 
 def repeatmask(sequence,dnasource='mouse'):
+    '''
+    This function takes a sequence and returns a masked sequence with help from RepeatMasker
+    
+    :param sequence: The sequence to be masked
+    :param dnasource: vertebrate, mammal, human, rodent, mouse, rat, danio, drosophila, elegans,
+    defaults to mouse (optional)
+    :return: A masked sequence.
+    '''
     oksource = ['vertebrate','mammal','human','rodent','mouse','rat','danio','drosophila','elegans']
     assert dnasource in oksource
     params = {'sequence':sequence,
@@ -79,6 +87,9 @@ def repeatmask(sequence,dnasource='mouse'):
                 res = res.replace("\n","")
                 utils.eprint("Returning Masked Sequence")
                 return(res)
+
+def repeatmasker_local(sequence,dnasource='mouse'):
+    pass
 
 def test():
     test_str_len = 30

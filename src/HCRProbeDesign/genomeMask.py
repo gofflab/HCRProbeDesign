@@ -32,6 +32,12 @@ def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3, in
     return res
 
 def countHitsFromSam(samFile):
+    '''
+    For each read in the sam file, add 1 to the count of hits for that read
+    
+    :param samFile: the name of the sam file
+    :return: A dictionary with the read name as the key and the number of hits as the value.
+    '''
     hitCounts = defaultdict(int)
     sam = pysam.AlignmentFile(samFile,"r")
     for read in sam.fetch():

@@ -182,6 +182,12 @@ def overhang_dna(inseq,end):
     return dGoh[inseq]
 
 def Tm_RNA_DNA(sequence):
+    '''
+    Given a sequence, the function returns the Tm of the sequence using the SantaLucia 98 parameters
+    
+    :param sequence: the sequence of the primer
+    :return: The dG value.
+    '''
     # This gives the Tm of a sequence using RNA-DNA energetics
     primerConc = 0.00005
     temp = 30.0
@@ -216,6 +222,12 @@ def Tm_RNA_DNA(sequence):
     return dG
 
 def Tm(sequence):
+    '''
+    The function calculates the melting temperature of a sequence
+    
+    :param sequence: the sequence of the primer
+    :return: The melting temperature of the primer.
+    '''
     # This gives the Tm of a sequence
     primerConc = 0.00005
     temp = 30.0
@@ -259,6 +271,17 @@ def Tm(sequence):
     return ans
     
 def melting_temp(dH,dS,ca,cb,salt):
+    '''
+    Calculates the melting temperature of a DNA sequence.
+    
+    :param dH: Enthalpy (delta H). This is the energy required to separate the strands of the DNA duplex
+    in kilo Joules per mole
+    :param dS: Entropy of hybridization (cal/(K*mol))
+    :param ca: concentration of a strand in nM
+    :param cb: concentration of the complementary strand (M)
+    :param salt: the molarity of the Na+ in the hybridisation reaction
+    :return: The melting temperature of the primer.
+    '''
     # calculation for total concentration of nucleic acid for non-self-complementary pairs
     ct = ca - cb/2 # SantaLucia 98
 

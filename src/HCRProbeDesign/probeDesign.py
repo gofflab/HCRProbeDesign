@@ -22,6 +22,17 @@ from itertools import product
 #TODO: Modify this so that it only gets the window of appropriate size.  We will add prefix and suffix afterwards.
 
 def scanSequence(sequence,seqName,tileStep=1,tileSize=52):
+	'''
+	Given a sequence, a name for the sequence, a step size, and a tile size,
+	scanSequence will return a list of Tile objects that tile across the
+	sequence
+	
+	:param sequence: the sequence to be tiled
+	:param seqName: the name of the sequence
+	:param tileStep: The step size to take between tiles, defaults to 1 (optional)
+	:param tileSize: The size of the tile, defaults to 52 (optional)
+	:return: A list of Tile objects
+	'''
 	tiles = []
 	#Pre-compute number of chunks to emit
 	numOfChunks = int(((len(sequence)-tileSize)/tileStep) + 1)
@@ -94,6 +105,13 @@ def outputIDT(tiles,outHandle=sys.stdout):
 #     return [inseq, compseq, probeseq]
 
 def calcOligoCost(tiles,pricePerBase=0.19):
+	'''
+	Calculate the cost of the oligo library
+	
+	:param tiles: a list of Tile objects
+	:param pricePerBase: the cost of a base of probe
+	:return: A list of oligos.
+	'''
 	total = 0.0
 	for tile in tiles:
 		probeSize = len(tile.P1) + len(tile.P2)
@@ -331,6 +349,7 @@ def main():
 	###############
 	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
 	###############
+	# This code is breaking the target sequence into tiles of size args.tileSize.
 	utils.eprint(f"\nBreaking target sequence into revcomp tiles of size {args.tileSize}...")
 	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=args.tileSize) # Here we remove masked sequences and rev comp for tiles.
 	utils.eprint(f'{len(tiles)} tiles available of length {args.tileSize}...')
@@ -338,6 +357,8 @@ def main():
 	##############
 	# Crunmask
 	##############
+	# This code is checking if there are runs of C's in the tiles. If there are runs of C's, then the
+	# tile is removed from the list of tiles.
 	utils.eprint("\nChecking for runs of C's")
 	tiles = [tile for tile in tiles if not tile.hasRuns(runChar='c',runLength=args.maxRunLength,mismatches=args.maxRunMismatches)]
 	utils.eprint(f'{len(tiles)} tiles remain')
@@ -345,6 +366,8 @@ def main():
 	##############
 	# Grunmask
 	##############
+	# This code is checking if there are runs of G's in the tiles. If there are runs of G's, then the
+	# tile is removed from the list of tiles.
 	utils.eprint("\nChecking for runs of G's")
 	tiles = [tile for tile in tiles if not tile.hasRuns(runChar='g',runLength=args.maxRunLength,mismatches=args.maxRunMismatches)]
 	utils.eprint(f'{len(tiles)} tiles remain')
@@ -352,6 +375,7 @@ def main():
 	##############
 	# Calculate Hairpins
 	##############
+	# Checking for hairpins in the tiles.
 	utils.eprint("\nChecking for hairpins")
 	for tile in tiles:
 		thermRes = primer3.calcHairpin(tile.sequence)
@@ -361,6 +385,8 @@ def main():
 	##############
 	# GenomeMasking?  Using bowtie because BLAST over WWW is unpredictable
 	##############
+	# This code is checking the number of hits to the genome for each tile. If the number of hits is
+	# greater than the number of hits allowed, the tile is removed from the list of tiles.
 	if args.no_genomemask:
 		utils.eprint(f"\nChecking unique mapping of remaining tiles against {args.species} reference genome")
 		blast_string = "\n".join([tile.toFasta() for tile in tiles])
@@ -393,6 +419,7 @@ def main():
 	###############
 	# Gibbs filtering
 	###############
+	# Checking if the Gibbs free energy is within the specified range.
 	utils.eprint(f"\nChecking for {args.minGibbs} < Gibbs FE < {args.maxGibbs}")
 	[tile.calcGibbs() for tile in tiles]
 	tiles = [tile for tile in tiles if tile.Gibbs >= args.minGibbs]
@@ -409,6 +436,8 @@ def main():
 	###############
 	# dTm between halves
 	###############
+	# This code is checking if the dTm value is less than or equal to the dTmMax value. If it is, it will
+	# keep the tile. If it is not, it will remove the tile.
 	if args.dTmFilter:
 		utils.eprint(f"\nChecking for dTm <= {args.dTmMax} between probes for each tile")
 		tiles = [tile for tile in tiles if tile.dTm <= args.dTmMax]
@@ -448,6 +477,7 @@ def main():
 	# Do this until you are out of tiles or bestTiles reaches a certain number of tiles.
 
 	#TODO: Currently ranking tiles based on min distance to targetGibbs.  Need to make an argument to select targetGC as goal instead.
+	# Selecting the top tiles based on distance to the targetGibbs.
 	utils.eprint(f'\nSelecting top {args.maxProbes} tiles based on distance to targetGibbs = {args.targetGibbs}')
 	bestTiles = []
 	while len(bestTiles) < args.maxProbes and len(tiles) > 0:

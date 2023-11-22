@@ -6,9 +6,24 @@ import numpy as np
 #Probability Tools for DNA sequence analysis
 #######
 def snr(observed,expected):
+    '''
+    This function calculates the signal-to-noise ratio of an observed value compared to an expected
+    value
+    
+    :param observed: the actual number of observed counts
+    :param expected: the expected value of the distribution
+    :return: The SNR value
+    '''
     return observed/expected
 
 def zscore(observed,expected):
+    '''
+    The z-score is the number of standard deviations from the mean a data point is
+    
+    :param observed: the actual observed count of the test statistic
+    :param expected: the expected number of counts under the null hypothesis
+    :return: The z-score for the observed value.
+    '''
     return (observed-expected)/math.sqrt(expected)
 
 def which_bin(bins, x, safe=0):
@@ -29,6 +44,12 @@ def which_bin(bins, x, safe=0):
     return len(i)+1
 
 def cumulative_sum(quality):
+    '''
+    Given a list of numbers, return a list of the cumulative sum of the numbers in the list
+    
+    :param quality: a list of integers representing the quality of the video
+    :return: The cumulative sum of the quality scores.
+    '''
     if not quality: return quality
     sum_q = quality[:]
     for i in range(1,len(quality)):
@@ -45,6 +66,14 @@ def frequency_dic(seq):
     return dic
 
 def pick_one(dic):
+    '''
+    Given a dictionary of key:value pairs, 
+    where the values are cumulative sums of the keys, 
+    pick a key with probability proportional to its value
+    
+    :param dic: the dictionary to pick from
+    :return: The character with the probability of occurrence specified by the dictionary.
+    '''
     # {'A': .18, 'C': .32, 'G': .32, 'T': .18}
     # will generate A with probability .18 and so on
     items = dic.items()
@@ -60,6 +89,14 @@ def pick_one(dic):
         return items[which_bin(cums, random.uniform(0,cums[-1]), safe=1)][0]
 
 def pick_many(dic, n):
+    '''
+    Given a dictionary of items and their probabilities, 
+    pick n items according to those probabilities
+    
+    :param dic: a dictionary of the form {'A': .18, 'C': .32, 'G': .32, 'T': .18}
+    :param n: number of random choices
+    :return: A list of n characters.
+    '''
     # {'A': .18, 'C': .32, 'G': .32, 'T': .18}
     # will generate A with probability .18 and so on
     items = dic.items()
@@ -101,6 +138,14 @@ def make_adder(n):
 loge_2 = math.log(2)
 
 def avg(l,precise=0):
+    '''
+    Return the average of a list of numbers
+    
+    :param l: The list of numbers to be averaged
+    :param precise: If True, the average will be rounded to the nearest integer, defaults to 0
+    (optional)
+    :return: The average of the list of numbers.
+    '''
     if not l: return 0
     if precise:
         return reduce(operator.add,l,0)/float(len(l))
@@ -148,6 +193,12 @@ def log_k(x,k):
     return math.log(x)/math.log(k)
 
 def prob2score(prob):
+    '''
+    Given a probability, return the corresponding score
+    
+    :param prob: the probability of the event
+    :return: The score for each SNP.
+    '''
     #1/100 -> 20
     try:
         return -10*float(math.log10(float(prob)))
@@ -169,6 +220,12 @@ def factorial(n):
 #Poisson
 ###########
 def poisson_expected(rate):
+    '''
+    The function poisson_expected() takes a rate and prints out the probability of a number of events
+    occuring in a given time period
+    
+    :param rate: the average number of events per interval
+    '''
     for x in range(1,50,1):
         p = poisson(rate,x)
         print(f"{x}\t{p}\t{12000000*p}")
@@ -181,6 +238,15 @@ def poisson(rate, x):
 #Binomial Distribution
 #######################
 def binomial_likelihood_ratio(ps,k,n):
+    '''
+    The likelihood ratio is the log of the likelihood of the hypothesis being tested divided by the
+    likelihood of the null hypothesis
+    
+    :param ps: the two hypotheses
+    :param k: number of successes
+    :param n: number of trials
+    :return: The log-likelihood ratio.
+    '''
     # p[0] is the null hypothesis
     # p[1] is the hypothesis being tested
     assert(len(ps)==2)
@@ -238,6 +304,13 @@ def n_choose_k(n,k):
     return result
 
 def log_n_choose_k(n,k):
+    '''
+    Given n and k, return the log of n choose k
+    
+    :param n: number of items in the list
+    :param k: the number of successes
+    :return: The log of the number of ways to choose k objects from n objects.
+    '''
     # (n k) = n! / (k! (n-k)!)
     #
     #         n*(n-1)*(n-2)*....*(n-k+1)

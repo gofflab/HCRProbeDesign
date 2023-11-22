@@ -5,6 +5,7 @@ import primer3
 from . import HCR
 
 
+# This class is used to raise exceptions.
 class TileError(Exception):
 	def __init__(self,value):
 		self.value = value
@@ -102,6 +103,9 @@ class Tile:
 	# 	return ">%s\n%s" % (self.name,self.sequence)
 
 	def calcGibbs(self):
+		'''
+		Calculate the Gibbs free energy of binding for a given sequence
+		'''
 		[dHs,dSs] = thermo.stacks_rna_dna(self.sequence)
 		[dHi,dSi] = thermo.init_rna_dna()
 		binding_energy = thermo.gibbs(dHs+dHi,dSs+dSi,temp=37)  # cal/mol
@@ -122,6 +126,16 @@ class Tile:
 		return self.masked
 
 	def hasRuns(self,runChar,runLength,mismatches):
+		'''
+		Given a sequence, a run character, a run length, and a number of mismatches, 
+		returns True if the sequence has a run of the specified character of the specified length, 
+		with the specified number of mismatches
+		
+		:param runChar: the character that indicates a run
+		:param runLength: the length of the run of the same character
+		:param mismatches: the number of mismatches allowed in the run
+		:return: A boolean value.
+		'''
 		answer = False
 		for i in range(len(self)-runLength+1):
 			count = 0
@@ -143,10 +157,18 @@ class Tile:
 		return
 
 	def calcdTm(self):
+		'''
+		Calculate the difference in melting temperature between the 5' and 3' sequences
+		'''
 		self.dTm = abs(primer3.calcTm(self.fivePrimeSeq)-primer3.calcTm(self.threePrimeSeq))
 
 	#TODO: PLEASE check this to make sure that I'm adding the initiator sequences in the correct position and order
 	def makeProbes(self,channel):
+		'''
+		This function creates the probes for the channel.
+		
+		:param channel: the channel that the probe is on
+		'''
 		self.P1 = HCR.initiators[channel]["odd"]+self.threePrimeSeq
 		self.P2 = self.fivePrimeSeq + HCR.initiators[channel]["even"]
 		self.channel = channel
