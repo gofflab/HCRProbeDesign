@@ -43,4 +43,4 @@
 
 # Command Line
 
-`HCRProbeDesign` package provides the commandline executable `designProbes` as the primary
+`HCRProbeDesign` package provides the commandline executable `designProbes` as the primary application
