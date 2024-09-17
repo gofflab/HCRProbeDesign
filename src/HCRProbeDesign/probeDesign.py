@@ -157,14 +157,14 @@ def test():
 	mySeq = next(fastaIter) #TODO: make loopable when migrating to main()
 
 	# RepeatMasking
-	#TODO: Specify DNA source in input params
-	utils.eprint("\nRepeat Masking...")
-	mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource=species)
+	# #TODO: Specify DNA source in input params
+	#utils.eprint("\nRepeat Masking...")
+	#mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource=species)
 
 	#Convert to lowercase
 	#mySeq['sequence'] = mySeq['sequence'].lower()
 
-	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
+	# Tile over sequence record to generate all possible probes of appropriate length that are not already masked
 	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=tileSize)
 	utils.eprint(f'{len(tiles)} tiles available of length {tileSize}...')
 
@@ -315,7 +315,8 @@ def main():
 	parser.add_argument("--dTmFilter", help="Enable filtering based on dTm between probeset halves.", default=False, action="store_true")
 	parser.add_argument("-g", "--no-genomemask", help="Disables bowtie2 checking for multiple hits to genome", default=True, action="store_false")
 	parser.add_argument("-i","--index", help="Location of bowtie2 index file for genomemask analysis")
-	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=True, action="store_false")
+	## Disabling repeat masking by default at this point.  Will likely remove because is in some ways redundant with genomeMask and is also a pain in the ass to maintain.
+	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=False, action="store_false") # Set default=True to repeatmask by default
 	parser.add_argument("--minGibbs", help="Min allowable GibbsFE", default=-70.0,type=float)
 	parser.add_argument("--maxGibbs", help="Max allowable GibbsFE", default=-50.0,type=float)
 	parser.add_argument("--targetGibbs", help="Target GibbsFE", default=-60.0,type=float)
