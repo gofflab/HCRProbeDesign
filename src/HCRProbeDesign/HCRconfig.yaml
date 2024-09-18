@@ -1,0 +1,5 @@
+species:
+  mouse:
+    bowtie2_index: "indices/mm10/mm10"
+  dpealeii:
+    bowtie2_index: "indices/dpealeii/d_pealeii_v2-1"

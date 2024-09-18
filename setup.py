@@ -20,6 +20,7 @@ setuptools.setup(
         'beautifulsoup4',
         'pysam',
         'zipfile36',
+        'pyyaml'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -30,7 +31,7 @@ setuptools.setup(
     entry_points={
     'console_scripts': [
         'designProbes=HCRProbeDesign.probeDesign:main',
-        'fetchIndex=HCRProbeDesign.genomeMask:install_index',
+        'fetchMouseIndex=HCRProbeDesign.genomeMask:install_index',
     ],
 },
 )

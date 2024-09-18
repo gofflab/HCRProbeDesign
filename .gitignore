@@ -6,3 +6,5 @@ indices/*
 tmp.fa
 *.zip
 *.bt2
+*.bt2l
+*.tgz

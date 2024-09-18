@@ -1,6 +1,7 @@
 ################
 # Manages API calls to http://www.repeatmasker.org/ for target sequences
 #TODO: Unsure whether this should happen before or after reverse complementing.  Ie. do I want to mask the target sequence?  Or the probe sequences?  Does it matter?
+#UPDATE: This whole thing is hosed and will be deprecated.
 #################
 
 import time

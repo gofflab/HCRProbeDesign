@@ -15,6 +15,10 @@ import primer3
 from string import ascii_uppercase
 import argparse
 from itertools import product
+import yaml
+import os
+
+package_directory = os.path.dirname(os.path.abspath(__file__))
 
 #######################
 # Scan input sequence #
@@ -307,7 +311,7 @@ def main():
 	parser.add_argument('-o', '--output', help='Output file name', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
 	parser.add_argument("--tileSize", help="Size of the tiles along the target sequence", type=int, default=52)
 	parser.add_argument("--targetName",help="User-friendly name for target sequence (e.g. Gene Name)",default="target")
-	parser.add_argument("-s","--species", help="Species for repeatmask and genomemask", default='mouse')
+	parser.add_argument("-s","--species", help="Species for genomemask (must have valid bowtie2 entry HCRconfig.yaml)", default='mouse')
 	parser.add_argument("--minGC", help="Min allowable GC", default=45.0,type=float)
 	parser.add_argument("--maxGC", help="Max allowable GC", default=55.0,type=float)
 	parser.add_argument("--targetGC", help="Target GC", default=50.0,type=float)
@@ -328,6 +332,15 @@ def main():
 	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
 	args = parser.parse_args()
 
+	################
+	# Assert species has entry in config.yaml
+	#################
+	# Load the configuration
+	with open(package_directory+"/HCRconfig.yaml", "r") as file:
+		config = yaml.safe_load(file)
+	
+	assert args.species in config['species'].keys(), "Species is not yet setup in HCRconfig.yaml"
+ 
 	#########
 	# Parse fasta file. Currently not looping over records, only uses first fasta record
 	#########
@@ -492,7 +505,7 @@ def main():
 		else:
 			bestTiles.append(tiles.pop(nextBestIdx))
 
-	utils.eprint(f'Selected {len(bestTiles)} tiles for probe design')
+	utils.eprint(f'Selected {len(bestTiles)} non-overlapping tiles for probe design')
 
 	################
 	# Add initator and spacers to split probes
