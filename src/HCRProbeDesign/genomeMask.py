@@ -9,7 +9,6 @@ from collections import defaultdict
 import os
 import urllib.request
 import shutil
-import pkg_resources
 from zipfile import ZipFile
 import argparse
 import yaml
@@ -37,7 +36,11 @@ def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3, in
     if index == None:
         index = config['species'][species]['bowtie2_index']
     print(index)
-    res = subprocess.call(["bowtie2", f"-k{nAlignments}", "-x", package_directory+"/"+index, "-f", fasta_file, "-S", sam_file])
+    if os.path.isabs(index):
+        index_path = index
+    else:
+        index_path = package_directory + "/" + index
+    res = subprocess.call(["bowtie2", f"-k{nAlignments}", "-x", index_path, "-f", fasta_file, "-S", sam_file])
     return res
 
 def countHitsFromSam(samFile):
@@ -70,7 +73,6 @@ def install_index(url='https://genome-idx.s3.amazonaws.com/bt/mm10.zip',genome="
     parser = argparse.ArgumentParser(description="Bowtie2 index retrieval and installation",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     args = parser.parse_args()
     print(f'Downloading Bowtie2 index from {url} ...')
-    #folder = pkg_resources.resource_filename('HCRProbeDesign','indices/')
     index_folder = indices_directory
     fname = f'{index_folder}{genome}.zip'
     print(fname)

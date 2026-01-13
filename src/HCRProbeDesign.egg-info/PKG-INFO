@@ -18,6 +18,7 @@ Requires-Dist: biopython
 Requires-Dist: beautifulsoup4
 Requires-Dist: pysam
 Requires-Dist: zipfile36
+Requires-Dist: pyyaml
 
 # Introduction
 

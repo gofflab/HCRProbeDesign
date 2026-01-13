@@ -34,11 +34,17 @@
 # Quickstart
   ## Install mm10 bowtie2 index
   Before using `designProbes`, you must either disable genome masking `--no-genomemask` or install a bowtie2 index into the indices directory `<package_dir>/indices/`.
-  For mouse (the default target species), we provide a simple command line utility `fetchIndex` to download and install the mouse mm10 bowtie2 directory into the package reference index folder.
+  For mouse (the default target species), we provide a simple command line utility `fetchMouseIndex` to download and install the mouse mm10 bowtie2 directory into the package reference index folder.
 
   ```
   # Grab mm10 index and install in <package_install_dir>/indices/mm10/
-  $ fetchIndex
+  $ fetchMouseIndex
+  ```
+  ## Build a new species index
+  To add a new species, build a Bowtie2 index from a local FASTA and register it in `HCRconfig.yaml`.
+
+  ```
+  $ buildGenomeIndex --species zebrafish --fasta /path/to/genome.fa
   ```
 
 # Command Line

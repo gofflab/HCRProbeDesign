@@ -3,3 +3,4 @@ biopython
 beautifulsoup4
 pysam
 zipfile36
+pyyaml

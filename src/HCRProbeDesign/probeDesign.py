@@ -59,7 +59,7 @@ def outputTable(tiles,outHandle=sys.stdout):
 	outputKeys=["name","probe","start","length","P1","P2","channel","GC","Tm","dTm","GibbsFE"]
 	outHandle.write("\t".join(outputKeys)+"\n")
 	for tile in tiles:
-		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calcTm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}\n")
+		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calc_tm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}\n")
 
 def outputIDT(tiles,outHandle=sys.stdout):
 	"""
@@ -187,8 +187,8 @@ def test():
 	# Calculate Hairpins
 	utils.eprint("\nChecking for hairpins")
 	for tile in tiles:
-		thermRes = primer3.calcHairpin(tile.sequence)
-	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).structure_found]
+		thermRes = primer3.calc_hairpin(tile.sequence)
+	tiles = [tile for tile in tiles if primer3.calc_hairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	print(len(tiles))
@@ -269,7 +269,7 @@ def test():
 
 	# Print out results
 	for tile in bestTiles:
-		print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
+		print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calc_tm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 
 	utils.eprint(f'\nThere are a total of {len(bestTiles)} best probes')
 
@@ -393,7 +393,7 @@ def main():
 	utils.eprint("\nChecking for hairpins")
 	#TODO: add this as a user-selectable parameter. Currently awkward as we don't have a min Tm filter.
 	max_Th = 45.0 # This is the maximum tolerated calculated melting temperature of any predicted hairpins 
-	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).tm < max_Th or not primer3.calcHairpin(tile.sequence).structure_found]
+	tiles = [tile for tile in tiles if primer3.calc_hairpin(tile.sequence).tm < max_Th or not primer3.calc_hairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	##############
@@ -404,7 +404,7 @@ def main():
 	if args.no_genomemask:
 		utils.eprint(f"\nChecking unique mapping of remaining tiles against {args.species} reference genome")
 		blast_string = "\n".join([tile.toFasta() for tile in tiles])
-		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species,index=None)
+		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species,index=args.index)
 		utils.eprint(f'Parsing bowtie2 output now')
 		hitCounts = genomeMask.countHitsFromSam(f'{args.targetName}.sam')
 		#print(hitCounts)
