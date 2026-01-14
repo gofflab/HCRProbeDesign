@@ -1,3 +1,7 @@
+## v0.2.3 - 01.14.2026
+  + Added detailed documentation
+  + Added loader for custom reference genomes
+  + Added batch-processing of multi-record fasta files
 ## v0.2.2 - 1.7.2022
   + Added `--idt` argument to format output probes for IDT ordering on plates
 ## v0.2.1 - 5.10.2021
