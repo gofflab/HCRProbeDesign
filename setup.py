@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="HCRProbeDesign", # Replace with your own username
-    version="0.2.2",
+    version="0.2.3",
     author="Loyal A. Goff",
     author_email="author@example.com",
     description="Probe Design tool for Hybridization Chain Reaction",
