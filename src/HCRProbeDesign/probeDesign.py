@@ -127,6 +127,223 @@ def outputRunParams(args):
 	utils.eprint(print(args))
 
 
+def build_parser():
+	parser = argparse.ArgumentParser(description="Probe Design Utility for HCR v3.0",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	parser.add_argument("infile",help="Properly formatted fasta file against which to design probes",type=argparse.FileType('r'))
+	parser.add_argument("-v", "--verbose", help="Verbose output", action="store_true")
+	parser.add_argument("-c", "--channel", help="HCR Channel initiator sequences", default="B1",choices=HCR.initiators.keys())
+	parser.add_argument('-o', '--output', help='Output file name', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
+	parser.add_argument("--tileSize", help="Size of the tiles along the target sequence", type=int, default=52)
+	parser.add_argument("--targetName",help="User-friendly name for target sequence (e.g. Gene Name)",default="target")
+	parser.add_argument("-s","--species", help="Species for genomemask (must have valid bowtie2 entry HCRconfig.yaml)", default='mouse')
+	parser.add_argument("--minGC", help="Min allowable GC", default=45.0,type=float)
+	parser.add_argument("--maxGC", help="Max allowable GC", default=55.0,type=float)
+	parser.add_argument("--targetGC", help="Target GC", default=50.0,type=float)
+	parser.add_argument("--dTmMax", help="Max allowable difference in Tm between probes in set", default=5.0,type=float)
+	parser.add_argument("--dTmFilter", help="Enable filtering based on dTm between probeset halves.", default=False, action="store_true")
+	parser.add_argument("-g", "--no-genomemask", help="Disables bowtie2 checking for multiple hits to genome", default=True, action="store_false")
+	parser.add_argument("-i","--index", help="Location of bowtie2 index file for genomemask analysis")
+	## Disabling repeat masking by default at this point.  Will likely remove because is in some ways redundant with genomeMask and is also a pain in the ass to maintain.
+	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=False, action="store_false") # Set default=True to repeatmask by default
+	parser.add_argument("--minGibbs", help="Min allowable GibbsFE", default=-70.0,type=float)
+	parser.add_argument("--maxGibbs", help="Max allowable GibbsFE", default=-50.0,type=float)
+	parser.add_argument("--targetGibbs", help="Target GibbsFE", default=-60.0,type=float)
+	parser.add_argument("--maxRunLength", help="Max allowable homopolymer run size", default=7,type=int)
+	parser.add_argument("-n","--maxProbes", help="Max number of probes to return", default=20,type=int)
+	parser.add_argument("--maxRunMismatches", help="Max allowable homopolymer run mismatches", default=2,type=int)
+	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
+	parser.add_argument("--idt", help="File name to output tsv format optimized for IDT ordering", type=argparse.FileType('w'), default=None)
+	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
+	return parser
+
+
+def _sanitize_name(name):
+	if name is None:
+		return ""
+	name = name.strip()
+	if not name:
+		return ""
+	return re.sub(r"[^A-Za-z0-9_.-]+", "_", name)
+
+
+def _parse_record_channel(name):
+	if not name:
+		return "", None
+	match = re.search(r'(?:^|[\s|])channel=([A-Za-z0-9_-]+)', name)
+	if not match:
+		return name, None
+	channel = match.group(1)
+	cleaned = re.sub(r'(?:^|[\s|])channel=[A-Za-z0-9_-]+', ' ', name)
+	cleaned = re.sub(r'[\s|]+', ' ', cleaned).strip()
+	return cleaned, channel
+
+
+def _resolve_channel(args, channel_override):
+	channel = channel_override or args.channel
+	if channel not in HCR.initiators:
+		raise ValueError(f"Channel '{channel}' is not defined in HCR.initiators")
+	return channel
+
+
+def _build_target_name(base_name, record_name, index, used_names):
+	base = _sanitize_name(base_name)
+	record = _sanitize_name(record_name)
+	if not record:
+		record = f"record_{index}"
+	candidate = f"{base}_{record}" if base else record
+	if candidate in used_names:
+		suffix = 2
+		while f"{candidate}_{suffix}" in used_names:
+			suffix += 1
+		candidate = f"{candidate}_{suffix}"
+	used_names.add(candidate)
+	return candidate
+
+
+def _design_tiles_for_record(args, record, target_name, channel_override=None):
+	sequence = record["sequence"]
+	seq_name = record["name"]
+	handle_name = target_name or args.targetName
+	channel = _resolve_channel(args, channel_override)
+
+	#############
+	# Repeatmask target sequence
+	#############
+	if args.no_repeatmask:
+		# RepeatMasking
+		utils.eprint(f"\nRepeat Masking using {args.species} reference...")
+		sequence = repeatMask.repeatmask(sequence,dnasource=args.species)
+
+	###############
+	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
+	###############
+	# This code is breaking the target sequence into tiles of size args.tileSize.
+	utils.eprint(f"\nBreaking target sequence into revcomp tiles of size {args.tileSize}...")
+	tiles = scanSequence(sequence,seq_name,tileStep=1,tileSize=args.tileSize) # Here we remove masked sequences and rev comp for tiles.
+	utils.eprint(f'{len(tiles)} tiles available of length {args.tileSize}...')
+
+	##############
+	# Crunmask
+	##############
+	# This code is checking if there are runs of C's in the tiles. If there are runs of C's, then the
+	# tile is removed from the list of tiles.
+	utils.eprint("\nChecking for runs of C's")
+	tiles = [tile for tile in tiles if not tile.hasRuns(runChar='c',runLength=args.maxRunLength,mismatches=args.maxRunMismatches)]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	##############
+	# Grunmask
+	##############
+	# This code is checking if there are runs of G's in the tiles. If there are runs of G's, then the
+	# tile is removed from the list of tiles.
+	utils.eprint("\nChecking for runs of G's")
+	tiles = [tile for tile in tiles if not tile.hasRuns(runChar='g',runLength=args.maxRunLength,mismatches=args.maxRunMismatches)]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	##############
+	# Calculate Hairpins
+	##############
+	# Checking for hairpins in the tiles.
+	utils.eprint("\nChecking for hairpins")
+	#TODO: add this as a user-selectable parameter. Currently awkward as we don't have a min Tm filter.
+	max_Th = 45.0 # This is the maximum tolerated calculated melting temperature of any predicted hairpins 
+	tiles = [tile for tile in tiles if primer3.calc_hairpin(tile.sequence).tm < max_Th or not primer3.calc_hairpin(tile.sequence).structure_found]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	##############
+	# GenomeMasking?  Using bowtie because BLAST over WWW is unpredictable
+	##############
+	# This code is checking the number of hits to the genome for each tile. If the number of hits is
+	# greater than the number of hits allowed, the tile is removed from the list of tiles.
+	if args.no_genomemask:
+		utils.eprint(f"\nChecking unique mapping of remaining tiles against {args.species} reference genome")
+		blast_string = "\n".join([tile.toFasta() for tile in tiles])
+		blast_res = genomeMask.genomemask(blast_string, handleName=handle_name,species=args.species,index=args.index)
+		utils.eprint(f'Parsing bowtie2 output now')
+		hitCounts = genomeMask.countHitsFromSam(f'{handle_name}.sam')
+		#print(hitCounts)
+		#Check that keys returned from hitCounts match order of tiles in tiles
+		assert all(map(lambda x, y: x == y, [k for k in hitCounts.keys()], [tile.name for tile in tiles]))
+		utils.eprint(f'Filtering for <= {args.num_hits_allowed} alignments to {args.species} genome...')
+		for i in range(len(tiles)):
+			k = list(hitCounts.keys())[i]
+			tiles[i].hitCount = hitCounts[k]
+			#utils.eprint(f'{tiles[i].hitCount}')
+		tiles = [tile for tile in tiles if tile.hitCount <= args.num_hits_allowed]
+		utils.eprint(f'{len(tiles)} tiles remain')
+
+	###############
+	# TM filtering
+	###############
+
+	###############
+	# GC filtering
+	###############
+	utils.eprint(f"\nChecking for {args.minGC} < GC < {args.maxGC}")
+	tiles = [tile for tile in tiles if tile.GC() >= args.minGC]
+	tiles = [tile for tile in tiles if tile.GC() <= args.maxGC]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	###############
+	# Gibbs filtering
+	###############
+	# Checking if the Gibbs free energy is within the specified range.
+	utils.eprint(f"\nChecking for {args.minGibbs} < Gibbs FE < {args.maxGibbs}")
+	[tile.calcGibbs() for tile in tiles]
+	tiles = [tile for tile in tiles if tile.Gibbs >= args.minGibbs]
+	tiles = [tile for tile in tiles if tile.Gibbs <= args.maxGibbs]
+	utils.eprint(f'{len(tiles)} tiles remain')
+
+	###############
+	# Split tile into probeset
+	###############
+	utils.eprint(f"\nSplitting tiles into probesets")
+	[tile.splitProbe() for tile in tiles]
+	[tile.calcdTm() for tile in tiles]
+
+	###############
+	# dTm between halves
+	###############
+	# This code is checking if the dTm value is less than or equal to the dTmMax value. If it is, it will
+	# keep the tile. If it is not, it will remove the tile.
+	if args.dTmFilter:
+		utils.eprint(f"\nChecking for dTm <= {args.dTmMax} between probes for each tile")
+		tiles = [tile for tile in tiles if tile.dTm <= args.dTmMax]
+		utils.eprint(f'{len(tiles)} tiles remain')
+
+	################
+	# Select overall best n tiles (regardless of region)
+	################
+	# Instead of above 'region-based' approach, Let's start by choosing the best probes (by min distance to targetGibbs and/or min distance to targetGC).
+	# As we choose subsequent best probes, test for overlap with any existing tiles (tile.overlaps(tile2)).  If none, then append next best to bestTiles
+	# Do this until you are out of tiles or bestTiles reaches a certain number of tiles.
+
+	#TODO: Currently ranking tiles based on min distance to targetGibbs.  Need to make an argument to select targetGC as goal instead.
+	# Selecting the top tiles based on distance to the targetGibbs.
+	utils.eprint(f'\nSelecting top {args.maxProbes} tiles based on distance to targetGibbs = {args.targetGibbs}')
+	bestTiles = []
+	while len(bestTiles) < args.maxProbes and len(tiles) > 0:
+		nextBestIdx = min(range(len(tiles)), key=lambda i: abs([x.Gibbs for x in tiles][i]-args.targetGibbs))
+		#print(f'{nextBestIdx}')
+		if len(bestTiles) == 0:
+			bestTiles.append(tiles.pop(nextBestIdx))
+			continue
+		if any([tiles[nextBestIdx].overlaps(x) for x in bestTiles]):
+			tiles.pop(nextBestIdx)
+		else:
+			bestTiles.append(tiles.pop(nextBestIdx))
+
+	utils.eprint(f'Selected {len(bestTiles)} non-overlapping tiles for probe design')
+
+	################
+	# Add initator and spacers to split probes
+	################
+	utils.eprint(f"\nAdding spacers and initiator sequences to split probes for channel {channel}")
+	[tile.makeProbes(channel) for tile in bestTiles]
+
+	return bestTiles
+
+
 ###############
 # Test function with hard-coded variables
 ###############
@@ -276,255 +493,79 @@ def test():
 	#TODO: dump output to designated file handles
 
 
+def _assert_species_config(args):
+	with open(package_directory+"/HCRconfig.yaml", "r") as file:
+		config = yaml.safe_load(file)
+	assert args.species in config['species'].keys(), "Species is not yet setup in HCRconfig.yaml"
+
+
 def main():
 	"""
 	Main function for HCR Probe design.  Called when used directly from cmdline
 	"""
-	#######################
-	# Variables
-	#######################
-	# # Set default args
-	# tileSize = 52
-	# tileStep = 1
-	# minGC = 45.0
-	# maxGC = 55.0
-	# targetGC = 50.0
-	# dTmMax = 5.0
-	# minGibbs = -70.0
-	# maxGibbs = -50.0
-	# targetGibbs = -60.0
-	# verbose = True
-	# species = 'mouse'
-	# genomemask = False
-	# repeatmask = True
-	# blastmask = False
-	# pseudogenemask = False
-	# channel = "B1"
-	# num_hits_allowed = 1
-	# dTmFilter = False
-
-	#Argument handling
-	parser = argparse.ArgumentParser(description="Probe Design Utility for HCR v3.0",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-	parser.add_argument("infile",help="Properly formatted fasta file against which to design probes",type=argparse.FileType('r'))
-	parser.add_argument("-v", "--verbose", help="Verbose output", action="store_true")
-	parser.add_argument("-c", "--channel", help="HCR Channel initiator sequences", default="B1",choices=HCR.initiators.keys())
-	parser.add_argument('-o', '--output', help='Output file name', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
-	parser.add_argument("--tileSize", help="Size of the tiles along the target sequence", type=int, default=52)
-	parser.add_argument("--targetName",help="User-friendly name for target sequence (e.g. Gene Name)",default="target")
-	parser.add_argument("-s","--species", help="Species for genomemask (must have valid bowtie2 entry HCRconfig.yaml)", default='mouse')
-	parser.add_argument("--minGC", help="Min allowable GC", default=45.0,type=float)
-	parser.add_argument("--maxGC", help="Max allowable GC", default=55.0,type=float)
-	parser.add_argument("--targetGC", help="Target GC", default=50.0,type=float)
-	parser.add_argument("--dTmMax", help="Max allowable difference in Tm between probes in set", default=5.0,type=float)
-	parser.add_argument("--dTmFilter", help="Enable filtering based on dTm between probeset halves.", default=False, action="store_true")
-	parser.add_argument("-g", "--no-genomemask", help="Disables bowtie2 checking for multiple hits to genome", default=True, action="store_false")
-	parser.add_argument("-i","--index", help="Location of bowtie2 index file for genomemask analysis")
-	## Disabling repeat masking by default at this point.  Will likely remove because is in some ways redundant with genomeMask and is also a pain in the ass to maintain.
-	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=False, action="store_false") # Set default=True to repeatmask by default
-	parser.add_argument("--minGibbs", help="Min allowable GibbsFE", default=-70.0,type=float)
-	parser.add_argument("--maxGibbs", help="Max allowable GibbsFE", default=-50.0,type=float)
-	parser.add_argument("--targetGibbs", help="Target GibbsFE", default=-60.0,type=float)
-	parser.add_argument("--maxRunLength", help="Max allowable homopolymer run size", default=7,type=int)
-	parser.add_argument("-n","--maxProbes", help="Max number of probes to return", default=20,type=int)
-	parser.add_argument("--maxRunMismatches", help="Max allowable homopolymer run mismatches", default=2,type=int)
-	parser.add_argument("--num-hits-allowed", help="Number of allowable hits to genome", default=1, type=int)
-	parser.add_argument("--idt", help="File name to output tsv format optimized for IDT ordering", type=argparse.FileType('w'), default=None)
-	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
+	parser = build_parser()
 	args = parser.parse_args()
+	_assert_species_config(args)
 
-	################
-	# Assert species has entry in config.yaml
-	#################
-	# Load the configuration
-	with open(package_directory+"/HCRconfig.yaml", "r") as file:
-		config = yaml.safe_load(file)
-	
-	assert args.species in config['species'].keys(), "Species is not yet setup in HCRconfig.yaml"
- 
 	#########
 	# Parse fasta file. Currently not looping over records, only uses first fasta record
 	#########
 	utils.eprint("Reading in Fasta file")
-	handle = args.infile
-	fastaIter = sequencelib.FastaIterator(handle)
+	fastaIter = sequencelib.FastaIterator(args.infile)
+	mySeq = next(fastaIter)
 
-	mySeq = next(fastaIter) #TODO: make loopable when migrating to main()
+	record_name, channel_override = _parse_record_channel(mySeq["name"])
+	if record_name:
+		mySeq["name"] = record_name
+	else:
+		mySeq["name"] = args.targetName
+	bestTiles = _design_tiles_for_record(args, mySeq, args.targetName, channel_override)
 
-	#############
-	# Repeatmask target sequence
-	#############
-	if args.no_repeatmask:
-		# RepeatMasking
-		utils.eprint(f"\nRepeat Masking using {args.species} reference...")
-		mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource=args.species)
-
-	# Check for invalid characters ?
-
-	###############
-	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
-	###############
-	# This code is breaking the target sequence into tiles of size args.tileSize.
-	utils.eprint(f"\nBreaking target sequence into revcomp tiles of size {args.tileSize}...")
-	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=args.tileSize) # Here we remove masked sequences and rev comp for tiles.
-	utils.eprint(f'{len(tiles)} tiles available of length {args.tileSize}...')
-
-	##############
-	# Crunmask
-	##############
-	# This code is checking if there are runs of C's in the tiles. If there are runs of C's, then the
-	# tile is removed from the list of tiles.
-	utils.eprint("\nChecking for runs of C's")
-	tiles = [tile for tile in tiles if not tile.hasRuns(runChar='c',runLength=args.maxRunLength,mismatches=args.maxRunMismatches)]
-	utils.eprint(f'{len(tiles)} tiles remain')
-
-	##############
-	# Grunmask
-	##############
-	# This code is checking if there are runs of G's in the tiles. If there are runs of G's, then the
-	# tile is removed from the list of tiles.
-	utils.eprint("\nChecking for runs of G's")
-	tiles = [tile for tile in tiles if not tile.hasRuns(runChar='g',runLength=args.maxRunLength,mismatches=args.maxRunMismatches)]
-	utils.eprint(f'{len(tiles)} tiles remain')
-
-	##############
-	# Calculate Hairpins
-	##############
-	# Checking for hairpins in the tiles.
-	utils.eprint("\nChecking for hairpins")
-	#TODO: add this as a user-selectable parameter. Currently awkward as we don't have a min Tm filter.
-	max_Th = 45.0 # This is the maximum tolerated calculated melting temperature of any predicted hairpins 
-	tiles = [tile for tile in tiles if primer3.calc_hairpin(tile.sequence).tm < max_Th or not primer3.calc_hairpin(tile.sequence).structure_found]
-	utils.eprint(f'{len(tiles)} tiles remain')
-
-	##############
-	# GenomeMasking?  Using bowtie because BLAST over WWW is unpredictable
-	##############
-	# This code is checking the number of hits to the genome for each tile. If the number of hits is
-	# greater than the number of hits allowed, the tile is removed from the list of tiles.
-	if args.no_genomemask:
-		utils.eprint(f"\nChecking unique mapping of remaining tiles against {args.species} reference genome")
-		blast_string = "\n".join([tile.toFasta() for tile in tiles])
-		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species,index=args.index)
-		utils.eprint(f'Parsing bowtie2 output now')
-		hitCounts = genomeMask.countHitsFromSam(f'{args.targetName}.sam')
-		#print(hitCounts)
-		#Check that keys returned from hitCounts match order of tiles in tiles
-		assert all(map(lambda x, y: x == y, [k for k in hitCounts.keys()], [tile.name for tile in tiles]))
-		utils.eprint(f'Filtering for <= {args.num_hits_allowed} alignments to {args.species} genome...')
-		for i in range(len(tiles)):
-			k = list(hitCounts.keys())[i]
-			tiles[i].hitCount = hitCounts[k]
-			#utils.eprint(f'{tiles[i].hitCount}')
-		tiles = [tile for tile in tiles if tile.hitCount <= args.num_hits_allowed]
-		utils.eprint(f'{len(tiles)} tiles remain')
-
-	###############
-	# TM filtering
-	###############
-
-	###############
-	# GC filtering
-	###############
-	utils.eprint(f"\nChecking for {args.minGC} < GC < {args.maxGC}")
-	tiles = [tile for tile in tiles if tile.GC() >= args.minGC]
-	tiles = [tile for tile in tiles if tile.GC() <= args.maxGC]
-	utils.eprint(f'{len(tiles)} tiles remain')
-
-	###############
-	# Gibbs filtering
-	###############
-	# Checking if the Gibbs free energy is within the specified range.
-	utils.eprint(f"\nChecking for {args.minGibbs} < Gibbs FE < {args.maxGibbs}")
-	[tile.calcGibbs() for tile in tiles]
-	tiles = [tile for tile in tiles if tile.Gibbs >= args.minGibbs]
-	tiles = [tile for tile in tiles if tile.Gibbs <= args.maxGibbs]
-	utils.eprint(f'{len(tiles)} tiles remain')
-
-	###############
-	# Split tile into probeset
-	###############
-	utils.eprint(f"\nSplitting tiles into probesets")
-	[tile.splitProbe() for tile in tiles]
-	[tile.calcdTm() for tile in tiles]
-
-	###############
-	# dTm between halves
-	###############
-	# This code is checking if the dTm value is less than or equal to the dTmMax value. If it is, it will
-	# keep the tile. If it is not, it will remove the tile.
-	if args.dTmFilter:
-		utils.eprint(f"\nChecking for dTm <= {args.dTmMax} between probes for each tile")
-		tiles = [tile for tile in tiles if tile.dTm <= args.dTmMax]
-		utils.eprint(f'{len(tiles)} tiles remain')
-
-	###############
-	# Break remaining probes into non-overlapping regions
-	###############
-	# #TODO: there must be a better way to do this to minimize overlaps.  Perhaps testing overlaps from bestTiles later on?  Would ensure better quality picks make it to the end.
-	# regions = {}
-	# regionCount = 0
-	#
-	# regionList = [tiles[0]]
-	# for i in range(1,len(tiles)):
-	# 	if i == len(tiles)-1:
-	# 		regions[ascii_uppercase[regionCount]] = regionList
-	# 		break
-	# 	if tiles[i].overlaps(tiles[i-1]):
-	# 		regionList.append(tiles[i])
-	# 	else:
-	# 		regions[ascii_uppercase[regionCount]] = regionList
-	# 		regionList = [tiles[i]]
-	# 		regionCount = regionCount + 1
-	#
-	# ################
-	# # Select best from each region
-	# ################
-	# bestTiles = []
-	# for k,v in regions.items():
-	# 	bestTiles.append(v[min(range(len(v)), key=lambda i: abs([x.Gibbs for x in v][i]-args.targetGibbs))])
-
-	################
-	# Select overall best n tiles (regardless of region)
-	################
-	# Instead of above 'region-based' approach, Let's start by choosing the best probes (by min distance to targetGibbs and/or min distance to targetGC).
-	# As we choose subsequent best probes, test for overlap with any existing tiles (tile.overlaps(tile2)).  If none, then append next best to bestTiles
-	# Do this until you are out of tiles or bestTiles reaches a certain number of tiles.
-
-	#TODO: Currently ranking tiles based on min distance to targetGibbs.  Need to make an argument to select targetGC as goal instead.
-	# Selecting the top tiles based on distance to the targetGibbs.
-	utils.eprint(f'\nSelecting top {args.maxProbes} tiles based on distance to targetGibbs = {args.targetGibbs}')
-	bestTiles = []
-	while len(bestTiles) < args.maxProbes and len(tiles) > 0:
-		nextBestIdx = min(range(len(tiles)), key=lambda i: abs([x.Gibbs for x in tiles][i]-args.targetGibbs))
-		#print(f'{nextBestIdx}')
-		if len(bestTiles) == 0:
-			bestTiles.append(tiles.pop(nextBestIdx))
-			continue
-		if any([tiles[nextBestIdx].overlaps(x) for x in bestTiles]):
-			tiles.pop(nextBestIdx)
-		else:
-			bestTiles.append(tiles.pop(nextBestIdx))
-
-	utils.eprint(f'Selected {len(bestTiles)} non-overlapping tiles for probe design')
-
-	################
-	# Add initator and spacers to split probes
-	################
-	utils.eprint(f"\nAdding spacers and initiator sequences to split probes for channel {args.channel}")
-	[tile.makeProbes(args.channel) for tile in bestTiles]
-
-	################
-	# Print out results
-	################
-	#for tile in bestTiles:
-	#	print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 	if args.idt is not None:
 		outputIDT(bestTiles,outHandle=args.idt)
-	
+
 	outputTable(bestTiles,outHandle=args.output)
 
 	if args.calcPrice:
 		utils.eprint(f'\nTotal cost to synthesize probe sets ~${calcOligoCost(bestTiles):.2f}')
+
+	outputRunParams(args)
+
+
+def main_batch():
+	"""
+	Batch probe design for multi-record FASTA inputs.
+	"""
+	parser = build_parser()
+	args = parser.parse_args()
+	_assert_species_config(args)
+
+	utils.eprint("Reading in Fasta file")
+	fastaIter = sequencelib.FastaIterator(args.infile)
+	used_names = set()
+	all_tiles = []
+	total_cost = 0.0
+
+	for index, record in enumerate(fastaIter, start=1):
+		record_name, channel_override = _parse_record_channel(record["name"])
+		display_name = record_name.strip() if record_name else ""
+		if not display_name:
+			display_name = f"record_{index}"
+		utils.eprint(f"\nProcessing target {display_name}")
+		record_data = {"name": display_name, "sequence": record["sequence"]}
+		handle_name = _build_target_name(args.targetName, display_name, index, used_names)
+		bestTiles = _design_tiles_for_record(args, record_data, handle_name, channel_override)
+		all_tiles.extend(bestTiles)
+		if args.calcPrice:
+			total_cost += calcOligoCost(bestTiles)
+
+	if args.idt is not None:
+		outputIDT(all_tiles,outHandle=args.idt)
+
+	outputTable(all_tiles,outHandle=args.output)
+
+	if args.calcPrice:
+		utils.eprint(f'\nTotal cost to synthesize probe sets ~${total_cost:.2f}')
 
 	outputRunParams(args)
 

@@ -7,6 +7,7 @@ homopolymers, and hairpins, and can optionally enforce genome uniqueness with Bo
 
 Key tools:
 - `designProbes`: primary probe design CLI.
+- `designProbesBatch`: batch probe design for multi-record FASTA inputs.
 - `fetchMouseIndex`: download and install the mm10 Bowtie2 index.
 - `buildGenomeIndex`: build and register a new reference genome index.
 
@@ -51,7 +52,7 @@ fetchMouseIndex
 
 ## Usage instructions
 ### 1) Prepare a FASTA file
-`designProbes` reads the first FASTA record in the input file.
+`designProbes` reads the first FASTA record in the input file. Use `designProbesBatch` for multi-record inputs.
 
 ```text
 >MyTarget
@@ -61,6 +62,17 @@ ACGTACGTACGTACGTACGTACGTACGTACGT
 ### 2) Run probe design
 ```bash
 designProbes targets.fa --species mouse --channel B1 --output probes.tsv --idt probes.idt
+```
+
+Batch mode example:
+```bash
+designProbesBatch targets.fa --species mouse --channel B1 --output probes.tsv --idt probes.idt
+```
+
+To override the channel per record in batch mode, add `channel=` to the FASTA header:
+```text
+>MyTarget channel=B2
+ACGTACGTACGTACGTACGT
 ```
 
 Common flags:

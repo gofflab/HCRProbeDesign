@@ -31,6 +31,7 @@ setuptools.setup(
     entry_points={
     'console_scripts': [
         'designProbes=HCRProbeDesign.probeDesign:main',
+        'designProbesBatch=HCRProbeDesign.probeDesign:main_batch',
         'fetchMouseIndex=HCRProbeDesign.genomeMask:install_index',
         'buildGenomeIndex=HCRProbeDesign.referenceGenome:main',
     ],
