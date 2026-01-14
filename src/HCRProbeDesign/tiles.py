@@ -1,3 +1,5 @@
+"""Tile and probe representation used in the design pipeline."""
+
 from . import utils
 from . import thermo
 from . import sequencelib
@@ -7,13 +9,22 @@ from . import HCR
 
 # This class is used to raise exceptions.
 class TileError(Exception):
+	"""Custom exception type for tile validation and processing."""
 	def __init__(self,value):
 		self.value = value
 	def __str__(self):
 		return repr(self.value)
 
 class Tile:
+	"""Represents a candidate probe tile extracted from a target sequence."""
 	def __init__(self,sequence,seqName,startPos):
+		"""
+		Initialize a Tile from a sequence and positional metadata.
+
+		:param sequence: Tile sequence (string).
+		:param seqName: Source sequence name.
+		:param startPos: 1-based start position in the source sequence.
+		"""
 		self.sequence = str.lower(sequence)
 		self.startPos = startPos
 		self.start = startPos
@@ -26,6 +37,7 @@ class Tile:
 
 
 	def validate(self):
+		"""Run lightweight validation checks on the tile."""
 		self.GC()
 
 	# def compiledPrefix(self):
@@ -45,16 +57,20 @@ class Tile:
 	# 		return self.suffix[:tagPos]+self.tag+self.suffix[tagPos+1:]
 
 	def __repr__(self):
+		"""Return a debug-friendly representation of the tile."""
 		return f"{self.name}:{self.sequence}"
 
 	def __str__(self):
+		"""Return a human-readable representation of the tile."""
 		#return "%s\t%0.2f\t%d" % (self.__repr__(),self.GC,len(self))
 		return f"{self.__repr__()}"
 
 	def __iter__(self):
+		"""Iterate over the tile sequence bases."""
 		return iter(self.sequence)
 
 	def __len__(self):
+		"""Return the length of the tile interval."""
 		return self.end-self.start+1
 
 	def overlaps(self,b):
@@ -71,21 +87,26 @@ class Tile:
 		return abs(self.start-b.start)
 
 	def toFasta(self):
+		"""Return the tile formatted as a FASTA record."""
 		return f'>{self.name}\n{self.sequence}'
 
 	def toBed(self):
+		"""Placeholder for BED formatting support."""
 		pass
 
 	def GC(self):
+		"""Return GC percentage for the tile sequence."""
 		return float(sequencelib.gc_content(self.sequence))
 
 	#def oligoSequence(self):
 	#	return self.compiledPrefix()+self.sequence+self.compiledSuffix()
 
 	def __hash__(self):
+		"""Hash tiles by their sequence."""
 		return hash(self.sequence)
 
 	def __eq__(self,other):
+		"""Compare tiles by their sequences."""
 		#if self.sequence.upper() == other.sequence.upper():
 		if self.sequence == other.sequence:
 			return True
@@ -93,9 +114,11 @@ class Tile:
 			return False
 
 	def __len__(self):
+		"""Return the length of the tile sequence."""
 		return len(self.sequence)
 
 	def __cmp__(self,other):
+		"""Legacy comparison for sorting tiles by name and position."""
 		return cmp((self.seqName, self.startPos, self.name),(other.seqName, other.startPos, other.name))
 
 	# def tileFasta(self):
@@ -113,12 +136,15 @@ class Tile:
 		self.Gibbs = binding_energy
 
 	def Tm(self):
+		"""Return the basic melting temperature estimate for the tile."""
 		return float(sequencelib.getTm(self.sequence))
 
 	def RajTm(self):
+		"""Return the SantaLucia-style melting temperature estimate."""
 		return thermo.Tm(self.sequence)
 
 	def isMasked(self):
+		"""Return True if the tile contains masked bases."""
 		if 'n' in self.sequence:
 			self.masked = True
 		elif 'N' in self.sequence:

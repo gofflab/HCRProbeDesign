@@ -11,6 +11,13 @@ import re
 import array
 
 def containsAny(astring, aset):
+    """
+    Check whether a string contains any of the given characters.
+
+    :param astring: Input string.
+    :param aset: Iterable of characters to search for.
+    :return: True if any character is present.
+    """
     # Check whether 'str' contains ANY of the chars in 'set'
     # http://code.activestate.com/recipes/65441-checking-whether-a-string-contains-a-set-of-chars/
     return 1 in [c in astring for c in aset]

@@ -1,3 +1,5 @@
 [console_scripts]
+buildGenomeIndex = HCRProbeDesign.referenceGenome:main
 designProbes = HCRProbeDesign.probeDesign:main
+designProbesBatch = HCRProbeDesign.probeDesign:main_batch
 fetchMouseIndex = HCRProbeDesign.genomeMask:install_index

@@ -1,3 +1,5 @@
+"""Miscellaneous utilities for sequence processing and formatting."""
+
 import string
 import operator
 import random
@@ -43,6 +45,11 @@ def FastaIterator(handle):
 
 
 def eprint(*args, **kwargs):
+    """
+    Print to stderr with the same signature as print().
+
+    :return: None.
+    """
     print(*args, file=sys.stderr, **kwargs)
 
 ########
@@ -51,6 +58,19 @@ def eprint(*args, **kwargs):
 #
 ########
 def pretty_print(f, d, level=-1, maxw=0, maxh=0, gap="", first_gap='', last_gap=''):
+    """
+    Pretty-print nested structures to a file handle.
+
+    :param f: Output file-like object.
+    :param d: Data structure to render.
+    :param level: Recursion depth (-1 for unlimited).
+    :param maxw: Maximum width per line.
+    :param maxh: Maximum items per list/dict/tuple.
+    :param gap: Base indentation string.
+    :param first_gap: Indentation for opening delimiter line.
+    :param last_gap: Indentation for closing delimiter line.
+    :return: None.
+    """
     # depending on the type of expression, it recurses through its elements
     # and prints with appropriate indentation
 
@@ -226,12 +246,20 @@ def pp(d,level=-1,maxw=0,maxh=0,parsable=0):
         pp2.pprint(d)
 
 def onlyNucleic(seq,set=['a','c','g','t','u','A','C','G','T','U','n','N','@']):
+	"""
+	Check whether a sequence contains only nucleic characters.
+
+	:param seq: Input sequence string.
+	:param set: Allowed characters.
+	:return: True if all characters are allowed.
+	"""
 	for c in seq:
 		if c not in set:
 			return False
 	return True
 
 def findUnique(tiles):
+	"""Return a list of unique Tile objects from the input list."""
 	return list(set(tiles))
 
 # def findUnique(tiles):
@@ -244,6 +272,14 @@ def findUnique(tiles):
 # 	return res
 
 def estimateAffixLength(sequence,tagLength):
+	"""
+	Estimate sequence length after tag insertion.
+
+	:param sequence: Sequence containing an optional '@' tag marker.
+	:param tagLength: Length of the tag to be inserted.
+	:return: Adjusted sequence length.
+	:raises TileError: If multiple tag markers are present.
+	"""
 	tagHits = sequencelib.mcount(sequence, '@')
 	if tagHits == 0:
 		return len(sequence)
@@ -254,6 +290,14 @@ def estimateAffixLength(sequence,tagLength):
 
 
 def buildTags(numTags,tagLength,sites=None):
+	"""
+	Generate random DNA tags with optional restriction site filtering.
+
+	:param numTags: Number of tags to generate.
+	:param tagLength: Length of each tag.
+	:param sites: Comma-delimited restriction sites to avoid.
+	:return: List of DNA tag strings.
+	"""
 	tmpTags = set()
 	while len(tmpTags)<numTags:
 		tmpTag = sequencelib.GenRandomSeq(tagLength,type="DNA")
@@ -264,6 +308,13 @@ def buildTags(numTags,tagLength,sites=None):
 	return list(tmpTags)
 
 def hasRestrictionSites(sequence,sites):
+	"""
+	Check if a sequence contains restriction sites.
+
+	:param sequence: Sequence to scan.
+	:param sites: Comma-delimited restriction site names.
+	:return: True if any sites are present.
+	"""
 	#Parse sites
 	sites = sites.split(",")
 	rb = Restriction.RestrictionBatch(sites)
@@ -286,6 +337,14 @@ def hasRestrictionSites(sequence,sites):
 		return False
 
 def warnRestrictionSites(sequence,name,sites):
+	"""
+	Print a warning if restriction sites are found in a sequence.
+
+	:param sequence: Sequence to scan.
+	:param name: Sequence label for logging.
+	:param sites: Comma-delimited restriction site names.
+	:return: None.
+	"""
 	sites = sites.split(",")
 	rb = Restriction.RestrictionBatch(sites)
 

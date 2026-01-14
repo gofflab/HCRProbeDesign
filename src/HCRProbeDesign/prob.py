@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Probability and statistics helpers for sequence analysis."""
 import math,operator,random,sys
 import numpy as np
 
@@ -166,15 +167,35 @@ def movavg(s, n):
 
 
 def median(l):
+    """
+    Return the median of a list.
+
+    :param l: Sequence of numeric values.
+    :return: Median value or None for empty input.
+    """
     if not l: return None
     l = my_sort(l)
     if len(l)%2: return my_sort(l)[len(l)/2]
     else: return (l[len(l)/2]+l[len(l)/2-1])/2.0
 
 def stdev(l, failfast=1):
+    """
+    Return the sample standard deviation.
+
+    :param l: Sequence of numeric values.
+    :param failfast: Raise on insufficient data if True.
+    :return: Standard deviation.
+    """
     return math.sqrt(variance(l,failfast=failfast))
 
 def variance(l,failfast=1):
+    """
+    Return the sample variance.
+
+    :param l: Sequence of numeric values.
+    :param failfast: Raise on insufficient data if True.
+    :return: Variance.
+    """
     if (not l) or len(l)==1:
         if failfast: raise "tools.variance: Not enough samples.  Need >= 2, got %s"%len(l)
         else: return 0#'N/A'
@@ -185,11 +206,24 @@ def variance(l,failfast=1):
     return s / (len(l)-1)
 
 def log2(x):
+    """
+    Compute log base 2.
+
+    :param x: Value to transform.
+    :return: log2(x).
+    """
     #converting bases: log_a(b) = log_c(b)/log_c(a)
     #i.e. log_2(x) = log_e(2)/log_e(x) = log_10(2)/log_10(x)
     return math.log(x)/float(loge_2)
 
 def log_k(x,k):
+    """
+    Compute log base k.
+
+    :param x: Value to transform.
+    :param k: Logarithm base.
+    :return: log_k(x).
+    """
     return math.log(x)/math.log(k)
 
 def prob2score(prob):
@@ -210,6 +244,12 @@ def p2bits(p):
     return -log2(p)
 
 def factorial(n):
+    """
+    Compute factorial of n.
+
+    :param n: Non-negative integer.
+    :return: n!.
+    """
     result = 1
     for i in range(n,0,-1):
         #print i
@@ -262,20 +302,52 @@ def binomial_likelihood_ratio(ps,k,n):
         return sys.maxint
 
 def binomial_log_likelihood_ratio(ps,k,n):
+    """
+    Return the log-likelihood ratio for two binomial hypotheses.
+
+    :param ps: Tuple/list of two probabilities (null, alternative).
+    :param k: Number of successes.
+    :param n: Number of trials.
+    :return: Log-likelihood ratio.
+    """
     return log_binomial(ps[1],k,n) - log_binomial(ps[0],k,n)
 
 def log_binomial(p,k,n):
+    """
+    Compute log probability of k successes in n trials.
+
+    :param p: Success probability.
+    :param k: Number of successes.
+    :param n: Number of trials.
+    :return: Log probability.
+    """
     # the log probability of seeing exactly k successes in n trials
     # given the probability of success is p
     return log_n_choose_k(n,k)+math.log(p)*k+math.log(1-p)*(n-k)
 
 def binomial(p,k,n):
+    """
+    Compute the binomial probability mass function.
+
+    :param p: Success probability.
+    :param k: Number of successes.
+    :param n: Number of trials.
+    :return: Probability of exactly k successes.
+    """
     # probability of seeing exactly k successes in n trials, given
     # the probability of success is p
     #return n_choose_k(n,k)*(p**k)*((1-p)**(n-k))
     return n_choose_k(n,k)*(p**k)*((1-p)**(n-k))
 
 def cumBinomial(p,k,n):
+    """
+    Return cumulative binomial probability up to k successes.
+
+    :param p: Success probability.
+    :param k: Maximum successes.
+    :param n: Number of trials.
+    :return: Cumulative probability.
+    """
     #Returns the cumulative probability from the binomaial distribution
     Pval = 0.0
     for j in range(0,k+1):
@@ -283,6 +355,13 @@ def cumBinomial(p,k,n):
     return Pval
 
 def n_choose_k(n,k):
+    """
+    Compute combinations (n choose k).
+
+    :param n: Total items.
+    :param k: Items chosen.
+    :return: Number of combinations.
+    """
     # (n k) = n! / (k! (n-k)!)
     #
     #         n*(n-1)*(n-2)*....*(n-k+1)
@@ -330,6 +409,14 @@ def log_n_choose_k(n,k):
 #Dictionary Tools
 #################
 def cget(diclist, key, strict=1):
+    """
+    Gather a key from a list of dictionaries.
+
+    :param diclist: List of dictionaries.
+    :param key: Key to retrieve.
+    :param strict: If True, require all dicts to have the key.
+    :return: List of values for the given key.
+    """
     # cross_get was: gather(diclist,key)
     # gathers the same key from a list of dictionaries
     # can also be used in lists

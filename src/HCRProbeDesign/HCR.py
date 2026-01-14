@@ -1,3 +1,4 @@
+"""HCR split-initiator sequence definitions and helper utilities."""
 
 # Split-initiator sequences from
 # Sequences retrieved from https://dev.biologists.org/content/develop/suppl/2018/06/21/145.12.dev165753.DC1/DEV165753supp.pdf
@@ -26,4 +27,11 @@ initiators = {
 }
 
 def addInitiator(tile,initiator="B1"):
+    """
+    Placeholder for future initiator attachment helper.
+
+    :param tile: Tile instance to modify.
+    :param initiator: Initiator channel key (e.g., B1).
+    :return: None.
+    """
     pass

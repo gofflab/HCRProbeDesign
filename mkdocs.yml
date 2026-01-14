@@ -1,0 +1,27 @@
+site_name: HCRProbeDesign
+site_description: Probe design tool for HCR v3.0 split-initiator probe pairs
+repo_url: https://github.com/gofflab/HCRProbeDesign
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Probe Design Workflow: probe-design-workflow.md
+  - CLI: cli.md
+  - Configuration: configuration.md
+  - Reference Genomes: reference-genome.md
+  - API Reference: api.md
+theme:
+  name: readthedocs
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
+            show_source: false
+            merge_init_into_class: true
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true

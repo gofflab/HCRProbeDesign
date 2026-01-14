@@ -1,3 +1,5 @@
+"""RepeatMasker web API helper utilities (deprecated)."""
+
 ################
 # Manages API calls to http://www.repeatmasker.org/ for target sequences
 #TODO: Unsure whether this should happen before or after reverse complementing.  Ie. do I want to mask the target sequence?  Or the probe sequences?  Does it matter?
@@ -90,9 +92,17 @@ def repeatmask(sequence,dnasource='mouse'):
                 return(res)
 
 def repeatmasker_local(sequence,dnasource='mouse'):
+    """
+    Placeholder for a local RepeatMasker wrapper.
+
+    :param sequence: Sequence to mask.
+    :param dnasource: RepeatMasker DNA source key.
+    :return: None.
+    """
     pass
 
 def test():
+    """Simple smoke test for the remote RepeatMasker flow."""
     test_str_len = 30
     test_seq = ''.join(random.choices(['a','g','c','t'], k=test_str_len)) + 'agagagagagagagagagagagagagagagagagaga' + ''.join(random.choices(['a','g','c','t'], k=test_str_len))
     test_seq_random = ''.join(random.choices(['a','g','c','t'], k=int(test_str_len*2)))

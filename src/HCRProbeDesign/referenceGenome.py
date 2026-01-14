@@ -1,3 +1,5 @@
+"""Build and register Bowtie2 indices for reference genomes."""
+
 import argparse
 import glob
 import os
@@ -13,6 +15,12 @@ FASTA_EXTENSIONS = (".fa", ".fasta", ".fna", ".fa.gz", ".fasta.gz", ".fna.gz")
 
 
 def load_config(config_path=DEFAULT_CONFIG_PATH):
+    """
+    Load the HCRconfig.yaml file.
+
+    :param config_path: Path to the YAML configuration file.
+    :return: Parsed config dictionary (empty if missing).
+    """
     if not os.path.exists(config_path):
         return {}
     with open(config_path, "r") as handle:
@@ -20,11 +28,25 @@ def load_config(config_path=DEFAULT_CONFIG_PATH):
 
 
 def save_config(config, config_path=DEFAULT_CONFIG_PATH):
+    """
+    Write configuration data to HCRconfig.yaml.
+
+    :param config: Configuration dictionary.
+    :param config_path: Path to write the configuration.
+    :return: None.
+    """
     with open(config_path, "w") as handle:
         yaml.safe_dump(config, handle, sort_keys=False)
 
 
 def collect_fasta_inputs(paths):
+    """
+    Resolve FASTA inputs from files and directories.
+
+    :param paths: List of FASTA files or directories.
+    :return: Deduplicated list of FASTA file paths.
+    :raises FileNotFoundError: If a path or directory has no FASTA files.
+    """
     files = []
     for path in paths:
         if os.path.isdir(path):
@@ -49,6 +71,12 @@ def collect_fasta_inputs(paths):
 
 
 def format_index_path(index_prefix):
+    """
+    Format an index prefix relative to the package when possible.
+
+    :param index_prefix: Bowtie2 index prefix path.
+    :return: Relative path if within package, otherwise absolute path.
+    """
     abs_prefix = os.path.abspath(index_prefix)
     abs_root = os.path.abspath(PACKAGE_DIRECTORY)
     try:
@@ -61,6 +89,19 @@ def format_index_path(index_prefix):
 
 
 def build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None, threads=1, force=False):
+    """
+    Build a Bowtie2 index from the provided FASTA files.
+
+    :param fasta_paths: List of FASTA file paths.
+    :param species: Species name for the index directory.
+    :param index_name: Optional index basename override.
+    :param indices_dir: Output directory for indices.
+    :param threads: Number of threads for bowtie2-build.
+    :param force: Overwrite existing index files if True.
+    :return: Index prefix path.
+    :raises RuntimeError: If bowtie2-build is not available.
+    :raises FileExistsError: If index exists and force is False.
+    """
     bowtie2_build = shutil.which("bowtie2-build")
     if not bowtie2_build:
         raise RuntimeError("bowtie2-build not found in PATH")
@@ -87,6 +128,16 @@ def build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None,
 
 
 def register_species(config_path, species, index_prefix, force=False):
+    """
+    Register a species and its Bowtie2 index prefix in the config file.
+
+    :param config_path: Path to HCRconfig.yaml.
+    :param species: Species key to register.
+    :param index_prefix: Bowtie2 index prefix path.
+    :param force: Overwrite an existing species entry if True.
+    :return: None.
+    :raises ValueError: If the species exists and force is False.
+    """
     config = load_config(config_path)
     species_config = config.setdefault("species", {})
     if species in species_config and not force:
@@ -96,6 +147,7 @@ def register_species(config_path, species, index_prefix, force=False):
 
 
 def main():
+    """CLI entry point for building and registering a reference genome index."""
     parser = argparse.ArgumentParser(
         description="Build a Bowtie2 index from a reference genome and register it."
     )
