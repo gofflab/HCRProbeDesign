@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Core probe design workflow and CLI entry points."""
 from .tiles import Tile, TileError
 from . import utils
 #import copy
@@ -123,11 +124,22 @@ def calcOligoCost(tiles,pricePerBase=0.19):
 	return total
 
 def outputRunParams(args):
+	"""
+	Print run parameters to stderr.
+
+	:param args: Parsed argparse namespace.
+	:return: None.
+	"""
 	utils.eprint(f"\nParameters:")
 	utils.eprint(print(args))
 
 
 def build_parser():
+	"""
+	Build the argument parser for probe design CLIs.
+
+	:return: argparse.ArgumentParser instance.
+	"""
 	parser = argparse.ArgumentParser(description="Probe Design Utility for HCR v3.0",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 	parser.add_argument("infile",help="Properly formatted fasta file against which to design probes",type=argparse.FileType('r'))
 	parser.add_argument("-v", "--verbose", help="Verbose output", action="store_true")
@@ -158,6 +170,12 @@ def build_parser():
 
 
 def _sanitize_name(name):
+	"""
+	Normalize an input name to a filesystem-friendly token.
+
+	:param name: Raw name string.
+	:return: Sanitized name or empty string.
+	"""
 	if name is None:
 		return ""
 	name = name.strip()
@@ -167,6 +185,12 @@ def _sanitize_name(name):
 
 
 def _parse_record_channel(name):
+	"""
+	Parse a FASTA header for a channel override.
+
+	:param name: FASTA record name.
+	:return: Tuple of (cleaned_name, channel_override).
+	"""
 	if not name:
 		return "", None
 	match = re.search(r'(?:^|[\s|])channel=([A-Za-z0-9_-]+)', name)
@@ -179,6 +203,14 @@ def _parse_record_channel(name):
 
 
 def _resolve_channel(args, channel_override):
+	"""
+	Resolve the effective HCR channel.
+
+	:param args: Parsed CLI arguments.
+	:param channel_override: Optional override from FASTA header.
+	:return: Channel string.
+	:raises ValueError: If the channel is not defined.
+	"""
 	channel = channel_override or args.channel
 	if channel not in HCR.initiators:
 		raise ValueError(f"Channel '{channel}' is not defined in HCR.initiators")
@@ -186,6 +218,15 @@ def _resolve_channel(args, channel_override):
 
 
 def _build_target_name(base_name, record_name, index, used_names):
+	"""
+	Build a unique, sanitized target name for outputs.
+
+	:param base_name: Base target name from CLI.
+	:param record_name: FASTA record name.
+	:param index: Record index for fallback naming.
+	:param used_names: Set of previously used names.
+	:return: Unique target name string.
+	"""
 	base = _sanitize_name(base_name)
 	record = _sanitize_name(record_name)
 	if not record:
@@ -201,6 +242,15 @@ def _build_target_name(base_name, record_name, index, used_names):
 
 
 def _design_tiles_for_record(args, record, target_name, channel_override=None):
+	"""
+	Run the full probe design workflow for a single FASTA record.
+
+	:param args: Parsed CLI arguments.
+	:param record: Dict containing "name" and "sequence".
+	:param target_name: Output name prefix for files and tiles.
+	:param channel_override: Optional channel override.
+	:return: List of selected Tile objects.
+	"""
 	sequence = record["sequence"]
 	seq_name = record["name"]
 	handle_name = target_name or args.targetName
@@ -349,6 +399,11 @@ def _design_tiles_for_record(args, record, target_name, channel_override=None):
 ###############
 
 def test():
+	"""
+	Manual test harness with hard-coded parameters and FASTA file.
+
+	:return: None.
+	"""
 	# Set default args
 	minGC = 45.0
 	maxGC = 55.0
@@ -494,6 +549,13 @@ def test():
 
 
 def _assert_species_config(args):
+	"""
+	Verify the requested species exists in HCRconfig.yaml.
+
+	:param args: Parsed CLI arguments with a species attribute.
+	:return: None.
+	:raises AssertionError: If species is not configured.
+	"""
 	with open(package_directory+"/HCRconfig.yaml", "r") as file:
 		config = yaml.safe_load(file)
 	assert args.species in config['species'].keys(), "Species is not yet setup in HCRconfig.yaml"

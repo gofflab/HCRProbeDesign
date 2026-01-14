@@ -1,3 +1,5 @@
+"""Genome masking utilities based on Bowtie2 alignments."""
+
 # Debating whether or not to attempt Bowtie2 mapping for speed.
 # Local would suck for install.
 # Remote would suck for maintenance.
@@ -27,6 +29,16 @@ with open(package_directory+"/HCRconfig.yaml", "r") as file:
 
 #TODO: make genomemask() take transient index argment if not default in species
 def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3, index=None):
+    """
+    Run Bowtie2 to align probe tiles and write a SAM file to disk.
+
+    :param fasta_string: FASTA formatted string with probe sequences.
+    :param handleName: Prefix for FASTA/SAM output files.
+    :param species: Species key in HCRconfig.yaml.
+    :param nAlignments: Number of alignments to report per read.
+    :param index: Optional Bowtie2 index prefix override.
+    :return: Bowtie2 subprocess return code.
+    """
     fasta_file = f'{handleName}_reads.fa'
     tmpFasta = open(fasta_file,mode="w")
     #print(tmpFasta.name)
@@ -61,6 +73,7 @@ def countHitsFromSam(samFile):
     return hitCounts
 
 def test():
+    """Quick manual test for Bowtie2 masking and SAM parsing."""
     fasta_string=">read1\ntacgagcttactggacgagcgtgactctgac\n>read2\nctgagctgatgcgacgtatctgatgctgtacgtgacg\n>read3\ncgagctatcgtactgagcggagcgcgggcgatat"
     handleName = 'test'
     proc_info = genomemask(fasta_string,handleName=handleName,species="mouse")
@@ -68,6 +81,13 @@ def test():
     print(res)
 
 def install_index(url='https://genome-idx.s3.amazonaws.com/bt/mm10.zip',genome="mm10"):
+    """
+    Download and extract a prebuilt Bowtie2 index into the package indices.
+
+    :param url: URL to a zipped Bowtie2 index archive.
+    :param genome: Genome name used to name the extraction directory.
+    :return: None.
+    """
     # Parse arguments if any
     #Argument handling
     parser = argparse.ArgumentParser(description="Bowtie2 index retrieval and installation",formatter_class=argparse.ArgumentDefaultsHelpFormatter)

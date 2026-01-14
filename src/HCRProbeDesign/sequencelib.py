@@ -1,3 +1,5 @@
+"""Sequence parsing and utility functions."""
+
 #/usr/bin/env python
 import operator,random,math
 from . import prob
@@ -166,6 +168,7 @@ def GenRandomSeq(length, type='DNA'):
     return ''.join([random.choice(chars) for i in range(length)])
 
 def seed():
+    """Seed the random number generator with system entropy."""
     random.seed()
 
 def draw(distribution):
