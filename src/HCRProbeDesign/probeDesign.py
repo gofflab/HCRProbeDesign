@@ -15,6 +15,10 @@ import primer3
 from string import ascii_uppercase
 import argparse
 from itertools import product
+import yaml
+import os
+
+package_directory = os.path.dirname(os.path.abspath(__file__))
 
 #######################
 # Scan input sequence #
@@ -55,7 +59,7 @@ def outputTable(tiles,outHandle=sys.stdout):
 	outputKeys=["name","probe","start","length","P1","P2","channel","GC","Tm","dTm","GibbsFE"]
 	outHandle.write("\t".join(outputKeys)+"\n")
 	for tile in tiles:
-		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calcTm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}\n")
+		outHandle.write(f"{tile.name}\t{tile.sequence}\t{tile.start}\t{len(tile)}\t{tile.P1}\t{tile.P2}\t{tile.channel}\t{tile.GC():.2f}\t{primer3.calc_tm(tile.sequence):.2f}\t{tile.dTm:.2f}\t{tile.Gibbs:.2f}\n")
 
 def outputIDT(tiles,outHandle=sys.stdout):
 	"""
@@ -157,14 +161,14 @@ def test():
 	mySeq = next(fastaIter) #TODO: make loopable when migrating to main()
 
 	# RepeatMasking
-	#TODO: Specify DNA source in input params
-	utils.eprint("\nRepeat Masking...")
-	mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource=species)
+	# #TODO: Specify DNA source in input params
+	#utils.eprint("\nRepeat Masking...")
+	#mySeq['sequence'] = repeatMask.repeatmask(mySeq['sequence'],dnasource=species)
 
 	#Convert to lowercase
 	#mySeq['sequence'] = mySeq['sequence'].lower()
 
-	# Tile over masked sequence record to generate all possible probes of appropriate length that are not already masked
+	# Tile over sequence record to generate all possible probes of appropriate length that are not already masked
 	tiles = scanSequence(mySeq['sequence'],mySeq['name'],tileStep=1,tileSize=tileSize)
 	utils.eprint(f'{len(tiles)} tiles available of length {tileSize}...')
 
@@ -183,8 +187,8 @@ def test():
 	# Calculate Hairpins
 	utils.eprint("\nChecking for hairpins")
 	for tile in tiles:
-		thermRes = primer3.calcHairpin(tile.sequence)
-	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).structure_found]
+		thermRes = primer3.calc_hairpin(tile.sequence)
+	tiles = [tile for tile in tiles if primer3.calc_hairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	print(len(tiles))
@@ -265,7 +269,7 @@ def test():
 
 	# Print out results
 	for tile in bestTiles:
-		print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calcTm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
+		print(f"{tile}\tP1_sequence:{tile.P1}\tP2_sequence:{tile.P2}\tmyTm:{tile.Tm():.2f}\tprimer3-Tm:{primer3.calc_tm(tile.sequence):.2f}\tdTm:{tile.dTm:.2f}\tGC%:{tile.GC():.2f}\tGibbs:{tile.Gibbs:.2f}")
 
 	utils.eprint(f'\nThere are a total of {len(bestTiles)} best probes')
 
@@ -307,7 +311,7 @@ def main():
 	parser.add_argument('-o', '--output', help='Output file name', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
 	parser.add_argument("--tileSize", help="Size of the tiles along the target sequence", type=int, default=52)
 	parser.add_argument("--targetName",help="User-friendly name for target sequence (e.g. Gene Name)",default="target")
-	parser.add_argument("-s","--species", help="Species for repeatmask and genomemask", default='mouse')
+	parser.add_argument("-s","--species", help="Species for genomemask (must have valid bowtie2 entry HCRconfig.yaml)", default='mouse')
 	parser.add_argument("--minGC", help="Min allowable GC", default=45.0,type=float)
 	parser.add_argument("--maxGC", help="Max allowable GC", default=55.0,type=float)
 	parser.add_argument("--targetGC", help="Target GC", default=50.0,type=float)
@@ -315,7 +319,8 @@ def main():
 	parser.add_argument("--dTmFilter", help="Enable filtering based on dTm between probeset halves.", default=False, action="store_true")
 	parser.add_argument("-g", "--no-genomemask", help="Disables bowtie2 checking for multiple hits to genome", default=True, action="store_false")
 	parser.add_argument("-i","--index", help="Location of bowtie2 index file for genomemask analysis")
-	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=True, action="store_false")
+	## Disabling repeat masking by default at this point.  Will likely remove because is in some ways redundant with genomeMask and is also a pain in the ass to maintain.
+	parser.add_argument("-r", "--no-repeatmask", help="Disables repeatmasker masking of target sequence", default=False, action="store_false") # Set default=True to repeatmask by default
 	parser.add_argument("--minGibbs", help="Min allowable GibbsFE", default=-70.0,type=float)
 	parser.add_argument("--maxGibbs", help="Max allowable GibbsFE", default=-50.0,type=float)
 	parser.add_argument("--targetGibbs", help="Target GibbsFE", default=-60.0,type=float)
@@ -327,6 +332,15 @@ def main():
 	parser.add_argument("--calcPrice", help="Calculate total cost of probe synthesis assuming $0.12 per base", default=False, action="store_true")
 	args = parser.parse_args()
 
+	################
+	# Assert species has entry in config.yaml
+	#################
+	# Load the configuration
+	with open(package_directory+"/HCRconfig.yaml", "r") as file:
+		config = yaml.safe_load(file)
+	
+	assert args.species in config['species'].keys(), "Species is not yet setup in HCRconfig.yaml"
+ 
 	#########
 	# Parse fasta file. Currently not looping over records, only uses first fasta record
 	#########
@@ -379,7 +393,7 @@ def main():
 	utils.eprint("\nChecking for hairpins")
 	#TODO: add this as a user-selectable parameter. Currently awkward as we don't have a min Tm filter.
 	max_Th = 45.0 # This is the maximum tolerated calculated melting temperature of any predicted hairpins 
-	tiles = [tile for tile in tiles if primer3.calcHairpin(tile.sequence).tm < max_Th or not primer3.calcHairpin(tile.sequence).structure_found]
+	tiles = [tile for tile in tiles if primer3.calc_hairpin(tile.sequence).tm < max_Th or not primer3.calc_hairpin(tile.sequence).structure_found]
 	utils.eprint(f'{len(tiles)} tiles remain')
 
 	##############
@@ -390,7 +404,7 @@ def main():
 	if args.no_genomemask:
 		utils.eprint(f"\nChecking unique mapping of remaining tiles against {args.species} reference genome")
 		blast_string = "\n".join([tile.toFasta() for tile in tiles])
-		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species,index=None)
+		blast_res = genomeMask.genomemask(blast_string, handleName=args.targetName,species=args.species,index=args.index)
 		utils.eprint(f'Parsing bowtie2 output now')
 		hitCounts = genomeMask.countHitsFromSam(f'{args.targetName}.sam')
 		#print(hitCounts)
@@ -491,7 +505,7 @@ def main():
 		else:
 			bestTiles.append(tiles.pop(nextBestIdx))
 
-	utils.eprint(f'Selected {len(bestTiles)} tiles for probe design')
+	utils.eprint(f'Selected {len(bestTiles)} non-overlapping tiles for probe design')
 
 	################
 	# Add initator and spacers to split probes

@@ -1,0 +1,19 @@
+species:
+  mouse:
+    bowtie2_index: "indices/mm10/mm10"
+  dpealeii:
+    bowtie2_index: "indices/dpealeii/d_pealeii_v2-1"
+default_params:
+  tileSize: 52
+  minGC: 45.0
+  maxGC: 55.0
+  targetGC: 50.0
+  dTmMax: 5.0
+  minGibbs: -70.0
+  maxGibbs: -50.0
+  targetGibbs: -60.0
+  maxRunLength: 7
+  maxProbes: 20
+  maxRunMismatches: 2
+  num_hits_allowed: 1
+

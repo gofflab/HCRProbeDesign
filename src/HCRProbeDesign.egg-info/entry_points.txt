@@ -1,4 +1,3 @@
 [console_scripts]
 designProbes = HCRProbeDesign.probeDesign:main
-fetchIndex = HCRProbeDesign.genomeMask:install_index
-
+fetchMouseIndex = HCRProbeDesign.genomeMask:install_index

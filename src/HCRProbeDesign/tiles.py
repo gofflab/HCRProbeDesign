@@ -160,7 +160,7 @@ class Tile:
 		'''
 		Calculate the difference in melting temperature between the 5' and 3' sequences
 		'''
-		self.dTm = abs(primer3.calcTm(self.fivePrimeSeq)-primer3.calcTm(self.threePrimeSeq))
+		self.dTm = abs(primer3.calc_tm(self.fivePrimeSeq)-primer3.calc_tm(self.threePrimeSeq))
 
 	#TODO: PLEASE check this to make sure that I'm adding the initiator sequences in the correct position and order
 	def makeProbes(self,channel):

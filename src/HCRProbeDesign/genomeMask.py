@@ -9,15 +9,21 @@ from collections import defaultdict
 import os
 import urllib.request
 import shutil
-import pkg_resources
 from zipfile import ZipFile
 import argparse
+import yaml
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 indices_directory = f'{package_directory}/indices/'
-indexLookup = {
-    'mouse': os.path.join(indices_directory,'mm10/mm10')
-}
+# indexLookup = {
+#     'mouse': os.path.join(indices_directory,'mm10/mm10')
+# }
+
+#############
+# Import config settings
+#############
+with open(package_directory+"/HCRconfig.yaml", "r") as file:
+		config = yaml.safe_load(file)
 
 #TODO: make genomemask() take transient index argment if not default in species
 def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3, index=None):
@@ -27,8 +33,14 @@ def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3, in
     tmpFasta.write(fasta_string)
     tmpFasta.close()
     sam_file = f'{handleName}.sam'
-    print(indexLookup[species])
-    res = subprocess.call(["bowtie2", f"-k{nAlignments}", "-x", indexLookup[species], "-f", fasta_file, "-S", sam_file])
+    if index == None:
+        index = config['species'][species]['bowtie2_index']
+    print(index)
+    if os.path.isabs(index):
+        index_path = index
+    else:
+        index_path = package_directory + "/" + index
+    res = subprocess.call(["bowtie2", f"-k{nAlignments}", "-x", index_path, "-f", fasta_file, "-S", sam_file])
     return res
 
 def countHitsFromSam(samFile):
@@ -61,7 +73,6 @@ def install_index(url='https://genome-idx.s3.amazonaws.com/bt/mm10.zip',genome="
     parser = argparse.ArgumentParser(description="Bowtie2 index retrieval and installation",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     args = parser.parse_args()
     print(f'Downloading Bowtie2 index from {url} ...')
-    #folder = pkg_resources.resource_filename('HCRProbeDesign','indices/')
     index_folder = indices_directory
     fname = f'{index_folder}{genome}.zip'
     print(fname)

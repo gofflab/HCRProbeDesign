@@ -2,3 +2,5 @@ primer3-py
 biopython
 beautifulsoup4
 pysam
+zipfile36
+pyyaml
