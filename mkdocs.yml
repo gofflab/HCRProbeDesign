@@ -1,6 +1,6 @@
 site_name: HCRProbeDesign
 site_description: Probe design tool for HCR v3.0 split-initiator probe pairs
-site_url: https://gofflab.github.io/HCRProbeDesign/
+site_url: https://www.gofflab.org/HCRProbeDesign/
 repo_url: https://github.com/gofflab/HCRProbeDesign
 nav:
   - Home: index.md

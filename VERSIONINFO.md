@@ -1,3 +1,5 @@
+## v0.2.5 - Unreleased
+  + Documentation base URL updated
 ## v0.2.4 - 01.16.2026
   + Exposed package version in `HCRProbeDesign.__version__`
 ## v0.2.3 - 01.14.2026

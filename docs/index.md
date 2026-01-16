@@ -4,6 +4,8 @@ HCRProbeDesign is a command-line and Python package for designing HCR v3.0 split
 from a target FASTA sequence. It tiles target sequences, filters by GC content, melting temperature,
 homopolymers, and hairpins, and can optionally enforce genome uniqueness with Bowtie2.
 
+Documentation URL: https://www.gofflab.org/HCRProbeDesign/
+
 ## Key tools
 - `designProbes`: primary probe design CLI for single-record FASTA inputs
 - `designProbesBatch`: batch probe design for multi-record FASTA inputs

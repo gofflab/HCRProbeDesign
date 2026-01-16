@@ -11,6 +11,8 @@ Key tools:
 - `fetchMouseIndex`: download, install, and register the mm10 Bowtie2 index.
 - `buildGenomeIndex`: build and register a new reference genome index.
 
+Documentation: https://www.gofflab.org/HCRProbeDesign/
+
 ## Installation
 ### Prerequisites
 - Python >= 3.6
