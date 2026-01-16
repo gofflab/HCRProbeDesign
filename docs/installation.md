@@ -7,6 +7,11 @@
 If you plan to use genome masking (enabled by default), register a reference
 species with `fetchMouseIndex` or `buildGenomeIndex` after installing.
 
+## Install from PyPI
+```bash
+pip install hcrprobedesign
+```
+
 ## Install from source
 ```bash
 git clone https://github.com/gofflab/HCRProbeDesign.git

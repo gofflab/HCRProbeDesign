@@ -17,6 +17,11 @@ Key tools:
 - Bowtie2 (`bowtie2` and `bowtie2-build`) for genome masking and index building
 - Python dependencies are installed via `pip` (primer3-py, biopython, beautifulsoup4, pysam, zipfile36, pyyaml)
 
+### Install from PyPI
+```bash
+pip install hcrprobedesign
+```
+
 ### Install from source
 ```bash
 git clone https://github.com/gofflab/HCRProbeDesign.git
