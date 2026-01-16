@@ -15,6 +15,10 @@ Common flags:
 - `--maxProbes`: maximum number of probes to emit
 - `--calcPrice`: estimate oligo synthesis cost
 
+Note: genome masking is enabled by default and requires a registered species.
+Use `fetchMouseIndex` or `buildGenomeIndex` first, or pass `--index` to point
+directly to a Bowtie2 index.
+
 ## designProbesBatch
 Design probes for every record in a FASTA file.
 

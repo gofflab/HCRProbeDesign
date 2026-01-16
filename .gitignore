@@ -1,8 +1,12 @@
 *.pyc
 __pycache__
+*.egg-info
+build/
+dist/
 .pytest_cache/
 .DS_Store
 indices/*
+!src/HCRProbeDesign/indices/.gitkeep
 *.sam
 tmp.fa
 *.zip

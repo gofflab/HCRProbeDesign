@@ -47,3 +47,4 @@ For mouse (mm10), you can install a prebuilt index instead of building one:
 ```bash
 fetchMouseIndex
 ```
+This registers the mouse entry in `HCRconfig.yaml` so `designProbes --species mouse` works immediately.

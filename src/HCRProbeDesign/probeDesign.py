@@ -147,7 +147,7 @@ def build_parser():
 	parser.add_argument('-o', '--output', help='Output file name', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
 	parser.add_argument("--tileSize", help="Size of the tiles along the target sequence", type=int, default=52)
 	parser.add_argument("--targetName",help="User-friendly name for target sequence (e.g. Gene Name)",default="target")
-	parser.add_argument("-s","--species", help="Species for genomemask (must have valid bowtie2 entry HCRconfig.yaml)", default='mouse')
+	parser.add_argument("-s","--species", help="Species for genome masking (register via fetchMouseIndex/buildGenomeIndex or use --index)", default='mouse')
 	parser.add_argument("--minGC", help="Min allowable GC", default=45.0,type=float)
 	parser.add_argument("--maxGC", help="Max allowable GC", default=55.0,type=float)
 	parser.add_argument("--targetGC", help="Target GC", default=50.0,type=float)
@@ -554,11 +554,31 @@ def _assert_species_config(args):
 
 	:param args: Parsed CLI arguments with a species attribute.
 	:return: None.
-	:raises AssertionError: If species is not configured.
+	:raises SystemExit: If species is not configured and genomemask is enabled.
 	"""
-	with open(package_directory+"/HCRconfig.yaml", "r") as file:
-		config = yaml.safe_load(file)
-	assert args.species in config['species'].keys(), "Species is not yet setup in HCRconfig.yaml"
+	if (not args.no_genomemask) or args.index:
+		return
+
+	config_path = os.path.join(package_directory, "HCRconfig.yaml")
+	if not os.path.exists(config_path):
+		config = {}
+	else:
+		with open(config_path, "r") as file:
+			config = yaml.safe_load(file) or {}
+	species_config = config.get("species", {}) or {}
+
+	if args.species in species_config:
+		return
+
+	available = ", ".join(sorted(species_config)) if species_config else "none"
+	message = (
+		f"Species '{args.species}' is not registered in HCRconfig.yaml.\n"
+		f"Registered species: {available}\n"
+		"Register a reference genome before running designProbes:\n"
+		"  buildGenomeIndex --species <name> --fasta <file_or_dir>\n"
+		"Or supply --index /path/to/bowtie2/index/prefix, or disable genome masking with --no-genomemask."
+	)
+	raise SystemExit(message)
 
 
 def main():

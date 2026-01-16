@@ -1,8 +1,7 @@
-species:
-  mouse:
-    bowtie2_index: "indices/mm10/mm10"
-  dpealeii:
-    bowtie2_index: "indices/dpealeii/d_pealeii_v2-1"
+species: {}
+# Example:
+#   mouse:
+#     bowtie2_index: "indices/mm10/mm10"
 default_params:
   tileSize: 52
   minGC: 45.0
@@ -16,4 +15,3 @@ default_params:
   maxProbes: 20
   maxRunMismatches: 2
   num_hits_allowed: 1
-

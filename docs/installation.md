@@ -4,6 +4,9 @@
 - Python >= 3.6
 - Bowtie2 (`bowtie2` and `bowtie2-build`) for genome masking and index building
 
+If you plan to use genome masking (enabled by default), register a reference
+species with `fetchMouseIndex` or `buildGenomeIndex` after installing.
+
 ## Install from source
 ```bash
 git clone https://github.com/gofflab/HCRProbeDesign.git

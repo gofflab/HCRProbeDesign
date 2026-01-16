@@ -1,0 +1,3 @@
+include src/HCRProbeDesign/HCRconfig.yaml
+recursive-exclude src/HCRProbeDesign/indices *
+include src/HCRProbeDesign/indices/.gitkeep

@@ -7,7 +7,7 @@ homopolymers, and hairpins, and can optionally enforce genome uniqueness with Bo
 ## Key tools
 - `designProbes`: primary probe design CLI for single-record FASTA inputs
 - `designProbesBatch`: batch probe design for multi-record FASTA inputs
-- `fetchMouseIndex`: download and install the mm10 Bowtie2 index
+- `fetchMouseIndex`: download, install, and register the mm10 Bowtie2 index
 - `buildGenomeIndex`: build and register a new reference genome index
 
 ## Documentation layout

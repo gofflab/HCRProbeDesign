@@ -10,6 +10,8 @@ them.
    - `designProbes` uses only the first FASTA record.
    - `designProbesBatch` processes every record.
    - A FASTA header can override the channel using `channel=...`.
+   - Genome masking is enabled by default and requires a registered species
+     (use `fetchMouseIndex` or `buildGenomeIndex`) or an explicit `--index`.
 2. **Optional repeat masking (disabled by default).**
    - If enabled, the input sequence is masked using RepeatMasker and masked bases
      are converted to `N`. Tiles containing masked bases are discarded later.

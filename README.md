@@ -8,7 +8,7 @@ homopolymers, and hairpins, and can optionally enforce genome uniqueness with Bo
 Key tools:
 - `designProbes`: primary probe design CLI.
 - `designProbesBatch`: batch probe design for multi-record FASTA inputs.
-- `fetchMouseIndex`: download and install the mm10 Bowtie2 index.
+- `fetchMouseIndex`: download, install, and register the mm10 Bowtie2 index.
 - `buildGenomeIndex`: build and register a new reference genome index.
 
 ## Installation
@@ -49,6 +49,7 @@ If you are working with mouse (mm10), you can use the prebuilt index:
 ```bash
 fetchMouseIndex
 ```
+This updates `HCRconfig.yaml` so `designProbes --species mouse` works out of the box.
 
 ## Usage instructions
 ### 1) Prepare a FASTA file
@@ -60,6 +61,10 @@ ACGTACGTACGTACGTACGTACGTACGTACGT
 ```
 
 ### 2) Run probe design
+Before running `designProbes` with genome masking (default), register a reference species with
+`buildGenomeIndex` or `fetchMouseIndex`. You can also supply `--index` directly or skip genome
+masking with `--no-genomemask`.
+
 ```bash
 designProbes targets.fa --species mouse --channel B1 --output probes.tsv --idt probes.idt
 ```
