@@ -121,48 +121,90 @@ output formats. The steps below are listed in the same order the code applies
 them.</p>
 <h2 id="pipeline-overview-ordered">Pipeline overview (ordered)<a class="headerlink" href="#pipeline-overview-ordered" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Read FASTA record(s).</strong></li>
+<li>
+<p><strong>Read FASTA record(s).</strong></p>
+<ul>
 <li><code>designProbes</code> uses only the first FASTA record.</li>
 <li><code>designProbesBatch</code> processes every record.</li>
 <li>A FASTA header can override the channel using <code>channel=...</code>.</li>
 <li>Genome masking is enabled by default and requires a registered species
-     (use <code>fetchMouseIndex</code> or <code>buildGenomeIndex</code>) or an explicit <code>--index</code>.</li>
-<li><strong>Optional repeat masking (disabled by default).</strong></li>
-<li>If enabled, the input sequence is masked using RepeatMasker and masked bases
-     are converted to <code>N</code>. Tiles containing masked bases are discarded later.</li>
-<li><strong>Tile the target sequence (reverse-complemented).</strong></li>
-<li>The sequence is scanned with a step size of 1 to generate 52-nt tiles by
-     default.</li>
+  (use <code>fetchMouseIndex</code> or <code>buildGenomeIndex</code>) or an explicit <code>--index</code>.</li>
+<li>
+<p><strong>Optional repeat masking (disabled by default).</strong></p>
+</li>
+<li>
+<p>If enabled, the input sequence is masked using RepeatMasker and masked bases
+  are converted to <code>N</code>. Tiles containing masked bases are discarded later.</p>
+</li>
+<li>
+<p><strong>Tile the target sequence (reverse-complemented).</strong></p>
+</li>
+<li>
+<p>The sequence is scanned with a step size of 1 to generate 52-nt tiles by
+  default.</p>
+</li>
 <li>Each tile is <strong>reverse-complemented</strong> so probes are antisense to the target.</li>
 <li>Any tile containing <code>N</code> is discarded immediately.</li>
-<li><strong>Filter homopolymer runs (C and G).</strong></li>
-<li>Tiles are removed if they contain long runs of C's or G's beyond the allowed
-     thresholds.</li>
-<li><strong>Filter hairpins.</strong></li>
-<li>Each tile is screened with <code>primer3</code> for self-hairpin structures.</li>
+<li>
+<p><strong>Filter homopolymer runs (C and G).</strong></p>
+</li>
+<li>
+<p>Tiles are removed if they contain long runs of C's or G's beyond the allowed
+  thresholds.</p>
+</li>
+<li>
+<p><strong>Filter hairpins.</strong></p>
+</li>
+<li>
+<p>Each tile is screened with <code>primer3</code> for self-hairpin structures.</p>
+</li>
 <li>Tiles with a predicted hairpin melting temperature &gt;= 45 C are removed.</li>
-<li><strong>Genome uniqueness filtering (Bowtie2).</strong></li>
-<li>Remaining tiles are aligned to the reference genome index.</li>
+<li>
+<p><strong>Genome uniqueness filtering (Bowtie2).</strong></p>
+</li>
+<li>
+<p>Remaining tiles are aligned to the reference genome index.</p>
+</li>
 <li>Tiles with more than the allowed number of hits are removed.</li>
-<li><strong>GC-content filtering.</strong></li>
-<li>Tiles must fall within the allowed GC% range.</li>
-<li><strong>Gibbs free energy filtering.</strong></li>
-<li>Tiles with binding free energies outside the allowed range are removed.</li>
-<li><strong>Split tiles into probe halves.</strong></li>
-<li>Each tile is split into two 25-mers (for a 52-mer tile), dropping the two
-     middle bases to create a short gap.</li>
-<li><strong>Optional dTm filtering.</strong><ul>
-<li>If enabled, tiles are removed when the temperature difference between
-  the two halves is too large.</li>
-</ul>
+<li>
+<p><strong>GC-content filtering.</strong></p>
 </li>
-<li><strong>Select top N non-overlapping tiles.</strong><ul>
-<li>Tiles are ranked by how close their Gibbs free energy is to the target.</li>
+<li>
+<p>Tiles must fall within the allowed GC% range.</p>
+</li>
+<li>
+<p><strong>Gibbs free energy filtering.</strong></p>
+</li>
+<li>
+<p>Tiles with binding free energies outside the allowed range are removed.</p>
+</li>
+<li>
+<p><strong>Split tiles into probe halves.</strong></p>
+</li>
+<li>
+<p>Each tile is split into two 25-mers (for a 52-mer tile), dropping the two
+  middle bases to create a short gap.</p>
+</li>
+<li>
+<p><strong>Optional dTm filtering.</strong></p>
+</li>
+<li>
+<p>If enabled, tiles are removed when the temperature difference between
+  the two halves is too large.</p>
+</li>
+<li>
+<p><strong>Select top N non-overlapping tiles.</strong></p>
+</li>
+<li>
+<p>Tiles are ranked by how close their Gibbs free energy is to the target.</p>
+</li>
 <li>Overlapping tiles are skipped to keep probes spread out.</li>
-</ul>
+<li>
+<p><strong>Add HCR initiators and spacers.</strong></p>
 </li>
-<li><strong>Add HCR initiators and spacers.</strong><ul>
-<li>Channel-specific initiator sequences are appended to the probe halves.</li>
+<li>
+<p>Channel-specific initiator sequences are appended to the probe halves.</p>
+</li>
 </ul>
 </li>
 </ol>
