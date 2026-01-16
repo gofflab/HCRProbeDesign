@@ -1,0 +1,4897 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://gofflab.github.io/HCRProbeDesign/api/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API Reference - HCRProbeDesign</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API Reference";
+        var mkdocs_page_input_path = "api.md";
+        var mkdocs_page_url = "/HCRProbeDesign/api/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> HCRProbeDesign
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../probe-design-workflow/">Probe Design Workflow</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../reference-genome/">Reference Genomes</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">API Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignprobedesign">HCRProbeDesign.probeDesign</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign">probeDesign</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.build_parser">build_parser</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.calcOligoCost">calcOligoCost</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.main">main</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.main_batch">main_batch</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.outputIDT">outputIDT</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.outputRunParams">outputRunParams</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.outputTable">outputTable</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.scanSequence">scanSequence</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.probeDesign.test">test</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesigntiles">HCRProbeDesign.tiles</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.tiles">tiles</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile">Tile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.GC">GC</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.RajTm">RajTm</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.Tm">Tm</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.__cmp__">__cmp__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.__eq__">__eq__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.__hash__">__hash__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.__iter__">__iter__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.__len__">__len__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.__repr__">__repr__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.__str__">__str__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.calcGibbs">calcGibbs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.calcdTm">calcdTm</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.distance">distance</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.hasRuns">hasRuns</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.isMasked">isMasked</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.makeProbes">makeProbes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.overlaps">overlaps</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.splitProbe">splitProbe</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.toBed">toBed</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.toFasta">toFasta</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#HCRProbeDesign.tiles.Tile.validate">validate</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.tiles.TileError">TileError</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesigngenomemask">HCRProbeDesign.genomeMask</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.genomeMask">genomeMask</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.genomeMask.countHitsFromSam">countHitsFromSam</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.genomeMask.genomemask">genomemask</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.genomeMask.install_index">install_index</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.genomeMask.test">test</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignreferencegenome">HCRProbeDesign.referenceGenome</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome">referenceGenome</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome.build_bowtie2_index">build_bowtie2_index</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome.collect_fasta_inputs">collect_fasta_inputs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome.format_index_path">format_index_path</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome.load_config">load_config</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome.main">main</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome.register_species">register_species</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome.save_config">save_config</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignsequencelib">HCRProbeDesign.sequencelib</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib">sequencelib</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.FastaIterator">FastaIterator</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.GenRandomSeq">GenRandomSeq</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.allindices">allindices</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.complement">complement</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.draw">draw</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.find_all">find_all</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.gc_content">gc_content</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.genRandomFromDist">genRandomFromDist</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.getGC">getGC</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.getTm">getTm</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.get_seeds">get_seeds</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.kmer_dictionary">kmer_dictionary</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.kmer_dictionary_counts">kmer_dictionary_counts</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.kmer_stats">kmer_stats</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.makeDistFromFreqs">makeDistFromFreqs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.mcount">mcount</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.prob_seq">prob_seq</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.rcomp">rcomp</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.reverse_complement">reverse_complement</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.seed">seed</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.sequencelib.transcribe">transcribe</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignthermo">HCRProbeDesign.thermo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo">thermo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.Tm">Tm</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.Tm_RNA_DNA">Tm_RNA_DNA</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.containsAny">containsAny</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.gibbs">gibbs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.init_dna_dna">init_dna_dna</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.init_rna_dna">init_rna_dna</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.melting_temp">melting_temp</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.overhang_dna">overhang_dna</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.overhang_rna">overhang_rna</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.salt_adjust">salt_adjust</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.stacks_dna_dna">stacks_dna_dna</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.thermo.stacks_rna_dna">stacks_rna_dna</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignutils">HCRProbeDesign.utils</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils">utils</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.FastaIterator">FastaIterator</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.buildTags">buildTags</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.eprint">eprint</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.estimateAffixLength">estimateAffixLength</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.findUnique">findUnique</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.hasRestrictionSites">hasRestrictionSites</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.onlyNucleic">onlyNucleic</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.pp">pp</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.pretty_print">pretty_print</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.utils.warnRestrictionSites">warnRestrictionSites</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignblast">HCRProbeDesign.BLAST</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.BLAST">BLAST</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.BLAST.blastProbes">blastProbes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.BLAST.getNHits">getNHits</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignrepeatmask">HCRProbeDesign.repeatMask</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.repeatMask">repeatMask</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.repeatMask.repeatmask">repeatmask</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.repeatMask.repeatmasker_local">repeatmasker_local</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.repeatMask.test">test</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">HCRProbeDesign</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/gofflab/HCRProbeDesign/edit/master/docs/api.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="hcrprobedesignprobedesign">HCRProbeDesign.probeDesign<a class="headerlink" href="#hcrprobedesignprobedesign" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.probeDesign"></a>
+    <div class="doc doc-contents first">
+
+        <p>Core probe design workflow and CLI entry points.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.build_parser" class="doc doc-heading">
+            <code class="highlight language-python">build_parser()</code>
+
+<a href="#HCRProbeDesign.probeDesign.build_parser" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build the argument parser for probe design CLIs.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>argparse.ArgumentParser instance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.calcOligoCost" class="doc doc-heading">
+            <code class="highlight language-python">calcOligoCost(tiles, pricePerBase=0.19)</code>
+
+<a href="#HCRProbeDesign.probeDesign.calcOligoCost" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate the cost of the oligo library</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>tiles</code></b>
+              –
+              <div class="doc-md-description">
+                <p>a list of Tile objects</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pricePerBase</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the cost of a base of probe</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A list of oligos.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.main" class="doc doc-heading">
+            <code class="highlight language-python">main()</code>
+
+<a href="#HCRProbeDesign.probeDesign.main" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Main function for HCR Probe design.  Called when used directly from cmdline</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.main_batch" class="doc doc-heading">
+            <code class="highlight language-python">main_batch()</code>
+
+<a href="#HCRProbeDesign.probeDesign.main_batch" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Batch probe design for multi-record FASTA inputs.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.outputIDT" class="doc doc-heading">
+            <code class="highlight language-python">outputIDT(tiles, outHandle=sys.stdout)</code>
+
+<a href="#HCRProbeDesign.probeDesign.outputIDT" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Formats tile output for direct ordering using IDT template</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.outputRunParams" class="doc doc-heading">
+            <code class="highlight language-python">outputRunParams(args)</code>
+
+<a href="#HCRProbeDesign.probeDesign.outputRunParams" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Print run parameters to stderr.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>args</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Parsed argparse namespace.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.outputTable" class="doc doc-heading">
+            <code class="highlight language-python">outputTable(tiles, outHandle=sys.stdout)</code>
+
+<a href="#HCRProbeDesign.probeDesign.outputTable" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Formats tile output and writes to outHandle</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.scanSequence" class="doc doc-heading">
+            <code class="highlight language-python">scanSequence(sequence, seqName, tileStep=1, tileSize=52)</code>
+
+<a href="#HCRProbeDesign.probeDesign.scanSequence" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Given a sequence, a name for the sequence, a step size, and a tile size,
+scanSequence will return a list of Tile objects that tile across the
+sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence to be tiled</p>
+              </div>
+            </li>
+            <li>
+              <b><code>seqName</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the name of the sequence</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tileStep</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The step size to take between tiles, defaults to 1 (optional)</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tileSize</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The size of the tile, defaults to 52 (optional)</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A list of Tile objects</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.probeDesign.test" class="doc doc-heading">
+            <code class="highlight language-python">test()</code>
+
+<a href="#HCRProbeDesign.probeDesign.test" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Manual test harness with hard-coded parameters and FASTA file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesigntiles">HCRProbeDesign.tiles<a class="headerlink" href="#hcrprobedesigntiles" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.tiles"></a>
+    <div class="doc doc-contents first">
+
+        <p>Tile and probe representation used in the design pipeline.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="HCRProbeDesign.tiles.Tile" class="doc doc-heading">
+              <code class="highlight language-python">Tile(sequence, seqName, startPos)</code>
+
+<a href="#HCRProbeDesign.tiles.Tile" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Represents a candidate probe tile extracted from a target sequence.</p>
+
+        <p>Initialize a Tile from a sequence and positional metadata.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Tile sequence (string).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>seqName</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Source sequence name.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>startPos</code></b>
+              –
+              <div class="doc-md-description">
+                <p>1-based start position in the source sequence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.GC" class="doc doc-heading">
+            <code class="highlight language-python">GC()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.GC" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return GC percentage for the tile sequence.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.RajTm" class="doc doc-heading">
+            <code class="highlight language-python">RajTm()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.RajTm" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the SantaLucia-style melting temperature estimate.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.Tm" class="doc doc-heading">
+            <code class="highlight language-python">Tm()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.Tm" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the basic melting temperature estimate for the tile.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.__cmp__" class="doc doc-heading">
+            <code class="highlight language-python">__cmp__(other)</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.__cmp__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Legacy comparison for sorting tiles by name and position.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.__eq__" class="doc doc-heading">
+            <code class="highlight language-python">__eq__(other)</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.__eq__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Compare tiles by their sequences.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.__hash__" class="doc doc-heading">
+            <code class="highlight language-python">__hash__()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.__hash__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Hash tiles by their sequence.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.__iter__" class="doc doc-heading">
+            <code class="highlight language-python">__iter__()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.__iter__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Iterate over the tile sequence bases.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.__len__" class="doc doc-heading">
+            <code class="highlight language-python">__len__()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.__len__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the length of the tile sequence.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.__repr__" class="doc doc-heading">
+            <code class="highlight language-python">__repr__()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.__repr__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return a debug-friendly representation of the tile.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.__str__" class="doc doc-heading">
+            <code class="highlight language-python">__str__()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.__str__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return a human-readable representation of the tile.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.calcGibbs" class="doc doc-heading">
+            <code class="highlight language-python">calcGibbs()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.calcGibbs" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate the Gibbs free energy of binding for a given sequence</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.calcdTm" class="doc doc-heading">
+            <code class="highlight language-python">calcdTm()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.calcdTm" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate the difference in melting temperature between the 5' and 3' sequences</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.distance" class="doc doc-heading">
+            <code class="highlight language-python">distance(b, enforceStrand=False)</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.distance" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Returns absolute distance between self and another interval start positions.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.hasRuns" class="doc doc-heading">
+            <code class="highlight language-python">hasRuns(runChar, runLength, mismatches)</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.hasRuns" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Given a sequence, a run character, a run length, and a number of mismatches, 
+returns True if the sequence has a run of the specified character of the specified length, 
+with the specified number of mismatches</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>runChar</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the character that indicates a run</p>
+              </div>
+            </li>
+            <li>
+              <b><code>runLength</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the length of the run of the same character</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mismatches</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the number of mismatches allowed in the run</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A boolean value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.isMasked" class="doc doc-heading">
+            <code class="highlight language-python">isMasked()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.isMasked" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return True if the tile contains masked bases.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.makeProbes" class="doc doc-heading">
+            <code class="highlight language-python">makeProbes(channel)</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.makeProbes" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>This function creates the probes for the channel.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>channel</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the channel that the probe is on</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.overlaps" class="doc doc-heading">
+            <code class="highlight language-python">overlaps(b)</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.overlaps" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return true if b overlaps self</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.splitProbe" class="doc doc-heading">
+            <code class="highlight language-python">splitProbe()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.splitProbe" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Split sequence in half with two bases in the middle removed (flexible gap to help initiator sequence land)
+ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer dropped</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.toBed" class="doc doc-heading">
+            <code class="highlight language-python">toBed()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.toBed" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Placeholder for BED formatting support.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.toFasta" class="doc doc-heading">
+            <code class="highlight language-python">toFasta()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.toFasta" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the tile formatted as a FASTA record.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="HCRProbeDesign.tiles.Tile.validate" class="doc doc-heading">
+            <code class="highlight language-python">validate()</code>
+
+<a href="#HCRProbeDesign.tiles.Tile.validate" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run lightweight validation checks on the tile.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="HCRProbeDesign.tiles.TileError" class="doc doc-heading">
+              <code class="highlight language-python">TileError(value)</code>
+
+<a href="#HCRProbeDesign.tiles.TileError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="Exception">Exception</span></code></p>
+
+
+
+        <p>Custom exception type for tile validation and processing.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesigngenomemask">HCRProbeDesign.genomeMask<a class="headerlink" href="#hcrprobedesigngenomemask" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.genomeMask"></a>
+    <div class="doc doc-contents first">
+
+        <p>Genome masking utilities based on Bowtie2 alignments.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.genomeMask.countHitsFromSam" class="doc doc-heading">
+            <code class="highlight language-python">countHitsFromSam(samFile)</code>
+
+<a href="#HCRProbeDesign.genomeMask.countHitsFromSam" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>For each read in the sam file, add 1 to the count of hits for that read</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>samFile</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the name of the sam file</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A dictionary with the read name as the key and the number of hits as the value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.genomeMask.genomemask" class="doc doc-heading">
+            <code class="highlight language-python">genomemask(fasta_string, handleName='tmp', species='mouse', nAlignments=3, index=None)</code>
+
+<a href="#HCRProbeDesign.genomeMask.genomemask" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run Bowtie2 to align probe tiles and write a SAM file to disk.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>fasta_string</code></b>
+              –
+              <div class="doc-md-description">
+                <p>FASTA formatted string with probe sequences.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>handleName</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Prefix for FASTA/SAM output files.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>species</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Species key in HCRconfig.yaml.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>nAlignments</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Number of alignments to report per read.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>index</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Optional Bowtie2 index prefix override.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Bowtie2 subprocess return code.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.genomeMask.install_index" class="doc doc-heading">
+            <code class="highlight language-python">install_index(url='https://genome-idx.s3.amazonaws.com/bt/mm10.zip', genome='mm10', species='mouse')</code>
+
+<a href="#HCRProbeDesign.genomeMask.install_index" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Download and extract a prebuilt Bowtie2 index into the package indices.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>url</code></b>
+              –
+              <div class="doc-md-description">
+                <p>URL to a zipped Bowtie2 index archive.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>genome</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Genome name used to name the extraction directory.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.genomeMask.test" class="doc doc-heading">
+            <code class="highlight language-python">test()</code>
+
+<a href="#HCRProbeDesign.genomeMask.test" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Quick manual test for Bowtie2 masking and SAM parsing.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesignreferencegenome">HCRProbeDesign.referenceGenome<a class="headerlink" href="#hcrprobedesignreferencegenome" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.referenceGenome"></a>
+    <div class="doc doc-contents first">
+
+        <p>Build and register Bowtie2 indices for reference genomes.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.referenceGenome.build_bowtie2_index" class="doc doc-heading">
+            <code class="highlight language-python">build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None, threads=1, force=False)</code>
+
+<a href="#HCRProbeDesign.referenceGenome.build_bowtie2_index" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build a Bowtie2 index from the provided FASTA files.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>fasta_paths</code></b>
+              –
+              <div class="doc-md-description">
+                <p>List of FASTA file paths.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>species</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Species name for the index directory.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>index_name</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Optional index basename override.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>indices_dir</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Output directory for indices.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>threads</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Number of threads for bowtie2-build.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>force</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Overwrite existing index files if True.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Index prefix path.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>RuntimeError</code>
+              –
+              <div class="doc-md-description">
+                <p>If bowtie2-build is not available.</p>
+              </div>
+            </li>
+            <li>
+                  <code>FileExistsError</code>
+              –
+              <div class="doc-md-description">
+                <p>If index exists and force is False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.referenceGenome.collect_fasta_inputs" class="doc doc-heading">
+            <code class="highlight language-python">collect_fasta_inputs(paths)</code>
+
+<a href="#HCRProbeDesign.referenceGenome.collect_fasta_inputs" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Resolve FASTA inputs from files and directories.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>paths</code></b>
+              –
+              <div class="doc-md-description">
+                <p>List of FASTA files or directories.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Deduplicated list of FASTA file paths.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>FileNotFoundError</code>
+              –
+              <div class="doc-md-description">
+                <p>If a path or directory has no FASTA files.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.referenceGenome.format_index_path" class="doc doc-heading">
+            <code class="highlight language-python">format_index_path(index_prefix)</code>
+
+<a href="#HCRProbeDesign.referenceGenome.format_index_path" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Format an index prefix relative to the package when possible.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>index_prefix</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Bowtie2 index prefix path.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Relative path if within package, otherwise absolute path.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.referenceGenome.load_config" class="doc doc-heading">
+            <code class="highlight language-python">load_config(config_path=DEFAULT_CONFIG_PATH)</code>
+
+<a href="#HCRProbeDesign.referenceGenome.load_config" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Load the HCRconfig.yaml file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config_path</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Path to the YAML configuration file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Parsed config dictionary (empty if missing).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.referenceGenome.main" class="doc doc-heading">
+            <code class="highlight language-python">main()</code>
+
+<a href="#HCRProbeDesign.referenceGenome.main" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>CLI entry point for building and registering a reference genome index.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.referenceGenome.register_species" class="doc doc-heading">
+            <code class="highlight language-python">register_species(config_path, species, index_prefix, force=False)</code>
+
+<a href="#HCRProbeDesign.referenceGenome.register_species" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Register a species and its Bowtie2 index prefix in the config file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config_path</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Path to HCRconfig.yaml.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>species</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Species key to register.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>index_prefix</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Bowtie2 index prefix path.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>force</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Overwrite an existing species entry if True.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>ValueError</code>
+              –
+              <div class="doc-md-description">
+                <p>If the species exists and force is False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.referenceGenome.save_config" class="doc doc-heading">
+            <code class="highlight language-python">save_config(config, config_path=DEFAULT_CONFIG_PATH)</code>
+
+<a href="#HCRProbeDesign.referenceGenome.save_config" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Write configuration data to HCRconfig.yaml.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Configuration dictionary.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>config_path</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Path to write the configuration.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesignsequencelib">HCRProbeDesign.sequencelib<a class="headerlink" href="#hcrprobedesignsequencelib" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.sequencelib"></a>
+    <div class="doc doc-contents first">
+
+        <p>Sequence parsing and utility functions.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.FastaIterator" class="doc doc-heading">
+            <code class="highlight language-python">FastaIterator(handle)</code>
+
+<a href="#HCRProbeDesign.sequencelib.FastaIterator" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generator function to iterate over fasta records in <handle>:
+Use in a loop to apply to each Seq record contained in a .fasta file
+Input: record handle as obtained by handle = open(<file>,'r')
+Returns an iterator across Sequences in file</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.GenRandomSeq" class="doc doc-heading">
+            <code class="highlight language-python">GenRandomSeq(length, type='DNA')</code>
+
+<a href="#HCRProbeDesign.sequencelib.GenRandomSeq" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate a random sequence of DNA or RNA of a given length</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>length</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the length of the random sequence</p>
+              </div>
+            </li>
+            <li>
+              <b><code>type</code></b>
+              –
+              <div class="doc-md-description">
+                <p>DNA or RNA, defaults to DNA (optional)</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A string of length length consisting of random characters from chars.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.allindices" class="doc doc-heading">
+            <code class="highlight language-python">allindices(string, sub, listindex=[], offset=0)</code>
+
+<a href="#HCRProbeDesign.sequencelib.allindices" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return a list of all indices of a substring in a string</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>string</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the string to be searched</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sub</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The string you're looking for</p>
+              </div>
+            </li>
+            <li>
+              <b><code>listindex</code></b>
+              –
+              <div class="doc-md-description">
+                <p>an empty list</p>
+              </div>
+            </li>
+            <li>
+              <b><code>offset</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the index in the string where you want to start searching, defaults to 0 (optional)</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A list of all the indices where the substring sub is found in string.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.complement" class="doc doc-heading">
+            <code class="highlight language-python">complement(s)</code>
+
+<a href="#HCRProbeDesign.sequencelib.complement" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the complement of a DNA sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>s</code></b>
+              –
+              <div class="doc-md-description">
+                <p>sequence</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A list of the complement bases of the sequence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.draw" class="doc doc-heading">
+            <code class="highlight language-python">draw(distribution)</code>
+
+<a href="#HCRProbeDesign.sequencelib.draw" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Draw a random value from the distribution, where values with a higher probability are drawn more
+often</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>distribution</code></b>
+              –
+              <div class="doc-md-description">
+                <p>a list of positive numbers that sum to 1</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The index of the array that the random number falls into.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.find_all" class="doc doc-heading">
+            <code class="highlight language-python">find_all(seq, sub)</code>
+
+<a href="#HCRProbeDesign.sequencelib.find_all" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Find all occurences of a substring in a string</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>seq</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the string to be searched</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sub</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The substring to search for</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A list of all the positions where the substring was found.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.gc_content" class="doc doc-heading">
+            <code class="highlight language-python">gc_content(seq)</code>
+
+<a href="#HCRProbeDesign.sequencelib.gc_content" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Given a DNA sequence, return the percentage of G's and C's in the sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>seq</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence to be analyzed</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The GC content of the sequence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.genRandomFromDist" class="doc doc-heading">
+            <code class="highlight language-python">genRandomFromDist(length, freqs)</code>
+
+<a href="#HCRProbeDesign.sequencelib.genRandomFromDist" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generates a random sequence of length 'length' drawing from a distribution of
+base frequencies in a dictionary</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.getGC" class="doc doc-heading">
+            <code class="highlight language-python">getGC(seq)</code>
+
+<a href="#HCRProbeDesign.sequencelib.getGC" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The function getGC(seq) takes a string of DNA sequence as input and returns the GC content of the
+sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>seq</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence to be analyzed</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A list of tuples. Each tuple contains the name of the gene, the GC content, and the length of the gene.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.getTm" class="doc doc-heading">
+            <code class="highlight language-python">getTm(seq)</code>
+
+<a href="#HCRProbeDesign.sequencelib.getTm" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The function getTm(seq) takes a sequence as an argument and returns the melting temperature of the
+sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>seq</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence of interest</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The melting temperature of the sequence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.get_seeds" class="doc doc-heading">
+            <code class="highlight language-python">get_seeds(iter, seeds={})</code>
+
+<a href="#HCRProbeDesign.sequencelib.get_seeds" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Given a list of sequences, return a dictionary of the counts of each seed</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>iter</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the iterator of sequences</p>
+              </div>
+            </li>
+            <li>
+              <b><code>seeds</code></b>
+              –
+              <div class="doc-md-description">
+                <p>a dictionary of seeds and their counts</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A dictionary with the seeds as keys and the number of times they occur as values.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.kmer_dictionary" class="doc doc-heading">
+            <code class="highlight language-python">kmer_dictionary(seq, k, dic={}, offset=0)</code>
+
+<a href="#HCRProbeDesign.sequencelib.kmer_dictionary" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Returns dictionary of k,v = kmer:'list of kmer start positions in seq'</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.kmer_dictionary_counts" class="doc doc-heading">
+            <code class="highlight language-python">kmer_dictionary_counts(seq, k, dic={})</code>
+
+<a href="#HCRProbeDesign.sequencelib.kmer_dictionary_counts" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Returns a dictionary of k,v = kmer:'count of kmer in seq'</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.kmer_stats" class="doc doc-heading">
+            <code class="highlight language-python">kmer_stats(kmer, dic, genfreqs)</code>
+
+<a href="#HCRProbeDesign.sequencelib.kmer_stats" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Takes as argument a kmer string, a dictionary with kmers as keys from kmer_dictionary_counts, and a dictionary
+of genomic frequencies with kmers as keys. Returns a dictionary of stats for kmer ("Signal2Noise Ratio, Z-score")</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.makeDistFromFreqs" class="doc doc-heading">
+            <code class="highlight language-python">makeDistFromFreqs(freqs)</code>
+
+<a href="#HCRProbeDesign.sequencelib.makeDistFromFreqs" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Given a dictionary of character frequencies, return a list of cumulative frequencies</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>freqs</code></b>
+              –
+              <div class="doc-md-description">
+                <p>a dictionary of the frequencies of each nucleotide at each position</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>a list of cumulative frequencies.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.mcount" class="doc doc-heading">
+            <code class="highlight language-python">mcount(s, chars)</code>
+
+<a href="#HCRProbeDesign.sequencelib.mcount" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Sums the counts of appearances of each char in chars</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>s</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the string to search</p>
+              </div>
+            </li>
+            <li>
+              <b><code>chars</code></b>
+              –
+              <div class="doc-md-description">
+                <p>a string of characters to count</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The number of times the characters in chars appear in s.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.prob_seq" class="doc doc-heading">
+            <code class="highlight language-python">prob_seq(seq, pGC=0.5)</code>
+
+<a href="#HCRProbeDesign.sequencelib.prob_seq" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Given a sequence and a background GC probability, 
+what is the probability of getting that sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>seq</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence of interest</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pGC</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the probability of a GC base pair</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The probability of the sequence given the background GC probability.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.rcomp" class="doc doc-heading">
+            <code class="highlight language-python">rcomp(s)</code>
+
+<a href="#HCRProbeDesign.sequencelib.rcomp" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Does same thing as reverse_complement only cooler</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.reverse_complement" class="doc doc-heading">
+            <code class="highlight language-python">reverse_complement(s)</code>
+
+<a href="#HCRProbeDesign.sequencelib.reverse_complement" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the reverse complement of a DNA sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>s</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The sequence to be reverse complemented</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The reverse complement of the input sequence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.seed" class="doc doc-heading">
+            <code class="highlight language-python">seed()</code>
+
+<a href="#HCRProbeDesign.sequencelib.seed" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Seed the random number generator with system entropy.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.sequencelib.transcribe" class="doc doc-heading">
+            <code class="highlight language-python">transcribe(seq)</code>
+
+<a href="#HCRProbeDesign.sequencelib.transcribe" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The function transcribe() takes a DNA sequence and replaces each instance of the nucleotide T with a
+uracil (U) in the transcribed RNA sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>seq</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence to be transcribed</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The transcribed RNA sequence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesignthermo">HCRProbeDesign.thermo<a class="headerlink" href="#hcrprobedesignthermo" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.thermo"></a>
+    <div class="doc doc-contents first">
+
+        <p>@authors:
+    Marshall J. Levesque
+    Arjun Raj
+    Daniel Wei</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.Tm" class="doc doc-heading">
+            <code class="highlight language-python">Tm(sequence)</code>
+
+<a href="#HCRProbeDesign.thermo.Tm" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The function calculates the melting temperature of a sequence</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence of the primer</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The melting temperature of the primer.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.Tm_RNA_DNA" class="doc doc-heading">
+            <code class="highlight language-python">Tm_RNA_DNA(sequence)</code>
+
+<a href="#HCRProbeDesign.thermo.Tm_RNA_DNA" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Given a sequence, the function returns the Tm of the sequence using the SantaLucia 98 parameters</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the sequence of the primer</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The dG value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.containsAny" class="doc doc-heading">
+            <code class="highlight language-python">containsAny(astring, aset)</code>
+
+<a href="#HCRProbeDesign.thermo.containsAny" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Check whether a string contains any of the given characters.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>astring</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Input string.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>aset</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Iterable of characters to search for.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>True if any character is present.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.gibbs" class="doc doc-heading">
+            <code class="highlight language-python">gibbs(dH, dS, temp=37)</code>
+
+<a href="#HCRProbeDesign.thermo.gibbs" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calc Gibbs Free Energy in cal/mol from enthaply, entropy, and temperature</p>
+<p>Arguments:
+dH -- enthalpy in kcal/mol
+dS -- entropy in cal/(mol * Kelvin)
+temp -- temperature in celcius (default 37 degrees C)</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.init_dna_dna" class="doc doc-heading">
+            <code class="highlight language-python">init_dna_dna(inseq)</code>
+
+<a href="#HCRProbeDesign.thermo.init_dna_dna" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return [enthalpy, entropy] list with units kcal/mol and cal/(mol*Kelvin)
+for DNA/DNA duplex initiation for the input DNA sequence (actg 5'-&gt;3').
+Values from SantaLucia 1998. Argument is DNA</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.init_rna_dna" class="doc doc-heading">
+            <code class="highlight language-python">init_rna_dna()</code>
+
+<a href="#HCRProbeDesign.thermo.init_rna_dna" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return [enthalpy, entropy] list in kcal/mol and cal/(mol*Kelvin) for RNA/DNA
+duplex initiation. Values from Sugimoto et al 1995</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.melting_temp" class="doc doc-heading">
+            <code class="highlight language-python">melting_temp(dH, dS, ca, cb, salt)</code>
+
+<a href="#HCRProbeDesign.thermo.melting_temp" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculates the melting temperature of a DNA sequence.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dH</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Enthalpy (delta H). This is the energy required to separate the strands of the DNA duplex in kilo Joules per mole</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dS</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Entropy of hybridization (cal/(K*mol))</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ca</code></b>
+              –
+              <div class="doc-md-description">
+                <p>concentration of a strand in nM</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cb</code></b>
+              –
+              <div class="doc-md-description">
+                <p>concentration of the complementary strand (M)</p>
+              </div>
+            </li>
+            <li>
+              <b><code>salt</code></b>
+              –
+              <div class="doc-md-description">
+                <p>the molarity of the Na+ in the hybridisation reaction</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>The melting temperature of the primer.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.overhang_dna" class="doc doc-heading">
+            <code class="highlight language-python">overhang_dna(inseq, end)</code>
+
+<a href="#HCRProbeDesign.thermo.overhang_dna" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return Gibbs free energy at 37degC (in kcal/mol) contribution from single
+base overhang in DNA/DNA duplex.</p>
+<p>Arguments:
+inseq - 2bp DNA sequence (5' -&gt; 3')
+end - specifies which end the over hang is on (valid values: 3 or 5)</p>
+<p>Table 2 in Bommarito, S. (2000). Nucleic Acids Research</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.overhang_rna" class="doc doc-heading">
+            <code class="highlight language-python">overhang_rna(inseq, end)</code>
+
+<a href="#HCRProbeDesign.thermo.overhang_rna" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return Gibbs free energy at 37degC (in kcal/mol) contribution from single
+base overhang in RNA/RNA duplex.</p>
+<p>Arguments:
+inseq - 2bp RNA sequence (5' -&gt; 3') uracil-&gt;thymidine
+end - specifies which end the over hang is on (valid values: 3 or 5)</p>
+<p>Table 3 in Freier et al, Biochemistry, 1986</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.salt_adjust" class="doc doc-heading">
+            <code class="highlight language-python">salt_adjust(delG, nbases, saltconc)</code>
+
+<a href="#HCRProbeDesign.thermo.salt_adjust" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Adjust Gibbs Free Energy from 1M Na+ for another concentration</p>
+<p>Arguments:
+delG -- Gibbs free energy in kcal/mol
+nbases --  number of bases in the sequence
+saltconc -- desired Na+ concentration for new Gibbs free energy calculation</p>
+<p>Equation 7 SantaLucia 1998</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.stacks_dna_dna" class="doc doc-heading">
+            <code class="highlight language-python">stacks_dna_dna(inseq, temp=37)</code>
+
+<a href="#HCRProbeDesign.thermo.stacks_dna_dna" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate thermodynamic values for DNA/DNA hybridization.</p>
+<p>Input Arguments:
+inseq -- the input DNA sequence of the DNA/DNA hybrid (5'-&gt;3')
+temp  -- in celcius for Gibbs free energy calc (default 37degC)
+salt  -- salt concentration in units of mol/L (default 0.33M)</p>
+<p>Return [enthalpy, entropy] list in kcal/mol and cal/(mol*Kelvin)</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.thermo.stacks_rna_dna" class="doc doc-heading">
+            <code class="highlight language-python">stacks_rna_dna(inseq)</code>
+
+<a href="#HCRProbeDesign.thermo.stacks_rna_dna" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate RNA/DNA base stack thermodynamic values (Sugimoto et al 1995)</p>
+<p>Sugimoto 95 parameters for RNA/DNA Hybridization (Table 3)
+"Thermodynamic Parameters To Predict Stability of RNA/DNA Hybrid
+Duplexes" in Biochemistry 1995</p>
+<p>Input Arguments:
+inseq -- RNA sequence of the RNA/DNA hybrid ( 5'-&gt;3' uracil-&gt;thymidine)</p>
+<p>Return [enthalpy, entropy] list in kcal/mol and cal/(mol*Kelvin)</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesignutils">HCRProbeDesign.utils<a class="headerlink" href="#hcrprobedesignutils" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.utils"></a>
+    <div class="doc doc-contents first">
+
+        <p>Miscellaneous utilities for sequence processing and formatting.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.FastaIterator" class="doc doc-heading">
+            <code class="highlight language-python">FastaIterator(handle)</code>
+
+<a href="#HCRProbeDesign.utils.FastaIterator" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generator function to iterate over fasta records in <handle>:
+Use in a loop to apply to each sequence record contained in a .fasta file
+Input: record handle as obtained by handle = open(<file>,'r')
+Returns an iterator across sequences in file</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.buildTags" class="doc doc-heading">
+            <code class="highlight language-python">buildTags(numTags, tagLength, sites=None)</code>
+
+<a href="#HCRProbeDesign.utils.buildTags" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate random DNA tags with optional restriction site filtering.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>numTags</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Number of tags to generate.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tagLength</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Length of each tag.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sites</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Comma-delimited restriction sites to avoid.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>List of DNA tag strings.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.eprint" class="doc doc-heading">
+            <code class="highlight language-python">eprint(*args, **kwargs)</code>
+
+<a href="#HCRProbeDesign.utils.eprint" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Print to stderr with the same signature as print().</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.estimateAffixLength" class="doc doc-heading">
+            <code class="highlight language-python">estimateAffixLength(sequence, tagLength)</code>
+
+<a href="#HCRProbeDesign.utils.estimateAffixLength" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Estimate sequence length after tag insertion.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Sequence containing an optional '@' tag marker.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tagLength</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Length of the tag to be inserted.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Adjusted sequence length.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>TileError</code>
+              –
+              <div class="doc-md-description">
+                <p>If multiple tag markers are present.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.findUnique" class="doc doc-heading">
+            <code class="highlight language-python">findUnique(tiles)</code>
+
+<a href="#HCRProbeDesign.utils.findUnique" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return a list of unique Tile objects from the input list.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.hasRestrictionSites" class="doc doc-heading">
+            <code class="highlight language-python">hasRestrictionSites(sequence, sites)</code>
+
+<a href="#HCRProbeDesign.utils.hasRestrictionSites" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Check if a sequence contains restriction sites.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Sequence to scan.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sites</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Comma-delimited restriction site names.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>True if any sites are present.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.onlyNucleic" class="doc doc-heading">
+            <code class="highlight language-python">onlyNucleic(seq, set=['a', 'c', 'g', 't', 'u', 'A', 'C', 'G', 'T', 'U', 'n', 'N', '@'])</code>
+
+<a href="#HCRProbeDesign.utils.onlyNucleic" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Check whether a sequence contains only nucleic characters.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>seq</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Input sequence string.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>set</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Allowed characters.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>True if all characters are allowed.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.pp" class="doc doc-heading">
+            <code class="highlight language-python">pp(d, level=-1, maxw=0, maxh=0, parsable=0)</code>
+
+<a href="#HCRProbeDesign.utils.pp" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>wrapper around pretty_print that prints to stdout</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.pretty_print" class="doc doc-heading">
+            <code class="highlight language-python">pretty_print(f, d, level=-1, maxw=0, maxh=0, gap='', first_gap='', last_gap='')</code>
+
+<a href="#HCRProbeDesign.utils.pretty_print" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Pretty-print nested structures to a file handle.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>f</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Output file-like object.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>d</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Data structure to render.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>level</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Recursion depth (-1 for unlimited).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>maxw</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Maximum width per line.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>maxh</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Maximum items per list/dict/tuple.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gap</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Base indentation string.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>first_gap</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Indentation for opening delimiter line.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>last_gap</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Indentation for closing delimiter line.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.utils.warnRestrictionSites" class="doc doc-heading">
+            <code class="highlight language-python">warnRestrictionSites(sequence, name, sites)</code>
+
+<a href="#HCRProbeDesign.utils.warnRestrictionSites" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Print a warning if restriction sites are found in a sequence.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Sequence to scan.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>name</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Sequence label for logging.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sites</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Comma-delimited restriction site names.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesignblast">HCRProbeDesign.BLAST<a class="headerlink" href="#hcrprobedesignblast" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.BLAST"></a>
+    <div class="doc doc-contents first">
+
+        <p>NCBI BLAST utilities for probe sequence validation.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.BLAST.blastProbes" class="doc doc-heading">
+            <code class="highlight language-python">blastProbes(fasta_string, species='mouse', verbose=True)</code>
+
+<a href="#HCRProbeDesign.BLAST.blastProbes" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Submit a BLASTN job for the given FASTA string.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>fasta_string</code></b>
+              –
+              <div class="doc-md-description">
+                <p>FASTA-formatted string containing probe sequences.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>species</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Species key for Entrez restriction (mouse or human).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>verbose</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Emit progress messages to stderr.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>NCBIWWW result handle for subsequent parsing.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.BLAST.getNHits" class="doc doc-heading">
+            <code class="highlight language-python">getNHits(blast_handle, verbose=True)</code>
+
+<a href="#HCRProbeDesign.BLAST.getNHits" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Report the number of hits for each record in a BLAST response.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>blast_handle</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Handle returned by NCBIWWW.qblast.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>verbose</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Reserved for future verbosity controls.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="hcrprobedesignrepeatmask">HCRProbeDesign.repeatMask<a class="headerlink" href="#hcrprobedesignrepeatmask" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.repeatMask"></a>
+    <div class="doc doc-contents first">
+
+        <p>RepeatMasker web API helper utilities (deprecated).</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.repeatMask.repeatmask" class="doc doc-heading">
+            <code class="highlight language-python">repeatmask(sequence, dnasource='mouse')</code>
+
+<a href="#HCRProbeDesign.repeatMask.repeatmask" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>This function takes a sequence and returns a masked sequence with help from RepeatMasker</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>The sequence to be masked</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dnasource</code></b>
+              –
+              <div class="doc-md-description">
+                <p>vertebrate, mammal, human, rodent, mouse, rat, danio, drosophila, elegans, defaults to mouse (optional)</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>A masked sequence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.repeatMask.repeatmasker_local" class="doc doc-heading">
+            <code class="highlight language-python">repeatmasker_local(sequence, dnasource='mouse')</code>
+
+<a href="#HCRProbeDesign.repeatMask.repeatmasker_local" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Placeholder for a local RepeatMasker wrapper.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sequence</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Sequence to mask.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dnasource</code></b>
+              –
+              <div class="doc-md-description">
+                <p>RepeatMasker DNA source key.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.repeatMask.test" class="doc doc-heading">
+            <code class="highlight language-python">test()</code>
+
+<a href="#HCRProbeDesign.repeatMask.test" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Simple smoke test for the remote RepeatMasker flow.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../reference-genome/" class="btn btn-neutral float-left" title="Reference Genomes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/gofflab/HCRProbeDesign" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../reference-genome/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

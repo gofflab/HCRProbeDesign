@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://gofflab.github.io/HCRProbeDesign/probe-design-workflow/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Probe Design Workflow - HCRProbeDesign</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Probe Design Workflow";
+        var mkdocs_page_input_path = "probe-design-workflow.md";
+        var mkdocs_page_url = "/HCRProbeDesign/probe-design-workflow/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> HCRProbeDesign
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Probe Design Workflow</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#pipeline-overview-ordered">Pipeline overview (ordered)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#default-parameters">Default parameters</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#thermodynamic-parameters-what-they-mean-and-why-they-are-used">Thermodynamic parameters (what they mean and why they are used)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#output-formats">Output formats</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-tsv-output">Primary TSV output</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#idt-ordering-output-optional">IDT ordering output (optional)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#genome-masking-artifacts">Genome masking artifacts</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../reference-genome/">Reference Genomes</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API Reference</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">HCRProbeDesign</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Probe Design Workflow</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/gofflab/HCRProbeDesign/edit/master/docs/probe-design-workflow.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="probe-design-workflow">Probe Design Workflow<a class="headerlink" href="#probe-design-workflow" title="Permanent link">&para;</a></h1>
+<p>This page describes the exact probe design pipeline used by <code>designProbes</code> and
+<code>designProbesBatch</code>, including the order of operations, default parameters, and
+output formats. The steps below are listed in the same order the code applies
+them.</p>
+<h2 id="pipeline-overview-ordered">Pipeline overview (ordered)<a class="headerlink" href="#pipeline-overview-ordered" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Read FASTA record(s).</strong></li>
+<li><code>designProbes</code> uses only the first FASTA record.</li>
+<li><code>designProbesBatch</code> processes every record.</li>
+<li>A FASTA header can override the channel using <code>channel=...</code>.</li>
+<li>Genome masking is enabled by default and requires a registered species
+     (use <code>fetchMouseIndex</code> or <code>buildGenomeIndex</code>) or an explicit <code>--index</code>.</li>
+<li><strong>Optional repeat masking (disabled by default).</strong></li>
+<li>If enabled, the input sequence is masked using RepeatMasker and masked bases
+     are converted to <code>N</code>. Tiles containing masked bases are discarded later.</li>
+<li><strong>Tile the target sequence (reverse-complemented).</strong></li>
+<li>The sequence is scanned with a step size of 1 to generate 52-nt tiles by
+     default.</li>
+<li>Each tile is <strong>reverse-complemented</strong> so probes are antisense to the target.</li>
+<li>Any tile containing <code>N</code> is discarded immediately.</li>
+<li><strong>Filter homopolymer runs (C and G).</strong></li>
+<li>Tiles are removed if they contain long runs of C's or G's beyond the allowed
+     thresholds.</li>
+<li><strong>Filter hairpins.</strong></li>
+<li>Each tile is screened with <code>primer3</code> for self-hairpin structures.</li>
+<li>Tiles with a predicted hairpin melting temperature &gt;= 45 C are removed.</li>
+<li><strong>Genome uniqueness filtering (Bowtie2).</strong></li>
+<li>Remaining tiles are aligned to the reference genome index.</li>
+<li>Tiles with more than the allowed number of hits are removed.</li>
+<li><strong>GC-content filtering.</strong></li>
+<li>Tiles must fall within the allowed GC% range.</li>
+<li><strong>Gibbs free energy filtering.</strong></li>
+<li>Tiles with binding free energies outside the allowed range are removed.</li>
+<li><strong>Split tiles into probe halves.</strong></li>
+<li>Each tile is split into two 25-mers (for a 52-mer tile), dropping the two
+     middle bases to create a short gap.</li>
+<li><strong>Optional dTm filtering.</strong><ul>
+<li>If enabled, tiles are removed when the temperature difference between
+  the two halves is too large.</li>
+</ul>
+</li>
+<li><strong>Select top N non-overlapping tiles.</strong><ul>
+<li>Tiles are ranked by how close their Gibbs free energy is to the target.</li>
+<li>Overlapping tiles are skipped to keep probes spread out.</li>
+</ul>
+</li>
+<li><strong>Add HCR initiators and spacers.</strong><ul>
+<li>Channel-specific initiator sequences are appended to the probe halves.</li>
+</ul>
+</li>
+</ol>
+<h2 id="default-parameters">Default parameters<a class="headerlink" href="#default-parameters" title="Permanent link">&para;</a></h2>
+<p>These are the defaults used if you do not override them on the command line.</p>
+<ul>
+<li><code>--tileSize</code>: 52</li>
+<li><code>--channel</code>: B1</li>
+<li><code>--species</code>: mouse</li>
+<li><code>--minGC</code>: 45.0</li>
+<li><code>--maxGC</code>: 55.0</li>
+<li><code>--targetGC</code>: 50.0 (not currently used in ranking or filtering)</li>
+<li><code>--minGibbs</code>: -70.0</li>
+<li><code>--maxGibbs</code>: -50.0</li>
+<li><code>--targetGibbs</code>: -60.0</li>
+<li><code>--dTmMax</code>: 5.0</li>
+<li><code>--dTmFilter</code>: off</li>
+<li><code>--maxRunLength</code>: 7</li>
+<li><code>--maxRunMismatches</code>: 2</li>
+<li><code>--maxProbes</code>: 20</li>
+<li><code>--num-hits-allowed</code>: 1</li>
+<li><code>--no-genomemask</code>: off (genome masking is on by default)</li>
+<li><code>--no-repeatmask</code>: on (repeat masking is disabled by default)</li>
+</ul>
+<p>Other defaults:
+- Hairpin filter threshold: 45 C (not currently configurable).
+- Tile step size: 1 nt (not currently configurable).</p>
+<h2 id="thermodynamic-parameters-what-they-mean-and-why-they-are-used">Thermodynamic parameters (what they mean and why they are used)<a class="headerlink" href="#thermodynamic-parameters-what-they-mean-and-why-they-are-used" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>GC%</strong>: Fraction of G/C bases in the tile. GC-rich probes bind more strongly
+  because G-C base pairs have three hydrogen bonds. Filtering keeps probes within
+  a moderate binding-strength window and improves uniformity.</li>
+<li><strong>Tm (melting temperature)</strong>: Predicted temperature at which half of probe-
+  target duplexes would melt. Reported for each full tile using <code>primer3</code>.
+  This provides a quick proxy for binding strength across candidates.</li>
+<li><strong>dTm</strong>: The absolute difference in Tm between the two split probe halves.
+  Large dTm values imply one half binds much more strongly than the other, which
+  can reduce uniformity. Filtering is optional and off by default.</li>
+<li><strong>Gibbs free energy (Gibbs FE)</strong>: Predicted free energy of RNA/DNA binding,
+  computed at 37 C with a salt correction (0.33 M). More negative values indicate
+  stronger binding. Filtering removes probes that are too weak or too strong, and
+  ranking prefers probes closest to <code>--targetGibbs</code>.</li>
+<li><strong>Hairpin Tm</strong>: Predicted melting temperature of a self-hairpin in the probe
+  sequence. Strong hairpins can compete with target binding, so tiles with a
+  hairpin Tm &gt;= 45 C are removed.</li>
+</ul>
+<h2 id="output-formats">Output formats<a class="headerlink" href="#output-formats" title="Permanent link">&para;</a></h2>
+<h3 id="primary-tsv-output">Primary TSV output<a class="headerlink" href="#primary-tsv-output" title="Permanent link">&para;</a></h3>
+<p><code>designProbes</code> and <code>designProbesBatch</code> write a tab-delimited table with these
+columns:</p>
+<ul>
+<li><code>name</code>: Tile identifier formatted as <code>record:start-end</code>.</li>
+<li><code>probe</code>: The reverse-complemented tile sequence.</li>
+<li><code>start</code>: 1-based start position in the original target sequence.</li>
+<li><code>length</code>: Tile length (default 52).</li>
+<li><code>P1</code>: Probe half with the odd initiator appended.</li>
+<li><code>P2</code>: Probe half with the even initiator appended.</li>
+<li><code>channel</code>: HCR channel used (e.g., B1).</li>
+<li><code>GC</code>: GC% of the tile.</li>
+<li><code>Tm</code>: <code>primer3</code> melting temperature of the full tile.</li>
+<li><code>dTm</code>: Absolute Tm difference between the two halves.</li>
+<li><code>GibbsFE</code>: Calculated Gibbs free energy of binding (kcal/mol).</li>
+</ul>
+<p>Example (single row):</p>
+<pre><code class="language-text">MyTarget:1-52\tacg...\t1\t52\tP1SEQ...\tP2SEQ...\tB1\t50.00\t70.12\t1.83\t-60.45
+</code></pre>
+<h3 id="idt-ordering-output-optional">IDT ordering output (optional)<a class="headerlink" href="#idt-ordering-output-optional" title="Permanent link">&para;</a></h3>
+<p>If <code>--idt</code> is provided, an additional file is written with two columns:
+<code>Name</code> and <code>Sequence</code>. Each tile produces two entries:
+- <code>{name}:{channel}:odd</code> for P1
+- <code>{name}:{channel}:even</code> for P2</p>
+<h3 id="genome-masking-artifacts">Genome masking artifacts<a class="headerlink" href="#genome-masking-artifacts" title="Permanent link">&para;</a></h3>
+<p>When genome masking is enabled, Bowtie2 writes a SAM file in the working
+directory named <code>{targetName}.sam</code>. This file lists all alignments used to
+compute hit counts.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../usage/" class="btn btn-neutral float-left" title="Usage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../cli/" class="btn btn-neutral float-right" title="CLI">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/gofflab/HCRProbeDesign" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../usage/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
