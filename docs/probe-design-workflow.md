@@ -7,54 +7,42 @@ them.
 
 ## Pipeline overview (ordered)
 1. **Read FASTA record(s).**
-
     - `designProbes` uses only the first FASTA record.
     - `designProbesBatch` processes every record.
     - A FASTA header can override the channel using `channel=...`.
     - Genome masking is enabled by default and requires a registered species
       (use `fetchMouseIndex` or `buildGenomeIndex`) or an explicit `--index`.
-2. **Optional repeat masking (disabled by default).**
-
+1. **Optional repeat masking (disabled by default).**
     - If enabled, the input sequence is masked using RepeatMasker and masked bases
       are converted to `N`. Tiles containing masked bases are discarded later.
-3. **Tile the target sequence (reverse-complemented).**
-
+1. **Tile the target sequence (reverse-complemented).**
     - The sequence is scanned with a step size of 1 to generate 52-nt tiles by
       default.
     - Each tile is **reverse-complemented** so probes are antisense to the target.
     - Any tile containing `N` is discarded immediately.
-4. **Filter homopolymer runs (C and G).**
-
+1. **Filter homopolymer runs (C and G).**
     - Tiles are removed if they contain long runs of C's or G's beyond the allowed
       thresholds.
-5. **Filter hairpins.**
-
+1. **Filter hairpins.**
     - Each tile is screened with `primer3` for self-hairpin structures.
     - Tiles with a predicted hairpin melting temperature >= 45 C are removed.
-6. **Genome uniqueness filtering (Bowtie2).**
-
+1. **Genome uniqueness filtering (Bowtie2).**
     - Remaining tiles are aligned to the reference genome index.
     - Tiles with more than the allowed number of hits are removed.
-7. **GC-content filtering.**
-
+1. **GC-content filtering.**
     - Tiles must fall within the allowed GC% range.
-8. **Gibbs free energy filtering.**
-
+1. **Gibbs free energy filtering.**
     - Tiles with binding free energies outside the allowed range are removed.
-9. **Split tiles into probe halves.**
-
+1. **Split tiles into probe halves.**
     - Each tile is split into two 25-mers (for a 52-mer tile), dropping the two
       middle bases to create a short gap.
-10. **Optional dTm filtering.**
-
+1. **Optional dTm filtering.**
     - If enabled, tiles are removed when the temperature difference between
       the two halves is too large.
-11. **Select top N non-overlapping tiles.**
-
+1. **Select top N non-overlapping tiles.**
     - Tiles are ranked by how close their Gibbs free energy is to the target.
     - Overlapping tiles are skipped to keep probes spread out.
-12. **Add HCR initiators and spacers.**
-
+1. **Add HCR initiators and spacers.**
     - Channel-specific initiator sequences are appended to the probe halves.
 
 ## Default parameters
