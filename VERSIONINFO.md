@@ -1,3 +1,5 @@
+## v0.2.4 - Unreleased
+  + Development version
 ## v0.2.3 - 01.14.2026
   + Added detailed documentation
   + Added loader for custom reference genomes
