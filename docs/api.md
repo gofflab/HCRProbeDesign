@@ -9,6 +9,9 @@
 ## HCRProbeDesign.genomeMask
 ::: HCRProbeDesign.genomeMask
 
+## HCRProbeDesign.listReferences
+::: HCRProbeDesign.listReferences
+
 ## HCRProbeDesign.referenceGenome
 ::: HCRProbeDesign.referenceGenome
 

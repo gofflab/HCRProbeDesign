@@ -33,6 +33,28 @@ Download a prebuilt mm10 Bowtie2 index and register it under the package indices
 fetchMouseIndex
 ```
 
+## listReferences
+List all installed reference genomes and their configuration details, including default
+parameters and the CLI flags needed to use them.
+
+```bash
+listReferences
+```
+
+Use `--config` to inspect an alternate configuration file:
+```bash
+listReferences --config /path/to/HCRconfig.yaml
+```
+
+The output shows, for each registered species:
+- Species name and installation status
+- Bowtie2 index prefix path (relative and absolute)
+- Number of index files found on disk
+- The `--species` flag to pass to `designProbes`
+
+It also displays all default parameters from `HCRconfig.yaml` with their corresponding
+CLI flags.
+
 ## buildGenomeIndex
 Build a Bowtie2 index for a new reference genome and register it in `HCRconfig.yaml`.
 

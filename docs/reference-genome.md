@@ -29,7 +29,16 @@ Notes:
 - Use `--indices-dir` to write indices elsewhere and `--config` to update a specific config file.
 - Use `--force` to overwrite an existing index or config entry.
 
-### 3) Verify the configuration
+### 3) Verify the installation
+After building an index, run `listReferences` to confirm it was registered correctly:
+
+```bash
+listReferences
+```
+
+This shows all registered species, whether their index files exist on disk, and the
+`--species` flag to use with `designProbes`.
+
 `buildGenomeIndex` adds an entry like this to `HCRconfig.yaml`:
 
 ```yaml

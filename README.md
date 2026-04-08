@@ -10,6 +10,7 @@ Key tools:
 - `designProbesBatch`: batch probe design for multi-record FASTA inputs.
 - `fetchMouseIndex`: download, install, and register the mm10 Bowtie2 index.
 - `buildGenomeIndex`: build and register a new reference genome index.
+- `listReferences`: display installed reference genomes and default parameters.
 
 Documentation: https://www.gofflab.org/HCRProbeDesign/
 
@@ -57,6 +58,14 @@ If you are working with mouse (mm10), you can use the prebuilt index:
 fetchMouseIndex
 ```
 This updates `HCRconfig.yaml` so `designProbes --species mouse` works out of the box.
+
+## Listing installed references
+To see which reference genomes are registered and ready to use:
+```bash
+listReferences
+```
+This prints each registered species, its Bowtie2 index location, whether the index files
+are present on disk, the `--species` flag to use, and the current default parameters.
 
 ## Usage instructions
 ### 1) Prepare a FASTA file
