@@ -1751,7 +1751,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
 
 <h2 id="HCRProbeDesign.listReferences.list_references" class="doc doc-heading">
-            <code class="highlight language-python">list_references(config_path=DEFAULT_CONFIG_PATH)</code>
+            <code class="highlight language-python">list_references(config_path=None)</code>
 
 <a href="#HCRProbeDesign.listReferences.list_references" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -1814,7 +1814,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
 
 <h2 id="HCRProbeDesign.listReferences.load_config" class="doc doc-heading">
-            <code class="highlight language-python">load_config(config_path=DEFAULT_CONFIG_PATH)</code>
+            <code class="highlight language-python">load_config(config_path=None)</code>
 
 <a href="#HCRProbeDesign.listReferences.load_config" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -2154,7 +2154,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
     <div class="doc doc-contents ">
 
-        <p>Format an index prefix relative to the package when possible.</p>
+        <p>Format an index prefix relative to the data directory when possible.</p>
 
 
 <table class="field-list">
@@ -2193,7 +2193,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
             <li>
               –
               <div class="doc-md-description">
-                <p>Relative path if within package, otherwise absolute path.</p>
+                <p>Relative path if within data dir, otherwise absolute path.</p>
               </div>
             </li>
         </ul>
@@ -2210,7 +2210,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
 
 <h2 id="HCRProbeDesign.referenceGenome.load_config" class="doc doc-heading">
-            <code class="highlight language-python">load_config(config_path=DEFAULT_CONFIG_PATH)</code>
+            <code class="highlight language-python">load_config(config_path=None)</code>
 
 <a href="#HCRProbeDesign.referenceGenome.load_config" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -2291,7 +2291,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
 
 <h2 id="HCRProbeDesign.referenceGenome.register_species" class="doc doc-heading">
-            <code class="highlight language-python">register_species(config_path, species, index_prefix, force=False)</code>
+            <code class="highlight language-python">register_species(config_path=None, species=None, index_prefix=None, force=False)</code>
 
 <a href="#HCRProbeDesign.referenceGenome.register_species" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -2315,7 +2315,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
               <b><code>config_path</code></b>
               –
               <div class="doc-md-description">
-                <p>Path to HCRconfig.yaml.</p>
+                <p>Path to HCRconfig.yaml (default: user data dir).</p>
               </div>
             </li>
             <li>
@@ -2398,7 +2398,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
 
 <h2 id="HCRProbeDesign.referenceGenome.save_config" class="doc doc-heading">
-            <code class="highlight language-python">save_config(config, config_path=DEFAULT_CONFIG_PATH)</code>
+            <code class="highlight language-python">save_config(config, config_path=None)</code>
 
 <a href="#HCRProbeDesign.referenceGenome.save_config" class="headerlink" title="Permanent link">&para;</a></h2>
 

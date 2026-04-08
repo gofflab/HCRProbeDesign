@@ -63,6 +63,12 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Configuration</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#data-directory">Data directory</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#migration-from-older-versions">Migration from older versions</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#example">Example</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#viewing-the-current-configuration">Viewing the current configuration</a>
@@ -105,8 +111,19 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
-<p>HCRProbeDesign stores reference genome index paths in <code>HCRconfig.yaml</code>.
-The file is located in the package directory and is read at runtime.</p>
+<p>HCRProbeDesign stores reference genome index paths and default parameters in
+<code>HCRconfig.yaml</code>, located in the user data directory (<code>~/.hcrprobedesign/</code> by default).</p>
+<h2 id="data-directory">Data directory<a class="headerlink" href="#data-directory" title="Permanent link">&para;</a></h2>
+<p>All user data (configuration and Bowtie2 indices) lives in <code>~/.hcrprobedesign/</code>.
+This directory is created automatically on first use and <strong>persists across package
+upgrades</strong>, so you won't lose your indices when running <code>pip install -U hcrprobedesign</code>.</p>
+<p>Override the location by setting the <code>HCRPROBEDESIGN_DATA_DIR</code> environment variable:</p>
+<pre><code class="language-bash">export HCRPROBEDESIGN_DATA_DIR=/path/to/custom/dir
+</code></pre>
+<h3 id="migration-from-older-versions">Migration from older versions<a class="headerlink" href="#migration-from-older-versions" title="Permanent link">&para;</a></h3>
+<p>If you are upgrading from v0.3.0 or earlier (where data was stored inside the
+package directory), HCRProbeDesign will automatically detect and migrate your
+existing indices and species registrations on first run.</p>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
 <pre><code class="language-yaml">species:
   mouse:
@@ -115,12 +132,13 @@ The file is located in the package directory and is read at runtime.</p>
     bowtie2_index: /path/to/hg38/index_prefix
 </code></pre>
 <h2 id="viewing-the-current-configuration">Viewing the current configuration<a class="headerlink" href="#viewing-the-current-configuration" title="Permanent link">&para;</a></h2>
-<p>Run <code>listReferences</code> to display all registered species and default parameters:</p>
+<p>Run <code>listReferences</code> to display all registered species, default parameters, and the
+data directory location:</p>
 <pre><code class="language-bash">listReferences
 </code></pre>
 <h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Paths can be absolute or package-relative.</li>
+<li>Paths can be absolute or relative to the data directory.</li>
 <li><code>buildGenomeIndex</code> updates this file automatically.</li>
 <li><code>fetchMouseIndex</code> also registers the mouse index for you.</li>
 <li>Use <code>--config</code> to write to a different config file when building indices.</li>
