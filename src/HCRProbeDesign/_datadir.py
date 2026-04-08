@@ -110,6 +110,7 @@ def _migrate_old_data():
     new_species = new_config.setdefault("species", {})
 
     migrated_any = False
+    migrated_index_dirs = []
 
     # Migrate index directories
     if os.path.isdir(old_indices_dir):
@@ -127,16 +128,17 @@ def _migrate_old_data():
                     f"  Skipping index '{entry}' (already exists in {new_indices_dir})",
                     file=sys.stderr,
                 )
-                continue
+            else:
+                print(
+                    f"  Moving index '{entry}' -> {new_entry_path}",
+                    file=sys.stderr,
+                )
+                shutil.copytree(old_entry_path, new_entry_path)
+                migrated_any = True
 
-            print(
-                f"  Moving index '{entry}' -> {new_entry_path}",
-                file=sys.stderr,
-            )
-            shutil.copytree(old_entry_path, new_entry_path)
-            migrated_any = True
+            migrated_index_dirs.append(entry)
 
-    # Migrate species config entries
+    # Migrate species config entries from old config
     for name, entry in old_species.items():
         if name in new_species:
             continue
@@ -156,6 +158,26 @@ def _migrate_old_data():
             f"  Migrated species '{name}' -> {new_index}",
             file=sys.stderr,
         )
+
+    # Auto-register species for migrated index dirs that have no config entry.
+    # This handles the case where pip replaced the old HCRconfig.yaml with a
+    # fresh copy (species: {}) during upgrade, so the config entries were lost
+    # even though the index files survived.
+    for dirname in migrated_index_dirs:
+        # Check if any existing species entry already points to this index dir
+        index_prefix = os.path.join(new_indices_dir, dirname, dirname)
+        already_registered = any(
+            sp.get("bowtie2_index", "") == index_prefix
+            or os.path.basename(sp.get("bowtie2_index", "")).startswith(dirname)
+            for sp in new_species.values()
+        )
+        if dirname not in new_species and not already_registered:
+            new_species[dirname] = {"bowtie2_index": index_prefix}
+            migrated_any = True
+            print(
+                f"  Auto-registered species '{dirname}' -> {index_prefix}",
+                file=sys.stderr,
+            )
 
     # Preserve default_params from old config if not present in new
     if "default_params" not in new_config and "default_params" in old_config:
