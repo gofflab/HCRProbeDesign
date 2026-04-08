@@ -111,6 +111,47 @@ def test_migrate_old_data(tmp_path, monkeypatch):
     assert len(bt2_files) == 6
 
 
+def test_migrate_auto_registers_species_when_config_empty(tmp_path, monkeypatch):
+    """Index files survive pip upgrade but old config was replaced with species: {}.
+    Migration should auto-register species based on index directory names."""
+    data_dir = tmp_path / "data"
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", str(data_dir))
+
+    # Set up old package dir with index files but EMPTY species config
+    # (simulates pip replacing HCRconfig.yaml with the clean default)
+    old_pkg = tmp_path / "old_pkg"
+    old_indices = old_pkg / "indices" / "mm10"
+    old_indices.mkdir(parents=True)
+    for suffix in ["1.bt2", "2.bt2", "3.bt2", "4.bt2", "rev.1.bt2", "rev.2.bt2"]:
+        (old_indices / f"mm10.{suffix}").write_text("fake")
+
+    old_config_path = old_pkg / "HCRconfig.yaml"
+    old_config = {
+        "species": {},
+        "default_params": {"tileSize": 52},
+    }
+    with open(old_config_path, "w") as fh:
+        yaml.safe_dump(old_config, fh)
+
+    monkeypatch.setattr(_datadir, "_PACKAGE_DIRECTORY", str(old_pkg))
+    monkeypatch.setattr(_datadir, "_SEED_CONFIG", str(old_config_path))
+
+    _datadir.ensure_data_dir()
+
+    # Index files should be migrated
+    new_index_dir = data_dir / "indices" / "mm10"
+    assert new_index_dir.exists()
+    bt2_files = glob.glob(str(new_index_dir / "*.bt2*"))
+    assert len(bt2_files) == 6
+
+    # Species should be auto-registered from the directory name
+    new_config = yaml.safe_load((data_dir / "HCRconfig.yaml").read_text())
+    assert "mm10" in new_config["species"]
+    assert new_config["species"]["mm10"]["bowtie2_index"] == os.path.join(
+        str(data_dir), "indices", "mm10", "mm10"
+    )
+
+
 def test_has_old_data_empty(tmp_path, monkeypatch):
     monkeypatch.setattr(_datadir, "_PACKAGE_DIRECTORY", str(tmp_path))
     # Write an empty config
