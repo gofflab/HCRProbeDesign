@@ -7,17 +7,19 @@ import sys
 
 import yaml
 
-PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIRECTORY, "HCRconfig.yaml")
+from ._datadir import get_data_dir, get_config_path, ensure_data_dir
 
 
-def load_config(config_path=DEFAULT_CONFIG_PATH):
+def load_config(config_path=None):
     """
     Load the HCRconfig.yaml file.
 
     :param config_path: Path to the YAML configuration file.
     :return: Parsed config dictionary (empty if missing).
     """
+    if config_path is None:
+        ensure_data_dir()
+        config_path = get_config_path()
     if not os.path.exists(config_path):
         return {}
     with open(config_path, "r") as handle:
@@ -28,14 +30,14 @@ def _resolve_absolute_index_path(index_prefix):
     """
     Resolve an index prefix to an absolute path.
 
-    Package-relative paths are resolved against the package directory.
+    Relative paths are resolved against the user data directory.
 
     :param index_prefix: Bowtie2 index prefix (relative or absolute).
     :return: Absolute path to the index prefix.
     """
     if os.path.isabs(index_prefix):
         return index_prefix
-    return os.path.join(PACKAGE_DIRECTORY, index_prefix)
+    return os.path.join(get_data_dir(), index_prefix)
 
 
 def _check_index_files(index_prefix):
@@ -48,7 +50,7 @@ def _check_index_files(index_prefix):
     return sorted(glob.glob(f"{index_prefix}*.bt2*"))
 
 
-def list_references(config_path=DEFAULT_CONFIG_PATH):
+def list_references(config_path=None):
     """
     Gather information about installed reference genomes.
 
@@ -86,6 +88,7 @@ def format_references(info):
     lines.append("=" * 60)
     lines.append("HCRProbeDesign - Installed Reference Genomes")
     lines.append("=" * 60)
+    lines.append(f"  Data directory: {get_data_dir()}")
 
     species_list = info.get("species", [])
     if not species_list:
@@ -143,14 +146,15 @@ def format_references(info):
 
 def main():
     """CLI entry point for listing installed reference genomes."""
+    ensure_data_dir()
     parser = argparse.ArgumentParser(
         description="List installed reference genomes and default parameters.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--config",
-        default=DEFAULT_CONFIG_PATH,
-        help="Path to HCRconfig.yaml (default: package config)",
+        default=get_config_path(),
+        help="Path to HCRconfig.yaml (default: user data dir config)",
     )
     args = parser.parse_args()
 

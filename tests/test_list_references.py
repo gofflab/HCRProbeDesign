@@ -3,6 +3,7 @@ import os
 import pytest
 
 from HCRProbeDesign import listReferences as lr
+from HCRProbeDesign import _datadir
 
 
 def _write_config(path, content):
@@ -117,9 +118,11 @@ def test_resolve_absolute_index_path_absolute():
     assert result == "/abs/path/index"
 
 
-def test_resolve_absolute_index_path_relative():
+def test_resolve_absolute_index_path_relative(monkeypatch, tmp_path):
+    data_dir = str(tmp_path / "datadir")
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", data_dir)
     result = lr._resolve_absolute_index_path("indices/mm10/mm10")
-    expected = os.path.join(lr.PACKAGE_DIRECTORY, "indices/mm10/mm10")
+    expected = os.path.join(data_dir, "indices/mm10/mm10")
     assert result == expected
 
 

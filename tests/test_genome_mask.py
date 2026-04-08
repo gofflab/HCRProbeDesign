@@ -1,6 +1,7 @@
 import os
 
 from HCRProbeDesign import genomeMask as gm
+from HCRProbeDesign import _datadir
 
 
 def test_genomemask_uses_absolute_index(monkeypatch, tmp_path):
@@ -27,10 +28,11 @@ def test_genomemask_uses_relative_index(monkeypatch, tmp_path):
         return 0
 
     monkeypatch.setattr(gm.subprocess, "call", fake_call)
-    monkeypatch.setattr(gm, "package_directory", "/pkg")
+    data_dir = str(tmp_path / "datadir")
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", data_dir)
     monkeypatch.chdir(tmp_path)
 
     gm.genomemask(">read1\nACGT\n", handleName="test", index="indices/mm10/mm10")
 
     idx = captured["cmd"].index("-x") + 1
-    assert captured["cmd"][idx] == os.path.join("/pkg", "indices/mm10/mm10")
+    assert captured["cmd"][idx] == os.path.join(data_dir, "indices/mm10/mm10")

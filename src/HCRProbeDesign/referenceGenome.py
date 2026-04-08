@@ -8,26 +8,29 @@ import subprocess
 import yaml
 
 from . import index_path
+from ._datadir import get_data_dir, get_config_path, get_indices_dir, ensure_data_dir
 
 PACKAGE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIRECTORY, "HCRconfig.yaml")
 FASTA_EXTENSIONS = (".fa", ".fasta", ".fna", ".fa.gz", ".fasta.gz", ".fna.gz")
 
 
-def load_config(config_path=DEFAULT_CONFIG_PATH):
+def load_config(config_path=None):
     """
     Load the HCRconfig.yaml file.
 
     :param config_path: Path to the YAML configuration file.
     :return: Parsed config dictionary (empty if missing).
     """
+    if config_path is None:
+        ensure_data_dir()
+        config_path = get_config_path()
     if not os.path.exists(config_path):
         return {}
     with open(config_path, "r") as handle:
         return yaml.safe_load(handle) or {}
 
 
-def save_config(config, config_path=DEFAULT_CONFIG_PATH):
+def save_config(config, config_path=None):
     """
     Write configuration data to HCRconfig.yaml.
 
@@ -35,6 +38,9 @@ def save_config(config, config_path=DEFAULT_CONFIG_PATH):
     :param config_path: Path to write the configuration.
     :return: None.
     """
+    if config_path is None:
+        ensure_data_dir()
+        config_path = get_config_path()
     with open(config_path, "w") as handle:
         yaml.safe_dump(config, handle, sort_keys=False)
 
@@ -72,13 +78,13 @@ def collect_fasta_inputs(paths):
 
 def format_index_path(index_prefix):
     """
-    Format an index prefix relative to the package when possible.
+    Format an index prefix relative to the data directory when possible.
 
     :param index_prefix: Bowtie2 index prefix path.
-    :return: Relative path if within package, otherwise absolute path.
+    :return: Relative path if within data dir, otherwise absolute path.
     """
     abs_prefix = os.path.abspath(index_prefix)
-    abs_root = os.path.abspath(PACKAGE_DIRECTORY)
+    abs_root = os.path.abspath(get_data_dir())
     try:
         common = os.path.commonpath([abs_prefix, abs_root])
     except ValueError:
@@ -127,17 +133,20 @@ def build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None,
     return index_prefix
 
 
-def register_species(config_path, species, index_prefix, force=False):
+def register_species(config_path=None, species=None, index_prefix=None, force=False):
     """
     Register a species and its Bowtie2 index prefix in the config file.
 
-    :param config_path: Path to HCRconfig.yaml.
+    :param config_path: Path to HCRconfig.yaml (default: user data dir).
     :param species: Species key to register.
     :param index_prefix: Bowtie2 index prefix path.
     :param force: Overwrite an existing species entry if True.
     :return: None.
     :raises ValueError: If the species exists and force is False.
     """
+    if config_path is None:
+        ensure_data_dir()
+        config_path = get_config_path()
     config = load_config(config_path)
     species_config = config.setdefault("species", {})
     if species in species_config and not force:
@@ -159,9 +168,10 @@ def main():
         help="FASTA file or directory (repeatable for multiple inputs)",
     )
     parser.add_argument("--index-name", help="Index basename (default: species)")
-    parser.add_argument("--indices-dir", help="Output directory for indices (default: package indices)")
+    ensure_data_dir()
+    parser.add_argument("--indices-dir", help="Output directory for indices (default: user data dir)")
     parser.add_argument("--threads", type=int, default=1, help="Threads for bowtie2-build")
-    parser.add_argument("--config", default=DEFAULT_CONFIG_PATH, help="Path to HCRconfig.yaml")
+    parser.add_argument("--config", default=get_config_path(), help="Path to HCRconfig.yaml")
     parser.add_argument("--force", action="store_true", help="Overwrite existing index/config entry")
     args = parser.parse_args()
 

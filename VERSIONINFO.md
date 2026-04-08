@@ -1,3 +1,8 @@
+## v0.3.1 - 04.08.2026
+  + Moved config and indices to persistent user data directory (`~/.hcrprobedesign/`)
+  + Reference genomes and configuration now survive `pip install -U` upgrades
+  + Automatic migration of data from old package-relative locations
+  + Support `HCRPROBEDESIGN_DATA_DIR` environment variable to override data location
 ## v0.3.0 - 04.08.2026
   + Added `listReferences` CLI tool to display installed reference genomes and default parameters
   + Added `HCRProbeDesign.listReferences` module with programmatic access to reference info

@@ -3,6 +3,7 @@
 from . import probeDesign
 from . import thermo
 from . import sequencelib
+from ._datadir import get_data_dir, get_config_path, get_indices_dir, ensure_data_dir
 
 import os
 try:
@@ -13,8 +14,14 @@ except ImportError:  # Python < 3.8
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
 def index_path():
-    """Return the default package-relative path for Bowtie2 indices."""
-    return os.path.join(_ROOT, 'indices')
+    """Return the path to the user's Bowtie2 indices directory.
+
+    Returns the user data directory (``~/.hcrprobedesign/indices/``) which
+    persists across package upgrades.  The data directory is created
+    automatically on first access.
+    """
+    ensure_data_dir()
+    return get_indices_dir()
 
 def _resolve_version():
     if importlib_metadata is not None:

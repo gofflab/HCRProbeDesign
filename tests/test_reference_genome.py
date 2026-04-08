@@ -3,6 +3,7 @@ import os
 import pytest
 
 from HCRProbeDesign import referenceGenome as rg
+from HCRProbeDesign import _datadir
 
 
 def _write_fasta(path, name="chr1", seq="ACGT"):
@@ -38,14 +39,16 @@ def test_collect_fasta_inputs_empty_dir(tmp_path):
 
 
 def test_format_index_path_relative(monkeypatch, tmp_path):
-    monkeypatch.setattr(rg, "PACKAGE_DIRECTORY", str(tmp_path))
-    index_prefix = tmp_path / "indices" / "zfish" / "zfish"
-    expected = os.path.relpath(str(index_prefix), str(tmp_path))
-    assert rg.format_index_path(str(index_prefix)) == expected
+    data_dir = str(tmp_path / "datadir")
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", data_dir)
+    index_prefix = os.path.join(data_dir, "indices", "zfish", "zfish")
+    expected = os.path.relpath(index_prefix, data_dir)
+    assert rg.format_index_path(index_prefix) == expected
 
 
 def test_format_index_path_absolute(monkeypatch, tmp_path):
-    monkeypatch.setattr(rg, "PACKAGE_DIRECTORY", str(tmp_path))
+    data_dir = str(tmp_path / "datadir")
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", data_dir)
     outside = tmp_path.parent / "other" / "idx"
     outside.parent.mkdir(parents=True, exist_ok=True)
     assert rg.format_index_path(str(outside)) == str(outside)
