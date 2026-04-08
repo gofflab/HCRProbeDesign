@@ -1,3 +1,5 @@
+## v0.3.3 - 04.08.2026
+  + Added `--large-index` flag to `buildGenomeIndex` for genomes > 4 billion bases
 ## v0.3.2 - 04.08.2026
   + Fixed migration bug where species config entries were not restored after `pip install -U`
   + Index directories found in the old package location are now auto-registered as species

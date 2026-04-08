@@ -92,6 +92,37 @@ def test_build_bowtie2_index_calls_bowtie2_build(monkeypatch, tmp_path):
     ]
 
 
+def test_build_bowtie2_index_large_index_flag(monkeypatch, tmp_path):
+    fa = tmp_path / "genome.fa"
+    _write_fasta(fa)
+
+    monkeypatch.setattr(rg.shutil, "which", lambda _: "/usr/bin/bowtie2-build")
+    captured = {}
+
+    def fake_check_call(cmd):
+        captured["cmd"] = cmd
+        return 0
+
+    monkeypatch.setattr(rg.subprocess, "check_call", fake_check_call)
+
+    rg.build_bowtie2_index(
+        [str(fa)],
+        "biggenome",
+        indices_dir=str(tmp_path),
+        threads=8,
+        large_index=True,
+    )
+
+    assert captured["cmd"] == [
+        "/usr/bin/bowtie2-build",
+        "--large-index",
+        "--threads",
+        "8",
+        str(fa),
+        str(tmp_path / "biggenome" / "biggenome"),
+    ]
+
+
 def test_build_bowtie2_index_force_overwrite(monkeypatch, tmp_path):
     fa = tmp_path / "genome.fa"
     _write_fasta(fa)

@@ -94,7 +94,7 @@ def format_index_path(index_prefix):
     return abs_prefix
 
 
-def build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None, threads=1, force=False):
+def build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None, threads=1, force=False, large_index=False):
     """
     Build a Bowtie2 index from the provided FASTA files.
 
@@ -104,6 +104,7 @@ def build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None,
     :param indices_dir: Output directory for indices.
     :param threads: Number of threads for bowtie2-build.
     :param force: Overwrite existing index files if True.
+    :param large_index: Use --large-index for genomes > 4 billion bases.
     :return: Index prefix path.
     :raises RuntimeError: If bowtie2-build is not available.
     :raises FileExistsError: If index exists and force is False.
@@ -126,6 +127,8 @@ def build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None,
             os.remove(fname)
 
     cmd = [bowtie2_build]
+    if large_index:
+        cmd.append("--large-index")
     if threads and threads > 1:
         cmd.extend(["--threads", str(threads)])
     cmd.extend([",".join(fasta_paths), index_prefix])
@@ -173,6 +176,7 @@ def main():
     parser.add_argument("--threads", type=int, default=1, help="Threads for bowtie2-build")
     parser.add_argument("--config", default=get_config_path(), help="Path to HCRconfig.yaml")
     parser.add_argument("--force", action="store_true", help="Overwrite existing index/config entry")
+    parser.add_argument("--large-index", action="store_true", help="Build a large index (for genomes > 4 billion bases)")
     args = parser.parse_args()
 
     fasta_paths = collect_fasta_inputs(args.fasta)
@@ -183,6 +187,7 @@ def main():
         indices_dir=args.indices_dir,
         threads=args.threads,
         force=args.force,
+        large_index=args.large_index,
     )
     register_species(args.config, args.species, index_prefix, force=args.force)
     print(f"Registered {args.species} with index {format_index_path(index_prefix)}")
