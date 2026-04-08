@@ -157,6 +157,18 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.genomeMask.test">test</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignlistreferences">HCRProbeDesign.listReferences</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.listReferences">listReferences</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.listReferences.format_references">format_references</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.listReferences.list_references">list_references</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.listReferences.load_config">load_config</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.listReferences.main">main</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#hcrprobedesignreferencegenome">HCRProbeDesign.referenceGenome</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#HCRProbeDesign.referenceGenome">referenceGenome</a>
@@ -1640,6 +1652,251 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
     </div>
 
+</div><h2 id="hcrprobedesignlistreferences">HCRProbeDesign.listReferences<a class="headerlink" href="#hcrprobedesignlistreferences" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="HCRProbeDesign.listReferences"></a>
+    <div class="doc doc-contents first">
+
+        <p>List installed reference genomes and their configuration details.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.listReferences.format_references" class="doc doc-heading">
+            <code class="highlight language-python">format_references(info)</code>
+
+<a href="#HCRProbeDesign.listReferences.format_references" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Format reference genome information as a human-readable string.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>info</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Dictionary returned by :func:<code>list_references</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Formatted string for display.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.listReferences.list_references" class="doc doc-heading">
+            <code class="highlight language-python">list_references(config_path=DEFAULT_CONFIG_PATH)</code>
+
+<a href="#HCRProbeDesign.listReferences.list_references" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Gather information about installed reference genomes.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config_path</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Path to HCRconfig.yaml.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Dictionary with 'species' list and 'default_params' dict.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.listReferences.load_config" class="doc doc-heading">
+            <code class="highlight language-python">load_config(config_path=DEFAULT_CONFIG_PATH)</code>
+
+<a href="#HCRProbeDesign.listReferences.load_config" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Load the HCRconfig.yaml file.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config_path</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Path to the YAML configuration file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Parsed config dictionary (empty if missing).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="HCRProbeDesign.listReferences.main" class="doc doc-heading">
+            <code class="highlight language-python">main()</code>
+
+<a href="#HCRProbeDesign.listReferences.main" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>CLI entry point for listing installed reference genomes.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
 </div><h2 id="hcrprobedesignreferencegenome">HCRProbeDesign.referenceGenome<a class="headerlink" href="#hcrprobedesignreferencegenome" title="Permanent link">&para;</a></h2>
 
 
@@ -2750,7 +3007,8 @@ sequence</p>
             <li>
               –
               <div class="doc-md-description">
-                <p>A list of tuples. Each tuple contains the name of the gene, the GC content, and the length of the gene.</p>
+                <p>A list of tuples. Each tuple contains the name of the gene, the GC content, and the length
+of the gene.</p>
               </div>
             </li>
         </ul>
@@ -3645,7 +3903,8 @@ duplex initiation. Values from Sugimoto et al 1995</p>
               <b><code>dH</code></b>
               –
               <div class="doc-md-description">
-                <p>Enthalpy (delta H). This is the energy required to separate the strands of the DNA duplex in kilo Joules per mole</p>
+                <p>Enthalpy (delta H). This is the energy required to separate the strands of the DNA duplex
+in kilo Joules per mole</p>
               </div>
             </li>
             <li>
@@ -4716,7 +4975,8 @@ Returns an iterator across sequences in file</p>
               <b><code>dnasource</code></b>
               –
               <div class="doc-md-description">
-                <p>vertebrate, mammal, human, rodent, mouse, rat, danio, drosophila, elegans, defaults to mouse (optional)</p>
+                <p>vertebrate, mammal, human, rodent, mouse, rat, danio, drosophila, elegans,
+defaults to mouse (optional)</p>
               </div>
             </li>
         </ul>

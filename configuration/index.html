@@ -65,6 +65,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#example">Example</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#viewing-the-current-configuration">Viewing the current configuration</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a>
     </li>
     </ul>
@@ -112,12 +114,17 @@ The file is located in the package directory and is read at runtime.</p>
   human:
     bowtie2_index: /path/to/hg38/index_prefix
 </code></pre>
+<h2 id="viewing-the-current-configuration">Viewing the current configuration<a class="headerlink" href="#viewing-the-current-configuration" title="Permanent link">&para;</a></h2>
+<p>Run <code>listReferences</code> to display all registered species and default parameters:</p>
+<pre><code class="language-bash">listReferences
+</code></pre>
 <h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Paths can be absolute or package-relative.</li>
 <li><code>buildGenomeIndex</code> updates this file automatically.</li>
 <li><code>fetchMouseIndex</code> also registers the mouse index for you.</li>
 <li>Use <code>--config</code> to write to a different config file when building indices.</li>
+<li>Use <code>listReferences --config /path/to/HCRconfig.yaml</code> to inspect a specific config file.</li>
 </ul>
               
             </div>

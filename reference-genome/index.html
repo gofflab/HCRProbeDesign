@@ -75,7 +75,7 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#2-build-and-register-the-bowtie2-index">2) Build and register the Bowtie2 index</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#3-verify-the-configuration">3) Verify the configuration</a>
+    <li class="toctree-l3"><a class="reference internal" href="#3-verify-the-installation">3) Verify the installation</a>
     </li>
         </ul>
     </li>
@@ -135,7 +135,12 @@ are supported.</p>
 - Indices are written under the package <code>indices/</code> directory by default.
 - Use <code>--indices-dir</code> to write indices elsewhere and <code>--config</code> to update a specific config file.
 - Use <code>--force</code> to overwrite an existing index or config entry.</p>
-<h3 id="3-verify-the-configuration">3) Verify the configuration<a class="headerlink" href="#3-verify-the-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="3-verify-the-installation">3) Verify the installation<a class="headerlink" href="#3-verify-the-installation" title="Permanent link">&para;</a></h3>
+<p>After building an index, run <code>listReferences</code> to confirm it was registered correctly:</p>
+<pre><code class="language-bash">listReferences
+</code></pre>
+<p>This shows all registered species, whether their index files exist on disk, and the
+<code>--species</code> flag to use with <code>designProbes</code>.</p>
 <p><code>buildGenomeIndex</code> adds an entry like this to <code>HCRconfig.yaml</code>:</p>
 <pre><code class="language-yaml">species:
   zebrafish:

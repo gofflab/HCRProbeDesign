@@ -65,6 +65,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#fetchmouseindex">fetchMouseIndex</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#listreferences">listReferences</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#buildgenomeindex">buildGenomeIndex</a>
     </li>
     </ul>
@@ -129,6 +131,21 @@ directly to a Bowtie2 index.</p>
 <p>Download a prebuilt mm10 Bowtie2 index and register it under the package indices directory.</p>
 <pre><code class="language-bash">fetchMouseIndex
 </code></pre>
+<h2 id="listreferences">listReferences<a class="headerlink" href="#listreferences" title="Permanent link">&para;</a></h2>
+<p>List all installed reference genomes and their configuration details, including default
+parameters and the CLI flags needed to use them.</p>
+<pre><code class="language-bash">listReferences
+</code></pre>
+<p>Use <code>--config</code> to inspect an alternate configuration file:</p>
+<pre><code class="language-bash">listReferences --config /path/to/HCRconfig.yaml
+</code></pre>
+<p>The output shows, for each registered species:
+- Species name and installation status
+- Bowtie2 index prefix path (relative and absolute)
+- Number of index files found on disk
+- The <code>--species</code> flag to pass to <code>designProbes</code></p>
+<p>It also displays all default parameters from <code>HCRconfig.yaml</code> with their corresponding
+CLI flags.</p>
 <h2 id="buildgenomeindex">buildGenomeIndex<a class="headerlink" href="#buildgenomeindex" title="Permanent link">&para;</a></h2>
 <p>Build a Bowtie2 index for a new reference genome and register it in <code>HCRconfig.yaml</code>.</p>
 <pre><code class="language-bash">buildGenomeIndex --species zebrafish --fasta /path/to/genome.fa --threads 8
