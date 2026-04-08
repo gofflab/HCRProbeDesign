@@ -25,7 +25,7 @@ buildGenomeIndex --species zebrafish --fasta /path/to/genome.fa --threads 8
 Notes:
 - `--fasta` is repeatable and can point to a directory; all `.fa`, `.fasta`, or `.fna` files
   (including `.gz`) will be included.
-- Indices are written under the package `indices/` directory by default.
+- Indices are written under `~/.hcrprobedesign/indices/` by default.
 - Use `--indices-dir` to write indices elsewhere and `--config` to update a specific config file.
 - Use `--force` to overwrite an existing index or config entry.
 

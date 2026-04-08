@@ -15,8 +15,9 @@ from zipfile import ZipFile
 import argparse
 import yaml
 
+from ._datadir import get_config_path, get_indices_dir, get_data_dir, ensure_data_dir
+
 package_directory = os.path.dirname(os.path.abspath(__file__))
-indices_directory = os.path.join(package_directory, "indices")
 # indexLookup = {
 #     'mouse': os.path.join(indices_directory,'mm10/mm10')
 # }
@@ -27,7 +28,9 @@ def _load_config(config_path=None):
 
     :return: Parsed config dict (empty if missing).
     """
-    config_path = config_path or os.path.join(package_directory, "HCRconfig.yaml")
+    if config_path is None:
+        ensure_data_dir()
+        config_path = get_config_path()
     if not os.path.exists(config_path):
         return {}
     with open(config_path, "r") as file:
@@ -41,19 +44,21 @@ def _save_config(config, config_path=None):
     :param config_path: Optional config path override.
     :return: None.
     """
-    config_path = config_path or os.path.join(package_directory, "HCRconfig.yaml")
+    if config_path is None:
+        ensure_data_dir()
+        config_path = get_config_path()
     with open(config_path, "w") as file:
         yaml.safe_dump(config, file, sort_keys=False)
 
 def _format_index_path(index_prefix):
     """
-    Format an index prefix relative to the package when possible.
+    Format an index prefix relative to the data directory when possible.
 
     :param index_prefix: Bowtie2 index prefix path.
-    :return: Relative path if within package, otherwise absolute path.
+    :return: Relative path if within data dir, otherwise absolute path.
     """
     abs_prefix = os.path.abspath(index_prefix)
-    abs_root = os.path.abspath(package_directory)
+    abs_root = os.path.abspath(get_data_dir())
     try:
         common = os.path.commonpath([abs_prefix, abs_root])
     except ValueError:
@@ -125,7 +130,7 @@ def genomemask(fasta_string,handleName="tmp",species="mouse",nAlignments = 3, in
     if os.path.isabs(index):
         index_path = index
     else:
-        index_path = package_directory + "/" + index
+        index_path = os.path.join(get_data_dir(), index)
     res = subprocess.call(["bowtie2", f"-k{nAlignments}", "-x", index_path, "-f", fasta_file, "-S", sam_file])
     return res
 
@@ -168,8 +173,9 @@ def install_index(url='https://genome-idx.s3.amazonaws.com/bt/mm10.zip', genome=
     parser.add_argument("--url", default=url, help="URL of a Bowtie2 index zip archive")
     parser.add_argument("--genome", default=genome, help="Genome name for the extracted folder")
     parser.add_argument("--species", default=species, help="Species key to register in HCRconfig.yaml")
-    parser.add_argument("--indices-dir", default=indices_directory, help="Directory to install indices")
-    parser.add_argument("--config", default=os.path.join(package_directory, "HCRconfig.yaml"), help="Path to HCRconfig.yaml")
+    ensure_data_dir()
+    parser.add_argument("--indices-dir", default=get_indices_dir(), help="Directory to install indices")
+    parser.add_argument("--config", default=get_config_path(), help="Path to HCRconfig.yaml")
     parser.add_argument("--force", action="store_true", help="Overwrite existing species entry")
     args = parser.parse_args()
     print(f'Downloading Bowtie2 index from {args.url} ...')

@@ -38,9 +38,14 @@ conda activate HCRProbeDesign
 pip install -e .
 ```
 
+## Data directory
+HCRProbeDesign stores configuration and Bowtie2 indices in a persistent user data directory
+at `~/.hcrprobedesign/` so they survive package upgrades. Override the location with the
+`HCRPROBEDESIGN_DATA_DIR` environment variable.
+
 ## Adding a new reference genome
-HCRProbeDesign keeps Bowtie2 index paths in `HCRconfig.yaml`. The `buildGenomeIndex` utility builds
-an index and registers it automatically.
+HCRProbeDesign keeps Bowtie2 index paths in `~/.hcrprobedesign/HCRconfig.yaml`. The `buildGenomeIndex`
+utility builds an index and registers it automatically.
 
 ```bash
 buildGenomeIndex --species zebrafish --fasta /path/to/genome.fa --threads 8
@@ -49,7 +54,7 @@ buildGenomeIndex --species zebrafish --fasta /path/to/genome.fa --threads 8
 Notes:
 - `--fasta` can be repeated and can point to a directory; all `.fa`, `.fasta`, or `.fna` files inside
   will be used.
-- By default, indices are written under the package `indices/` directory and the config is updated.
+- By default, indices are written under `~/.hcrprobedesign/indices/` and the config is updated.
 - Use `--indices-dir` to write indices elsewhere and `--config` to update a specific config file.
 - Use `--force` to overwrite an existing index or config entry.
 

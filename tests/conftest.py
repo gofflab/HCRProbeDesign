@@ -1,7 +1,15 @@
 import os
 import sys
 
+import pytest
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SRC = os.path.join(ROOT, "src")
 if SRC not in sys.path:
     sys.path.insert(0, SRC)
+
+
+@pytest.fixture(autouse=True)
+def _isolate_data_dir(tmp_path, monkeypatch):
+    """Redirect all tests to a temporary data directory by default."""
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", str(tmp_path / ".hcrprobedesign"))
