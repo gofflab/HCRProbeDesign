@@ -61,3 +61,8 @@ Build a Bowtie2 index for a new reference genome and register it in `HCRconfig.y
 ```bash
 buildGenomeIndex --species zebrafish --fasta /path/to/genome.fa --threads 8
 ```
+
+For large genomes (> 4 billion bases), use the `--large-index` flag:
+```bash
+buildGenomeIndex --species eberryi --fasta /path/to/genome.fa --threads 8 --large-index
+```
