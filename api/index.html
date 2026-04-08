@@ -1933,7 +1933,7 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
 
 
 <h2 id="HCRProbeDesign.referenceGenome.build_bowtie2_index" class="doc doc-heading">
-            <code class="highlight language-python">build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None, threads=1, force=False)</code>
+            <code class="highlight language-python">build_bowtie2_index(fasta_paths, species, index_name=None, indices_dir=None, threads=1, force=False, large_index=False)</code>
 
 <a href="#HCRProbeDesign.referenceGenome.build_bowtie2_index" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -1993,6 +1993,13 @@ ie. a 52mer will be split into two 25mers with the middle two bases of the 52mer
               –
               <div class="doc-md-description">
                 <p>Overwrite existing index files if True.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>large_index</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Use --large-index for genomes &gt; 4 billion bases.</p>
               </div>
             </li>
         </ul>

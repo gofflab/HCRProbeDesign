@@ -150,6 +150,9 @@ CLI flags.</p>
 <p>Build a Bowtie2 index for a new reference genome and register it in <code>HCRconfig.yaml</code>.</p>
 <pre><code class="language-bash">buildGenomeIndex --species zebrafish --fasta /path/to/genome.fa --threads 8
 </code></pre>
+<p>For large genomes (&gt; 4 billion bases), use the <code>--large-index</code> flag:</p>
+<pre><code class="language-bash">buildGenomeIndex --species eberryi --fasta /path/to/genome.fa --threads 8 --large-index
+</code></pre>
               
             </div>
           </div><footer>
