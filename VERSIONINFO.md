@@ -1,4 +1,6 @@
-## v0.2.5 - Unreleased
+## v0.3.0 - 04.08.2026
+  + Added `listReferences` CLI tool to display installed reference genomes and default parameters
+  + Added `HCRProbeDesign.listReferences` module with programmatic access to reference info
   + Documentation base URL updated
 ## v0.2.4 - 01.16.2026
   + Exposed package version in `HCRProbeDesign.__version__`

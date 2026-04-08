@@ -12,8 +12,16 @@ species:
     bowtie2_index: /path/to/hg38/index_prefix
 ```
 
+## Viewing the current configuration
+Run `listReferences` to display all registered species and default parameters:
+
+```bash
+listReferences
+```
+
 ## Notes
 - Paths can be absolute or package-relative.
 - `buildGenomeIndex` updates this file automatically.
 - `fetchMouseIndex` also registers the mouse index for you.
 - Use `--config` to write to a different config file when building indices.
+- Use `listReferences --config /path/to/HCRconfig.yaml` to inspect a specific config file.

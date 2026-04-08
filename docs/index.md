@@ -11,6 +11,7 @@ Documentation URL: https://www.gofflab.org/HCRProbeDesign/
 - `designProbesBatch`: batch probe design for multi-record FASTA inputs
 - `fetchMouseIndex`: download, install, and register the mm10 Bowtie2 index
 - `buildGenomeIndex`: build and register a new reference genome index
+- `listReferences`: display installed reference genomes and default parameters
 
 ## Documentation layout
 - Installation and prerequisites
