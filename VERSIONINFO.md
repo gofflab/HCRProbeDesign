@@ -1,3 +1,8 @@
+## v0.3.4 - 04.10.2026
+  + Fixed `designProbes`/`designProbesBatch` reading the species registry from the
+    package install directory instead of `~/.hcrprobedesign/HCRconfig.yaml`, which
+    caused "Registered species: none" errors after `pip install -U` even when
+    `listReferences` showed registered references
 ## v0.3.3 - 04.08.2026
   + Added `--large-index` flag to `buildGenomeIndex` for genomes > 4 billion bases
 ## v0.3.2 - 04.08.2026
