@@ -1,4 +1,6 @@
+import argparse
 import sys
+
 import pytest
 
 from HCRProbeDesign import HCR
@@ -209,6 +211,59 @@ def test_batch_fasta_header_channel_invalid(monkeypatch, tmp_path):
 
     with pytest.raises(ValueError, match="Channel 'Z9' is not defined"):
         probeDesign.main_batch()
+
+
+def _make_assert_args(species="mouse", no_genomemask=True, index=None):
+    return argparse.Namespace(species=species, no_genomemask=no_genomemask, index=index)
+
+
+def test_assert_species_config_reads_user_data_dir(tmp_path, monkeypatch):
+    data_dir = tmp_path / ".hcrprobedesign"
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", str(data_dir))
+    data_dir.mkdir()
+    config_path = data_dir / "HCRconfig.yaml"
+    config_path.write_text("species:\n  mouse:\n    bowtie2_index: indices/mm10/mm10\n")
+
+    probeDesign._assert_species_config(_make_assert_args(species="mouse"))
+
+
+def test_assert_species_config_missing_species_raises(tmp_path, monkeypatch):
+    data_dir = tmp_path / ".hcrprobedesign"
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", str(data_dir))
+    data_dir.mkdir()
+    (data_dir / "HCRconfig.yaml").write_text("species: {}\n")
+
+    with pytest.raises(SystemExit) as excinfo:
+        probeDesign._assert_species_config(_make_assert_args(species="mouse"))
+    assert "is not registered" in str(excinfo.value)
+
+
+def test_assert_species_config_skips_when_index_supplied(tmp_path, monkeypatch):
+    data_dir = tmp_path / ".hcrprobedesign"
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", str(data_dir))
+    data_dir.mkdir()
+    (data_dir / "HCRconfig.yaml").write_text("species: {}\n")
+
+    probeDesign._assert_species_config(
+        _make_assert_args(species="mouse", index="/some/index/prefix")
+    )
+
+
+def test_assert_species_config_ignores_stale_package_config(tmp_path, monkeypatch):
+    """Regression test: assertion must not read the package-relative config."""
+    data_dir = tmp_path / ".hcrprobedesign"
+    monkeypatch.setenv("HCRPROBEDESIGN_DATA_DIR", str(data_dir))
+    data_dir.mkdir()
+    (data_dir / "HCRconfig.yaml").write_text(
+        "species:\n  mouse:\n    bowtie2_index: indices/mm10/mm10\n"
+    )
+
+    # Simulate a stale package-level config that lacks the registered species.
+    stale = tmp_path / "stale_HCRconfig.yaml"
+    stale.write_text("species: {}\n")
+    monkeypatch.setattr(probeDesign, "package_directory", str(tmp_path))
+
+    probeDesign._assert_species_config(_make_assert_args(species="mouse"))
 
 
 def test_batch_fasta_header_channel_separator(monkeypatch, tmp_path, capsys):

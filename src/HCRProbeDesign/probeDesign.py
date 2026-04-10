@@ -9,6 +9,7 @@ from . import sequencelib
 from . import repeatMask
 from . import genomeMask
 from . import HCR
+from ._datadir import ensure_data_dir, get_config_path
 #from probeDesign import BLAST
 import sys,re
 #from Bio.Seq import Seq
@@ -559,7 +560,8 @@ def _assert_species_config(args):
 	if (not args.no_genomemask) or args.index:
 		return
 
-	config_path = os.path.join(package_directory, "HCRconfig.yaml")
+	ensure_data_dir()
+	config_path = get_config_path()
 	if not os.path.exists(config_path):
 		config = {}
 	else:
