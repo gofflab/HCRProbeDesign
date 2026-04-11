@@ -53,7 +53,7 @@ def complement(s):
     :return: A list of the complement bases of the sequence.
     '''
     comp = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A', 'N': 'N',
-            'a': 't', 'c': 't', 'g': 'c', 't': 'a', 'n': 'n'
+            'a': 't', 'c': 'g', 'g': 'c', 't': 'a', 'n': 'n'
             }
     complseq = [comp[base] for base in s]
     return complseq
