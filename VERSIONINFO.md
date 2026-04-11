@@ -1,3 +1,8 @@
+## v0.3.5 - 04.11.2026
+  + Fixed complement table bug: lowercase 'c' was incorrectly complemented to 't' instead of 'g'
+  + Fixed off-by-one in tile overlap detection that caused adjacent non-overlapping tiles to be
+    incorrectly skipped during probe selection, reducing yield
+  + Removed duplicate `__len__` method in Tile class (shadowed definition had off-by-one)
 ## v0.3.4 - 04.10.2026
   + Fixed `designProbes`/`designProbesBatch` reading the species registry from the
     package install directory instead of `~/.hcrprobedesign/HCRconfig.yaml`, which

@@ -69,13 +69,9 @@ class Tile:
 		"""Iterate over the tile sequence bases."""
 		return iter(self.sequence)
 
-	def __len__(self):
-		"""Return the length of the tile interval."""
-		return self.end-self.start+1
-
 	def overlaps(self,b):
 			"""Return true if b overlaps self"""
-			if (self.start <= b.start and b.start <=self.end) or (self.start >= b.start and self.start <= b.end):
+			if (self.start < b.end and b.start < self.end):
 				return True
 			else:
 				return False
